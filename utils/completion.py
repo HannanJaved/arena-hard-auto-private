@@ -653,7 +653,9 @@ def chat_completion_meta(model, messages, temperature, max_tokens, api_dict, **k
 
 def reorg_answer_file(answer_file):
     """Sort by question id and de-duplication"""
+    import os
     answers = {}
+    os.makedirs(os.path.dirname(answer_file), exist_ok=True)
     with open(answer_file, "r") as fin:
         for l in fin:
             qid = json.loads(l)["uid"]

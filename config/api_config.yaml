@@ -98,3 +98,986 @@ aws_nova_light_v1:
     max_tokens: 4096
     temperature: 0.0
     
+llama3.1-8b-instruct:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-8B-Instruct
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+
+
+# ******** TULU3 MODELS ***************** #
+
+# ******** Rank64 - Alpha 1e-5 - 0.01 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e5-001-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0    
+
+tulu3-8b-rank64-alpha1e5-001-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-001-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 1e-5 - 0.05 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e5-005-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-005-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 1e-5 - 0.10 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e5-010-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-step50000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_50000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e5-010-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 1e-6 - 0.01 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e6-001-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-001-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 1e-6 - 0.05 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e6-005-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-005-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 1e-6 - 0.10 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha1e6-010-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-step50000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/step_50000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha1e6-010-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 5e-5 - 0.01 WR ***************** #
+# Every 6000 steps
+tulu3-8b-rank64-alpha5e5-001-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+
+tulu3-8b-rank64-alpha5e5-001-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-001-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 5e-5 - 0.05 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha5e5-005-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-005-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_005/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - Alpha 5e-5 - 0.10 WR ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-alpha5e5-010-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-step50000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/step_50000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-alpha5e5-010-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_010/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+# ******** Rank64 - DEFAULT Setting ***************** #
+# Every 6000 steps
+
+tulu3-8b-rank64-default-step6000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_6000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step12000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_12000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step18000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_18000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step24000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_24000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step30000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_30000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step36000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_36000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step42000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_42000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step48000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_48000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-step50000:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/step_50000
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank64-default-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/Default/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0

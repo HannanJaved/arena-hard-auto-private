@@ -100,6 +100,7 @@ if __name__ == "__main__":
         questions = load_questions(question_file)
 
         answer_file = os.path.join("data", config["bench_name"], "model_answer", f"{model}.jsonl")
+        os.makedirs(os.path.dirname(answer_file), exist_ok=True)
         print(f"Output to {answer_file}")
 
         if "parallel" in endpoint_settings:
