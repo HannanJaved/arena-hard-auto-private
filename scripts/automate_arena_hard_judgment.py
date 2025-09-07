@@ -113,12 +113,13 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path)
     log_dir = f"{LOGS_DIR}/{log_subdir}"
     Path(log_dir).mkdir(parents=True, exist_ok=True)
     
-    timestamp = "${SLURM_JOB_ID}_$(date +%Y%m%d_%H%M%S)"
+    # Use SLURM_JOB_ID for unique filenames (no shell commands in SBATCH directives)
+    log_file_base = f"{job_name}_${{SLURM_JOB_ID}}"
     
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
-#SBATCH --error={log_dir}/{job_name}_{timestamp}.err
-#SBATCH --output={log_dir}/{job_name}_{timestamp}.out
+#SBATCH --error={log_dir}/{log_file_base}.err
+#SBATCH --output={log_dir}/{log_file_base}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8        
@@ -130,6 +131,10 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path)
 
 # Exit on any error
 set -e
+
+# Create timestamp for additional log files
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+UNIQUE_ID="${{SLURM_JOB_ID}}_${{TIMESTAMP}}"
 
 # --- SETUP ENVIRONMENT ---
 echo "Setting up the environment for Arena Hard judgment..."
@@ -166,17 +171,17 @@ CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port 8001 --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
-    > {log_dir}/{job_name}_{timestamp}_vllm_judge_server.log 2>&1 &
+    > {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log 2>&1 &
 JUDGE_PID=$!
 
 sleep 5
 if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
     echo "ERROR: Judge server failed to start. Check vllm_judge_server.log for details."
-    cat {log_dir}/{job_name}_{timestamp}_vllm_judge_server.log
+    cat {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log
     exit 1
 fi
 echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
-tail -n 100 {log_dir}/{job_name}_{timestamp}_vllm_judge_server.log
+tail -n 100 {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log
 
 echo "Waiting 15 mins for judge server to load..."
 sleep 900
@@ -251,8 +256,8 @@ def main():
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to judge (default: arena_hard_models_to_test.txt)')
     parser.add_argument('--all', action='store_true', help='Judge all tulu3 models from API config')
-    parser.add_argument('--batch-size', type=int, default=10, 
-                       help='Number of models to judge per job (default: 10)')
+    parser.add_argument('--batch-size', type=int, default=1, 
+                       help='Number of models to judge per job (default: 1)')
     parser.add_argument('--dry-run', action='store_true', help='Generate scripts but do not submit jobs')
     parser.add_argument('--submit', action='store_true', help='Submit jobs after generating scripts')
     parser.add_argument('--validate-only', action='store_true', help='Only validate models without generating scripts')
