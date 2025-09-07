@@ -155,8 +155,22 @@ def generate_report():
     extra_models = available_model_names - config_model_names
     present_models = config_model_names & available_model_names
     
+    # Identify incomplete models (less than 750 lines)
+    incomplete_models = []
+    complete_models = []
+    for model_name, file_path, file_size, file_mtime in model_files:
+        if model_name in present_models:
+            lines = count_lines_in_file(file_path)
+            if lines < 750:
+                incomplete_models.append((model_name, lines, file_size, file_mtime))
+            else:
+                complete_models.append((model_name, lines, file_size, file_mtime))
+    
+    
     print(f"✅ Models with answers: {len(present_models)}")
     print(f"❌ Missing models: {len(missing_models)}")
+    print(f"⚠️  Incomplete models (< 750 lines): {len(incomplete_models)}")
+    print(f"✅ Complete models (750 lines): {len(complete_models)}")
     print(f"➕ Extra models (not in config): {len(extra_models)}")
     
     # Create detailed report
@@ -174,9 +188,12 @@ def generate_report():
     report_lines.append("-" * 40)
     report_lines.append(f"Total models in config: {len(config_models)}")
     report_lines.append(f"Models with answers: {len(present_models)}")
+    report_lines.append(f"  - Complete (750 lines): {len(complete_models)}")
+    report_lines.append(f"  - Incomplete (< 750 lines): {len(incomplete_models)}")
     report_lines.append(f"Missing models: {len(missing_models)}")
     report_lines.append(f"Extra models: {len(extra_models)}")
     report_lines.append(f"Coverage: {len(present_models)/len(config_models)*100:.1f}%")
+    report_lines.append(f"Complete coverage: {len(complete_models)/len(config_models)*100:.1f}%")
     report_lines.append("")
     
     # Missing models section
@@ -217,6 +234,73 @@ def generate_report():
             report_lines.append(f"\nOTHER:")
             for model, line_num in missing_categories['other']:
                 report_lines.append(f"  Line {line_num:3d}: {model}")
+        
+        report_lines.append("")
+    
+    # Incomplete models section
+    if incomplete_models:
+        report_lines.append("INCOMPLETE MODELS (Less than 750 lines)")
+        report_lines.append("-" * 50)
+        
+        # Get incomplete models with line numbers from config
+        incomplete_with_lines = [(model, line_num) for model, line_num in config_models 
+                                if any(model == inc_model for inc_model, _, _, _ in incomplete_models)]
+        
+        # Categorize incomplete models
+        incomplete_categories = categorize_models_by_pattern(incomplete_with_lines)
+        
+        for rank in ['rank64', 'rank256', 'rank1024']:
+            if any(incomplete_categories[rank]['alpha1e5'].values()) or \
+               any(incomplete_categories[rank]['alpha1e6'].values()) or \
+               any(incomplete_categories[rank]['alpha5e5'].values()) or \
+               incomplete_categories[rank]['default']:
+                
+                report_lines.append(f"\n{rank.upper()}:")
+                
+                # Alpha variants
+                for alpha in ['alpha1e5', 'alpha1e6', 'alpha5e5']:
+                    for weight in ['001', '005', '010']:
+                        if incomplete_categories[rank][alpha][weight]:
+                            # Find line counts for these models
+                            weight_models_with_lines = []
+                            for model, line_num in incomplete_categories[rank][alpha][weight]:
+                                # Find the actual line count
+                                actual_lines = 0
+                                for inc_model, lines, _, _ in incomplete_models:
+                                    if inc_model == model:
+                                        actual_lines = lines
+                                        break
+                                weight_models_with_lines.append((model, line_num, actual_lines))
+                            
+                            report_lines.append(f"  {alpha}-{weight}: {len(weight_models_with_lines)} incomplete")
+                            for model, line_num, actual_lines in weight_models_with_lines:
+                                report_lines.append(f"    Line {line_num:3d}: {model} ({actual_lines} lines)")
+                
+                # Default models
+                if incomplete_categories[rank]['default']:
+                    default_models_with_lines = []
+                    for model, line_num in incomplete_categories[rank]['default']:
+                        actual_lines = 0
+                        for inc_model, lines, _, _ in incomplete_models:
+                            if inc_model == model:
+                                actual_lines = lines
+                                break
+                        default_models_with_lines.append((model, line_num, actual_lines))
+                    
+                    report_lines.append(f"  default: {len(default_models_with_lines)} incomplete")
+                    for model, line_num, actual_lines in default_models_with_lines:
+                        report_lines.append(f"    Line {line_num:3d}: {model} ({actual_lines} lines)")
+        
+        # Other incomplete models
+        if incomplete_categories['other']:
+            report_lines.append(f"\nOTHER:")
+            for model, line_num in incomplete_categories['other']:
+                actual_lines = 0
+                for inc_model, lines, _, _ in incomplete_models:
+                    if inc_model == model:
+                        actual_lines = lines
+                        break
+                report_lines.append(f"  Line {line_num:3d}: {model} ({actual_lines} lines)")
         
         report_lines.append("")
     
@@ -300,6 +384,14 @@ def generate_report():
         if len(missing_list) > 10:
             print(f"  ... and {len(missing_list) - 10} more (see report file for full list)")
     
+    if incomplete_models:
+        print(f"\n⚠️  INCOMPLETE MODELS ({len(incomplete_models)}):")
+        incomplete_list = sorted(incomplete_models, key=lambda x: x[1])  # Sort by line count
+        for i, (model, lines, _, _) in enumerate(incomplete_list[:10]):  # Show first 10
+            print(f"  {i+1:2d}. {model} ({lines} lines)")
+        if len(incomplete_list) > 10:
+            print(f"  ... and {len(incomplete_list) - 10} more (see report file for full list)")
+    
     if extra_models:
         print(f"\n➕ EXTRA MODELS ({len(extra_models)}):")
         extra_list = sorted(list(extra_models))
@@ -309,16 +401,22 @@ def generate_report():
             print(f"  ... and {len(extra_list) - 5} more")
     
     print(f"\n📊 COMPLETION STATUS:")
-    print(f"  ✅ Complete: {len(present_models)}/{len(config_models)} ({len(present_models)/len(config_models)*100:.1f}%)")
+    print(f"  ✅ Complete: {len(complete_models)}/{len(config_models)} ({len(complete_models)/len(config_models)*100:.1f}%)")
+    print(f"  ⚠️  Incomplete: {len(incomplete_models)}")
     print(f"  ❌ Missing: {len(missing_models)}")
     
     # Suggestions
-    if missing_models:
+    if missing_models or incomplete_models:
         print(f"\n💡 NEXT STEPS:")
-        print(f"  1. Review missing models in: {OUTPUT_FILE}")
-        print(f"  2. Generate answers for missing models:")
-        print(f"     python3 automate_arena_hard_generation.py --submit")
-        print(f"  3. Monitor progress:")
+        print(f"  1. Review missing/incomplete models in: {OUTPUT_FILE}")
+        if missing_models:
+            print(f"  2. Generate answers for missing models:")
+            print(f"     python3 automate_arena_hard_generation.py --submit")
+        if incomplete_models:
+            print(f"  3. Re-generate answers for incomplete models:")
+            print(f"     python3 create_incomplete_models_list.py")
+            print(f"     python3 automate_arena_hard_generation.py --missing-models-file incomplete_models_list.txt --submit")
+        print(f"  4. Monitor progress:")
         print(f"     python3 monitor_arena_hard_jobs.py")
 
 def main():

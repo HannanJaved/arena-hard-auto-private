@@ -12,6 +12,8 @@ Generates a detailed report comparing your configuration file with available ans
 **Features:**
 - Categorizes missing models by rank, alpha, and weight ratio
 - Shows file sizes and line counts for existing answers
+- **Identifies incomplete models (< 750 lines)**
+- **Separates complete vs incomplete model statistics**
 - Identifies extra models not in configuration
 - Provides completion percentage and statistics
 
@@ -34,7 +36,48 @@ python3 create_missing_models_list.py
 **Output:**
 - `missing_models_list.txt` - Simple list of missing model names (one per line)
 
+#### `create_incomplete_models_list.py` - Incomplete Models List Generator
+**NEW**: Creates a plain text list of models that have incomplete answers (< 750 lines).
+
+**Features:**
+- Scans only models in your configuration
+- Shows progress during scanning
+- Provides statistics on line counts
+- Identifies models that need re-generation
+
+**Usage:**
+```bash
+python3 create_incomplete_models_list.py
+```
+
+**Output:**
+- `incomplete_models_list.txt` - Simple list of incomplete model names (one per line)
+
 ### 2. Missing Models Processing
+
+#### `missing_models_workflow.py` - Complete Workflow Manager
+**ENHANCED**: Now handles both missing and incomplete models.
+
+**Usage:**
+```bash
+# Check for missing models only
+python3 missing_models_workflow.py --step check
+
+# Check for incomplete models only  
+python3 missing_models_workflow.py --step incomplete
+
+# Generate answers for missing models only  
+python3 missing_models_workflow.py --step generate
+
+# Complete workflow: check missing + incomplete + generate for both
+python3 missing_models_workflow.py --step all
+
+# Include detailed report
+python3 missing_models_workflow.py --step check --detailed-report
+
+# Dry run (no job submission)
+python3 missing_models_workflow.py --step all --dry-run
+```
 
 #### `missing_models_workflow.py` - Complete Workflow Manager
 Manages the entire process from detection to answer generation.
@@ -64,6 +107,9 @@ The main automation script now supports missing models files:
 # Generate answers for missing models specifically
 python3 automate_arena_hard_generation.py --missing-models-file missing_models_list.txt --submit
 
+# Generate answers for incomplete models specifically
+python3 automate_arena_hard_generation.py --missing-models-file incomplete_models_list.txt --submit
+
 # Also supports the original methods
 python3 automate_arena_hard_generation.py --models-file arena_hard_models_to_test.txt --submit
 python3 automate_arena_hard_generation.py --all --submit
@@ -78,6 +124,9 @@ python3 check_missing_model_answers.py
 
 # Create simple list for processing
 python3 create_missing_models_list.py
+
+# NEW: Identify incomplete models
+python3 create_incomplete_models_list.py
 ```
 
 ### Step 2: Review Results
@@ -87,15 +136,21 @@ cat missing_model_answers_report.txt
 
 # Count missing models
 wc -l missing_models_list.txt
+
+# Count incomplete models
+wc -l incomplete_models_list.txt
 ```
 
 ### Step 3: Generate Missing Answers
 ```bash
-# Option A: Use workflow manager
-python3 missing_models_workflow.py --step generate
+# Option A: Use workflow manager (handles both missing and incomplete)
+python3 missing_models_workflow.py --step all
 
-# Option B: Use automation directly
+# Option B: Use automation directly for missing models
 python3 automate_arena_hard_generation.py --missing-models-file missing_models_list.txt --submit
+
+# Option C: Use automation directly for incomplete models
+python3 automate_arena_hard_generation.py --missing-models-file incomplete_models_list.txt --submit
 ```
 
 ### Step 4: Monitor Progress
@@ -112,8 +167,31 @@ squeue -u $USER
 # Re-check for missing models
 python3 create_missing_models_list.py
 
-# Should show 0 missing if complete
+# Re-check for incomplete models
+python3 create_incomplete_models_list.py
+
+# Should show 0 missing and 0 incomplete if complete
 ```
+
+## Current Status
+
+Based on your latest scan:
+
+### Missing Models: 2 models
+- `tulu3-8b-rank1024-alpha1e6-010-step48000`
+- `tulu3-8b-rank64-alpha1e5-005-step24000`
+
+### Incomplete Models: 124 models
+- **Range**: 28 to 727 lines (target: 750 lines)
+- **Average**: 388.3 lines per file
+- **Most incomplete**: `tulu3-8b-rank1024-alpha1e5-005-step24000` (28 lines)
+
+### Complete Models: 144 models
+- Models with full 750 lines generated
+
+### Total Coverage: 268/270 models (99.3% with answers)
+- **Complete coverage**: 144/270 models (53.3%)
+- **Need re-generation**: 124 models
 
 ## Sample Report Output
 
