@@ -32,7 +32,7 @@ def find_log_files():
 
 def find_result_files():
     """Find generated answer files."""
-    result_files = glob.glob(f"{RESULTS_DIR}/tulu3-8b-rank64-*.jsonl")
+    result_files = glob.glob(f"{RESULTS_DIR}/tulu3-8b-*.jsonl")
     return sorted(result_files)
 
 def get_file_size(file_path):

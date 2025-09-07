@@ -29,7 +29,7 @@ import yaml
 with open('$WORKSPACE_ROOT/arena-hard-auto/config/api_config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 for model_name in sorted(config.keys()):
-    if model_name.startswith('tulu3-8b-rank64'):
+    if model_name.startswith('tulu3-8b-'):
         print(f'  {model_name}')
 "
 }

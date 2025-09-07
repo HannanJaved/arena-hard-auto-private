@@ -27,7 +27,7 @@ def extract_tulu_models(api_config):
     """Extract all tulu3 models from API config."""
     tulu_models = {}
     for model_name, config in api_config.items():
-        if model_name.startswith('tulu3-8b-rank64'):
+        if model_name.startswith('tulu3-8b-'):
             tulu_models[model_name] = config
     return tulu_models
 
