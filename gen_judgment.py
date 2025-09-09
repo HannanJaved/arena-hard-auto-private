@@ -176,6 +176,7 @@ if __name__ == "__main__":
                     continue
 
                 kwargs["answer"] = model_answers[model][uid]
+    
                 kwargs["baseline"] = model_answers[
                     JUDGE_SETTINGS[question["category"]]["baseline"]
                 ][uid]

@@ -2,7 +2,7 @@ OG_ARENA_HARD_PROMPT = "Please act as an impartial judge and evaluate the qualit
 
 JUDGE_SETTINGS = {
     "hard_prompt": {
-        "baseline": "o3-mini-2025-01-31",
+        "baseline": "llama3.1-8b-instruct",
         "system_prompt": OG_ARENA_HARD_PROMPT,
     },
     "coding": {
@@ -19,6 +19,10 @@ JUDGE_SETTINGS = {
     },
     "arena-hard-v0.1": {
         "baseline": "gpt-4-0314",
+        "system_prompt": OG_ARENA_HARD_PROMPT,
+    },
+    "arena-hard-v0.2": {
+        "baseline": "llama3.1-8b-instruct",
         "system_prompt": OG_ARENA_HARD_PROMPT,
     },
 }

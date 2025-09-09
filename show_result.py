@@ -1,39 +1,108 @@
+#!/usr/bin/env python3
+"""
+Memory-optimized Arena Hard results processor
+Processes judgment files in batches to avoid OOM issues
+"""
+
 import pandas as pd
 import argparse
 import os
 import torch
+import gc
 from glob import glob
 from tqdm import tqdm
+import tempfile
+import pickle
 
 from utils.judge_utils import JUDGE_SETTINGS
 from utils.math_utils import one_hot_encode, to_winrate_probabilities, bootstrap_pairwise_model
 
 
-def load_judgments(judge_names, benchmark, weight=3):
-    dfs = []
-    for judge_name in judge_names:
-        print(f"Loading {judge_name} judgments...")
-        dfs.extend([
-            pd.read_json(f, lines=True) for f in tqdm(glob(os.path.join(
-                "data",
-                benchmark, 
-                "model_judgment", 
-                judge_name, 
-                "*.jsonl"
-            )))
-        ])
-    data = pd.concat(dfs).reset_index(drop=True)
+def load_judgments_batch(judge_names, benchmark, batch_size=50, weight=3):
+    """Load judgments in batches to avoid memory issues"""
+    print(f"Loading judgments in batches of {batch_size}...")
     
-    # if data.model.isin(judge_names).any():
-    #     print(f"WARNING: {judge_names} is already in the data. Removing it.")
-    #     data = data[~data.model.isin(judge_names)].reset_index(drop=True)
+    all_files = []
+    for judge_name in judge_names:
+        files = glob(os.path.join(
+            "data",
+            benchmark, 
+            "model_judgment", 
+            judge_name, 
+            "*.jsonl"
+        ))
+        all_files.extend(files)
+    
+    print(f"Found {len(all_files)} judgment files to process")
+    
+    # Process files in batches
+    processed_batches = []
+    
+    for i in range(0, len(all_files), batch_size):
+        batch_files = all_files[i:i+batch_size]
+        print(f"Processing batch {i//batch_size + 1}/{(len(all_files) + batch_size - 1)//batch_size} ({len(batch_files)} files)")
+        
+        # Load batch
+        batch_dfs = []
+        for f in tqdm(batch_files, desc="Loading files"):
+            try:
+                df = pd.read_json(f, lines=True)
+                if not df.empty:
+                    batch_dfs.append(df)
+            except Exception as e:
+                print(f"Warning: Failed to load {f}: {e}")
+                continue
+        
+        if not batch_dfs:
+            continue
+            
+        # Concatenate batch
+        batch_data = pd.concat(batch_dfs, ignore_index=True)
+        
+        # Clean up individual DataFrames
+        del batch_dfs
+        gc.collect()
+        
+        # Process batch data
+        processed_batch = process_batch_data(batch_data, weight)
+        processed_batches.append(processed_batch)
+        
+        # Clean up batch data
+        del batch_data
+        gc.collect()
+        
+        print(f"Batch {i//batch_size + 1} processed: {len(processed_batch)} battles")
+    
+    # Combine all processed batches
+    if processed_batches:
+        print("Combining all batches...")
+        final_battles = pd.concat(processed_batches, ignore_index=True)
+        
+        # Clean up batch data
+        del processed_batches
+        gc.collect()
+        
+        print(f"Total battles loaded: {len(final_battles)}")
+        return final_battles
+    else:
+        print("No valid judgment data found!")
+        return pd.DataFrame()
 
+
+def process_batch_data(data, weight=3):
+    """Process a batch of judgment data"""
+    
+    # Filter out null judgments
     null_indices = data.games.map(lambda x: x[0] is None or x[1] is None or x[0]['score'] is None or x[1]['score'] is None)
     _data = data[~null_indices].reset_index(drop=True)
     
-    print(f"Number of null judgments found: {len(data) - len(_data)}")
+    if len(data) - len(_data) > 0:
+        print(f"  Filtered out {len(data) - len(_data)} null judgments from batch")
     
-    # map label to score
+    if _data.empty:
+        return pd.DataFrame()
+    
+    # Map label to score
     label_to_score = {
         "A>B": [1],
         "A>>B": [1] * weight,
@@ -47,13 +116,166 @@ def load_judgments(judge_names, benchmark, weight=3):
         "B<A": [1],
     }
 
-    _data['scores'] = _data.games.map(
-        lambda x: label_to_score[x[1]['score']] + [1 - s for s in label_to_score[x[0]['score']]]
-    )
+    def safe_score_mapping(x):
+        """Safely map scores, handling invalid/malformed scores"""
+        try:
+            score1 = x[0]['score']
+            score2 = x[1]['score']
+            
+            # Check if scores are valid
+            if score1 not in label_to_score:
+                print(f"WARNING: Invalid score '{score1}' found, skipping this judgment")
+                return None
+            if score2 not in label_to_score:
+                print(f"WARNING: Invalid score '{score2}' found, skipping this judgment")
+                return None
+                
+            return label_to_score[score2] + [1 - s for s in label_to_score[score1]]
+        except (KeyError, TypeError) as e:
+            print(f"WARNING: Error processing scores: {e}, skipping this judgment")
+            return None
+
+    _data['scores'] = _data.games.map(safe_score_mapping)
     
+    # Filter out rows with invalid scores (None values)
+    initial_count = len(_data)
+    _data = _data[_data['scores'].notna()].reset_index(drop=True)
+    filtered_count = initial_count - len(_data)
+    if filtered_count > 0:
+        print(f"  Filtered out {filtered_count} judgments with invalid scores from batch")
+    
+    # Explode scores to create individual battles
     battles = _data[['uid', 'model', 'category', 'scores']].explode('scores').reset_index(drop=True)
     
     return battles
+
+
+def load_judgments_memory_mapped(judge_names, benchmark, weight=3):
+    """Alternative approach using temporary files for very large datasets"""
+    print("Using memory-mapped approach for large dataset...")
+    
+    # Create temporary file for storing processed data
+    temp_dir = tempfile.mkdtemp()
+    temp_file = os.path.join(temp_dir, "battles.pkl")
+    
+    try:
+        all_files = []
+        for judge_name in judge_names:
+            files = glob(os.path.join(
+                "data",
+                benchmark, 
+                "model_judgment", 
+                judge_name, 
+                "*.jsonl"
+            ))
+            all_files.extend(files)
+        
+        print(f"Found {len(all_files)} judgment files")
+        
+        # Process one file at a time and append to temporary storage
+        all_battles = []
+        
+        for i, f in enumerate(tqdm(all_files, desc="Processing files")):
+            try:
+                df = pd.read_json(f, lines=True)
+                if df.empty:
+                    continue
+                    
+                # Process this file
+                batch_battles = process_batch_data(df, weight)
+                if not batch_battles.empty:
+                    all_battles.append(batch_battles)
+                
+                # Every 50 files, save intermediate results and clear memory
+                if (i + 1) % 50 == 0:
+                    if all_battles:
+                        combined = pd.concat(all_battles, ignore_index=True)
+                        
+                        # Save to temporary file
+                        if os.path.exists(temp_file):
+                            existing = pd.read_pickle(temp_file)
+                            combined = pd.concat([existing, combined], ignore_index=True)
+                        
+                        combined.to_pickle(temp_file)
+                        
+                        # Clear memory
+                        del all_battles, combined
+                        all_battles = []
+                        gc.collect()
+                        
+                        print(f"  Saved intermediate results after {i+1} files")
+                
+            except Exception as e:
+                print(f"Warning: Failed to process {f}: {e}")
+                continue
+        
+        # Save any remaining battles
+        if all_battles:
+            combined = pd.concat(all_battles, ignore_index=True)
+            
+            if os.path.exists(temp_file):
+                existing = pd.read_pickle(temp_file)
+                combined = pd.concat([existing, combined], ignore_index=True)
+            
+            combined.to_pickle(temp_file)
+            del all_battles, combined
+            gc.collect()
+        
+        # Load final result
+        if os.path.exists(temp_file):
+            final_battles = pd.read_pickle(temp_file)
+            print(f"Total battles loaded: {len(final_battles)}")
+            return final_battles
+        else:
+            print("No valid battles found!")
+            return pd.DataFrame()
+            
+    finally:
+        # Clean up temporary files
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+        os.rmdir(temp_dir)
+
+
+def load_judgments(judge_names, benchmark, weight=3, memory_efficient=True, batch_size=30):
+    """
+    Load judgments with memory optimization
+    
+    Args:
+        judge_names: List of judge names
+        benchmark: Benchmark name
+        weight: Weight for strong preferences
+        memory_efficient: Use memory-efficient loading
+        batch_size: Number of files to process at once
+    """
+    if memory_efficient:
+        if batch_size > 0:
+            return load_judgments_batch(judge_names, benchmark, batch_size, weight)
+        else:
+            return load_judgments_memory_mapped(judge_names, benchmark, weight)
+    else:
+        # Original implementation (for small datasets)
+        dfs = []
+        for judge_name in judge_names:
+            print(f"Loading {judge_name} judgments...")
+            files = glob(os.path.join(
+                "data",
+                benchmark, 
+                "model_judgment", 
+                judge_name, 
+                "*.jsonl"
+            ))
+            print(f"Found {len(files)} files")
+            
+            if len(files) > 100:
+                print(f"WARNING: {len(files)} files detected. Consider using --memory-efficient flag.")
+            
+            dfs.extend([
+                pd.read_json(f, lines=True) for f in tqdm(files)
+            ])
+        
+        data = pd.concat(dfs).reset_index(drop=True)
+        return process_batch_data(data, weight)
 
 
 def get_model_style_metadata(benchmark):
@@ -96,7 +318,7 @@ def format_confidence_interval(mean_scores, lower_scores, upper_scores, baseline
     return _leaderboard.sort_values(by="Scores (%)", ascending=False).reset_index(drop=True)
 
 
-def print_leaderboard(battles, category):
+def print_leaderboard(battles, category, output_csv=False, output_dir=None):
     baseline = JUDGE_SETTINGS[category]["baseline"]
     
     _battles = battles.drop(columns=['category'])[['model', 'scores']]
@@ -104,9 +326,11 @@ def print_leaderboard(battles, category):
     # remove model path
     _battles['model'] = _battles['model'].map(lambda x: x.split('/')[-1])
     
+    print(f"Computing bootstrap confidence intervals for {len(_battles['model'].unique())} models...")
+    
     bootstraps = pd.concat([
         _battles.groupby("model").sample(frac=1.0, replace=True).groupby("model").mean()
-        for _ in tqdm(range(100))
+        for _ in tqdm(range(100), desc="Bootstrap sampling")
     ])
     
     bootstraps["scores"] = bootstraps["scores"].astype(float)
@@ -119,9 +343,33 @@ def print_leaderboard(battles, category):
     
     print(f"##### Category: {category} #####")
     print(_leaderboard.to_string())
+    
+    if output_csv and output_dir:
+        # Save overall leaderboard
+        overall_filename = os.path.join(output_dir, f"{category}_leaderboard_all.csv")
+        _leaderboard.to_csv(overall_filename, index=False)
+        print(f"Saved overall leaderboard to: {overall_filename}")
+        
+        # Split by rank and save separate CSV files
+        rank_categories = {
+            'rank64': _leaderboard[_leaderboard['Model'].str.contains('rank64', na=False)],
+            'rank256': _leaderboard[_leaderboard['Model'].str.contains('rank256', na=False)],
+            'rank1024': _leaderboard[_leaderboard['Model'].str.contains('rank1024', na=False)],
+            'default': _leaderboard[_leaderboard['Model'].str.contains('default', na=False)]
+        }
+        
+        for rank_name, rank_df in rank_categories.items():
+            if not rank_df.empty:
+                rank_filename = os.path.join(output_dir, f"{category}_leaderboard_{rank_name}.csv")
+                rank_df.to_csv(rank_filename, index=False)
+                print(f"Saved {rank_name} leaderboard to: {rank_filename}")
+            else:
+                print(f"No {rank_name} models found in the results")
+    
+    return _leaderboard
         
 
-def print_leaderboard_with_style_features(battles, benchmark, category,control_features):        
+def print_leaderboard_with_style_features(battles, benchmark, category, control_features, output_csv=False, output_dir=None):        
     style_metadata = get_model_style_metadata(benchmark)
     
     model_features = battles.apply(lambda row: 
@@ -220,33 +468,102 @@ def print_leaderboard_with_style_features(battles, benchmark, category,control_f
     print(f"##### Category: {category} #####")
     print(_leaderboard.to_string())
     print(f"Feature Coefs: {torch.quantile(coefs[:, -num_features:], 0.5, axis=0)}")
+    
+    if output_csv and output_dir:
+        # Save overall leaderboard
+        overall_filename = os.path.join(output_dir, f"{category}_leaderboard_with_features_all.csv")
+        _leaderboard.to_csv(overall_filename, index=False)
+        print(f"Saved overall leaderboard with features to: {overall_filename}")
+        
+        # Split by rank and save separate CSV files
+        rank_categories = {
+            'rank64': _leaderboard[_leaderboard['Model'].str.contains('rank64', na=False)],
+            'rank256': _leaderboard[_leaderboard['Model'].str.contains('rank256', na=False)],
+            'rank1024': _leaderboard[_leaderboard['Model'].str.contains('rank1024', na=False)],
+            'default': _leaderboard[_leaderboard['Model'].str.contains('default', na=False)]
+        }
+        
+        for rank_name, rank_df in rank_categories.items():
+            if not rank_df.empty:
+                rank_filename = os.path.join(output_dir, f"{category}_leaderboard_with_features_{rank_name}.csv")
+                rank_df.to_csv(rank_filename, index=False)
+                print(f"Saved {rank_name} leaderboard with features to: {rank_filename}")
+            else:
+                print(f"No {rank_name} models found in the results")
+    
+    return _leaderboard
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", "-b", type=str, default="arena-hard-v2.0")
-    parser.add_argument("--judge-names", "-j", nargs="+", default=["gpt-4.1"])
+    parser.add_argument("--judge-names", "-j", nargs="+", default=["neuralmagic-llama3.1-70b-instruct-fp8"])
     parser.add_argument("--control-features", "-f", nargs="+", default=[])
     parser.add_argument("--category", "-c", nargs="+", default=['hard_prompt'])
+    parser.add_argument("--memory-efficient", action="store_true", default=True, 
+                       help="Use memory-efficient loading (recommended for large datasets)")
+    parser.add_argument("--batch-size", type=int, default=30,
+                       help="Number of files to process at once (0 for single-file processing)")
+    parser.add_argument("--no-memory-efficient", action="store_true", 
+                       help="Disable memory-efficient loading (original behavior)")
+    parser.add_argument("--output-csv", action="store_true", 
+                       help="Output results to CSV files")
+    parser.add_argument("--output-dir", type=str, default="results",
+                       help="Directory to save CSV files (default: results)")
     args = parser.parse_args()
     
-    battles = load_judgments(args.judge_names, args.benchmark)
+    # Handle memory efficiency flags
+    if args.no_memory_efficient:
+        args.memory_efficient = False
+    
+    # Create output directory if CSV output is requested
+    if args.output_csv:
+        os.makedirs(args.output_dir, exist_ok=True)
+        print(f"CSV output enabled. Results will be saved to: {args.output_dir}")
+    
+    print(f"Loading judgments from {args.judge_names} for {args.benchmark}")
+    print(f"Memory efficient: {args.memory_efficient}, Batch size: {args.batch_size}")
+    
+    battles = load_judgments(
+        args.judge_names, 
+        args.benchmark, 
+        memory_efficient=args.memory_efficient,
+        batch_size=args.batch_size
+    )
+    
+    if battles.empty:
+        print("ERROR: No battles data loaded. Check if judgment files exist.")
+        exit(1)
     
     for category in args.category:
-        assert category in battles.category.unique(), f"Invalid category: {category}"
+        if category not in battles.category.unique():
+            print(f"WARNING: Category '{category}' not found. Available categories: {list(battles.category.unique())}")
+            continue
+            
+        category_battles = battles[battles.category == category].reset_index(drop=True)
         
-        battles = battles[battles.category == category].reset_index(drop=True)
+        if category_battles.empty:
+            print(f"WARNING: No battles found for category '{category}'")
+            continue
+        
+        print(f"Processing {len(category_battles)} battles for category '{category}'")
         
         if args.control_features:
             print(f"INFO: Control features: {args.control_features}")
             
             print_leaderboard_with_style_features(
-                battles, 
+                category_battles, 
                 args.benchmark, 
                 category,
-                args.control_features
+                args.control_features,
+                output_csv=args.output_csv,
+                output_dir=args.output_dir
             )
                 
         else:
-            print_leaderboard(battles, category)
-        
+            print_leaderboard(
+                category_battles, 
+                category,
+                output_csv=args.output_csv,
+                output_dir=args.output_dir
+            )
