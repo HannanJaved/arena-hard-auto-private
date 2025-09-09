@@ -1,6 +1,6 @@
 ,Score,Improvement,Rank,Learning Rate,Warmup Ratio,Model
 Baseline (llama3.1-8b-instruct),50.0%,0.0 (baseline),N/A,N/A,N/A,
-Overall Best,27.8%,+-22.2pp,256,,,tulu3-8b-rank256-default-step36000
+Overall Best,27.8%,+-22.2pp,256,2e-05,0.03,tulu3-8b-rank256-default-step36000
 Best Rank 64,26.1%,+-23.9pp,,5e-05,0.01,tulu3-8b-rank64-alpha5e5-010-step36000
-Best Rank 256,27.8%,+-22.2pp,,,,tulu3-8b-rank256-default-step36000
+Best Rank 256,27.8%,+-22.2pp,,2e-05,0.03,tulu3-8b-rank256-default-step36000
 Best Rank 1024,26.4%,+-23.6pp,,1e-05,0.005,tulu3-8b-rank1024-alpha1e5-005-step48000

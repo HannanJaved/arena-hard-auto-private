@@ -20,7 +20,7 @@ import argparse
 
 # Set style for better plots
 plt.style.use('seaborn-v0_8')
-sns.set_palette("husl")
+sns.set_palette("Set2")
 
 def parse_model_name(model_name):
     """
@@ -47,6 +47,9 @@ def parse_model_name(model_name):
     # Check if it's a default configuration
     if 'default' in model_name:
         parsed['is_default'] = True
+        # Set default hyperparameters
+        parsed['learning_rate'] = 2e-5  # Default LR = 2e-5
+        parsed['warmup_ratio'] = 0.03   # Default WR = 0.03
         # Extract step for default models
         if 'final' in model_name:
             parsed['is_final'] = True
@@ -201,50 +204,48 @@ def plot_training_curves(df, output_dir):
                    'o-', linewidth=3, markersize=8, label='Default', color='black')
             print(f"    Default: {len(default_data)} points")
         
-        # Plot different hyperparameter configurations
+        # Plot different hyperparameter configurations with color groups by learning rate
         non_default = rank_data[~rank_data['is_default']]
         
-        # Group by learning rate and warmup ratio, but prioritize showing all learning rates
-        # config_count = 0
-        plotted_lrs = set()
-        
-        # First pass: plot one config per learning rate (with warmup=0.010 if available)
-        # for (lr, warmup), group in non_default.groupby(['learning_rate', 'warmup_ratio']):
-        #     if pd.notna(lr) and pd.notna(warmup) and len(group) > 1:
-        #         if lr not in plotted_lrs and warmup == 0.010:  # Prefer warmup=0.010
-        #             label = f'LR={lr:.0e}, WR={warmup:.3f}'
-        #             group_sorted = group.sort_values('checkpoint_step')
-        #             ax.plot(group_sorted['checkpoint_step'], group_sorted['score'], 
-        #                    'o-', linewidth=2, markersize=4, label=label, alpha=0.8)
-        #             plotted_lrs.add(lr)
-        #             config_count += 1
-        
-        # # Second pass: fill remaining slots with other configs, avoiding duplicate LRs
-        # for (lr, warmup), group in non_default.groupby(['learning_rate', 'warmup_ratio']):
-        #     if pd.notna(lr) and pd.notna(warmup) and len(group) > 1:
-        #         if lr not in plotted_lrs:  # Haven't plotted this LR yet
-        #             label = f'LR={lr:.0e}, WR={warmup:.3f}'
-        #             group_sorted = group.sort_values('checkpoint_step')
-        #             ax.plot(group_sorted['checkpoint_step'], group_sorted['score'], 
-        #                    'o-', linewidth=2, markersize=4, label=label, alpha=0.8)
-        #             plotted_lrs.add(lr)
-        #             config_count += 1
-                    # if config_count >= 6:  # Increased limit slightly
-                    #     break
-        
-        # Third pass: add a few more interesting configs if space allows
-        for (lr, warmup), group in non_default.groupby(['learning_rate', 'warmup_ratio']):
-            if pd.notna(lr) and pd.notna(warmup) and len(group) > 1:
-                # if config_count < 13:
-                label = f'LR={lr:.0e}, WR={warmup:.3f}'
-                group_sorted = group.sort_values('checkpoint_step')
-                ax.plot(group_sorted['checkpoint_step'], group_sorted['score'], 
-                        'o-', linewidth=2, markersize=4, label=label, alpha=0.8)
-                    # config_count += 1
-                # else:
-                #     break
-        
-        print(f"    Non-default configs plotted!  ")
+        if not non_default.empty:
+            # Get unique learning rates and assign color families
+            unique_lrs = sorted([lr for lr in non_default['learning_rate'].unique() if pd.notna(lr)])
+            
+            # Define color families for each learning rate
+            color_families = {
+                1e-6: ['darkred', 'red', 'lightcoral'],      # Red family for 1e-6
+                1e-5: ['darkgreen', 'green', 'lightgreen'],  # Green family for 1e-5  
+                2e-5: ['navy', 'blue', 'lightblue'],         # Blue family for 2e-5 (default)
+                5e-5: ['darkorange', 'orange', 'gold']       # Orange family for 5e-5
+            }
+            
+            config_count = 0
+            for lr in unique_lrs:
+                lr_data = non_default[non_default['learning_rate'] == lr]
+                colors = color_families.get(lr, ['gray', 'lightgray', 'silver'])  # Default colors
+                
+                # Plot up to 3 warmup ratios per learning rate
+                warmup_ratios = sorted([w for w in lr_data['warmup_ratio'].unique() if pd.notna(w)])
+                for i, warmup in enumerate(warmup_ratios[:3]):  # Limit to 3 per LR
+                    warmup_data = lr_data[lr_data['warmup_ratio'] == warmup]
+                    if len(warmup_data) > 1:  # Only plot if multiple points
+                        group_sorted = warmup_data.sort_values('checkpoint_step')
+                        color = colors[i % len(colors)]
+                        
+                        # Create label with both LR and warmup info
+                        if lr == 2e-5:  # Default LR
+                            label = f'Default LR={lr:.0e}, WR={warmup:.3f}'
+                        else:
+                            label = f'LR={lr:.0e}, WR={warmup:.3f}'
+                        
+                        ax.plot(group_sorted['checkpoint_step'], group_sorted['score'], 
+                               'o-', linewidth=2, markersize=4, label=label, 
+                               color=color, alpha=0.8)
+                        config_count += 1
+            
+            print(f"    Non-default configs plotted: {config_count}")
+        else:
+            print(f"    Non-default configs plotted: 0")
         
         ax.set_title(f'Rank {int(rank)} Training Curves')
         ax.set_xlabel('Training Steps')

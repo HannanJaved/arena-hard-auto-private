@@ -31,6 +31,9 @@ def parse_model_name(model_name):
     # Check if it's a default configuration
     if 'default' in model_name:
         parsed['is_default'] = True
+        # Set default hyperparameters
+        parsed['learning_rate'] = 2e-5  # Default LR = 2e-5
+        parsed['warmup_ratio'] = 0.03   # Default WR = 0.03
         if 'final' in model_name:
             parsed['is_final'] = True
             parsed['checkpoint_step'] = 999999
