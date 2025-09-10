@@ -3,7 +3,7 @@
 Arena Hard Results Analysis Script
 
 Analyzes Arena Hard evaluation results comparing:
-- Baseline: llama3.1-8b-instruct (instruction-tuned model)  
+- Baseline: llama3.1-8b (instruction-tuned model)  
 - Fine-tuned models: LoRA fine-tuning applied to base (non-instruct) model
 
 Shows the effectiveness of LoRA fine-tuning in adapting base models for instruction-following tasks.
@@ -105,10 +105,20 @@ def load_and_parse_data(csv_dir):
     all_csv = Path(csv_dir) / "hard_prompt_leaderboard_all.csv"
     if all_csv.exists():
         all_df = pd.read_csv(all_csv)
-        baseline_row = all_df[all_df['Model'] == 'llama3.1-8b-instruct']
+        baseline_row = all_df[all_df['Model'] == 'llama3.1-8b']
         if not baseline_row.empty:
             baseline_score = baseline_row.iloc[0]['Scores (%)']
-            print(f"Baseline (llama3.1-8b-instruct) score: {baseline_score:.1f}%")
+            print(f"Baseline (llama3.1-8b) score: {baseline_score:.1f}%")
+        else:
+            print("No baseline model (llama3.1-8b) found in data.")
+            # For Arena Hard vs base model comparisons, the baseline is typically 50%
+            # since Arena Hard reports win rates against the baseline
+            baseline_score = 50.0
+            print(f"Using default baseline of {baseline_score:.1f}% for Arena Hard win rate comparison")
+    else:
+        print("No combined CSV file found.")
+        baseline_score = 50.0  # Default for Arena Hard comparisons
+        print(f"Using default baseline of {baseline_score:.1f}% for Arena Hard win rate comparison")
     
     csv_files = list(Path(csv_dir).glob("*leaderboard*.csv"))
     
@@ -136,17 +146,18 @@ def load_and_parse_data(csv_dir):
         parsed_data = []
         for _, row in df.iterrows():
             # Skip the baseline model in individual files
-            if row['Model'] == 'llama3.1-8b-instruct':
+            if row['Model'] == 'llama3.1-8b':
                 continue
                 
             parsed = parse_model_name(row['Model'])
             parsed['score'] = row['Scores (%)']
             parsed['absolute_score'] = row['Scores (%)']
-            # Calculate improvement over baseline
+            # Calculate improvement over baseline 
+            # For Arena Hard: scores represent win rates vs baseline, so baseline is 50%
             if baseline_score is not None:
                 parsed['improvement_over_baseline'] = row['Scores (%)'] - baseline_score
             else:
-                parsed['improvement_over_baseline'] = None
+                parsed['improvement_over_baseline'] = row['Scores (%)'] - 50.0
             ci_lower, ci_upper = parse_confidence_interval(row['CI (%)'])
             parsed['ci_lower'] = ci_lower
             parsed['ci_upper'] = ci_upper
@@ -192,9 +203,13 @@ def plot_training_curves(df, output_dir):
         if rank_data.empty:
             continue
             
-        # Add baseline line
-        ax.axhline(y=baseline_score, color='red', linestyle='--', 
-                  linewidth=2, label=f'Baseline (llama3.1-8b-instruct): {baseline_score:.1f}%')
+        # Add baseline line 
+        if baseline_score == 50.0:
+            ax.axhline(y=baseline_score, color='red', linestyle='--', 
+                      linewidth=2, label=f'Baseline (even win rate): {baseline_score:.1f}%')
+        else:
+            ax.axhline(y=baseline_score, color='red', linestyle='--', 
+                      linewidth=2, label=f'Baseline (llama3.1-8b): {baseline_score:.1f}%')
         
         # Plot default configuration
         default_data = rank_data[rank_data['is_default']]
@@ -215,7 +230,7 @@ def plot_training_curves(df, output_dir):
             color_families = {
                 1e-6: ['darkred', 'red', 'lightcoral'],      # Red family for 1e-6
                 1e-5: ['darkgreen', 'green', 'lightgreen'],  # Green family for 1e-5  
-                2e-5: ['navy', 'blue', 'lightblue'],         # Blue family for 2e-5 (default)
+                2e-5: ['black'],                              # Black for 2e-5 (default) - single curve
                 5e-5: ['darkorange', 'orange', 'gold']       # Orange family for 5e-5
             }
             
@@ -255,9 +270,14 @@ def plot_training_curves(df, output_dir):
         # Set y-axis to show data clearly
         min_score = rank_data['score'].min()
         max_score = rank_data['score'].max()
-        score_range = max_score - min_score
-        ax.set_ylim(max(0, min_score - score_range * 0.1), 
-                   min(baseline_score + 5, max_score + score_range * 0.1))
+        
+        # Ensure y-axis includes 50% baseline
+        y_min = min(min_score, 50.0)
+        y_max = max(max_score, 50.0)
+        
+        # Add some padding
+        score_range = y_max - y_min
+        ax.set_ylim(y_min - score_range * 0.05, y_max + score_range * 0.05)
         
         # Place legend outside plot
         ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
@@ -402,7 +422,7 @@ def plot_improvement_over_baseline(df, output_dir):
     
     ax1.axhline(y=0, color='red', linestyle='--', alpha=0.7, label='Baseline')
     ax1.set_ylabel('Improvement over Baseline (percentage points)')
-    ax1.set_title('Improvement over llama3.1-8b-instruct by Rank')
+    ax1.set_title('Improvement over llama3.1-8b by Rank')
     ax1.grid(True, alpha=0.3)
     
     # Plot 2: Best vs Default configurations
@@ -518,7 +538,7 @@ def create_summary_table(df, output_dir):
     tuned_final = df[(~df['is_default']) & (df['is_final'])]
     
     summary_stats = {
-        'Baseline (llama3.1-8b-instruct)': {
+        'Baseline (llama3.1-8b)': {
             'Score': f"{baseline_score:.1f}%",
             'Improvement': "0.0 (baseline)",
             'Rank': "N/A",
@@ -550,11 +570,11 @@ def create_summary_table(df, output_dir):
     summary_df = pd.DataFrame(summary_stats).T
     summary_df.to_csv(f'{output_dir}/performance_summary.csv')
     
-    print("\n=== PERFORMANCE SUMMARY vs llama3.1-8b-instruct ===")
+    print("\n=== PERFORMANCE SUMMARY vs llama3.1-8b ===")
     print(summary_df.to_string())
     
     if not default_final.empty and not tuned_final.empty:
-        print(f"\nBaseline (llama3.1-8b-instruct): {baseline_score:.1f}%")
+        print(f"\nBaseline (llama3.1-8b): {baseline_score:.1f}%")
         print(f"Default Tuned Performance (avg): {default_final['score'].mean():.1f}% (+{default_final['improvement_over_baseline'].mean():.1f}pp)")
         print(f"Best Tuned Performance (avg): {tuned_final['score'].mean():.1f}% (+{tuned_final['improvement_over_baseline'].mean():.1f}pp)")
         print(f"Best vs Default improvement: {tuned_final['score'].mean() - default_final['score'].mean():.1f} percentage points")

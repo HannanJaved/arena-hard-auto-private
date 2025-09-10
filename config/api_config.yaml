@@ -97,7 +97,17 @@ aws_nova_light_v1:
     parallel: 8 
     max_tokens: 4096
     temperature: 0.0
-    
+
+llama3.1-8b:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 llama3.1-8b-instruct:
     model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-8B-Instruct
     endpoints:

@@ -3,5 +3,5 @@ bench_name: arena-hard-v2.0
 
 # a list of model to generate answers
 model_list:
-  - tulu3-8b-rank64-alpha1e5-001-step48000
+  - llama3.1-8b
   

@@ -1,0 +1,88 @@
+Loading data...
+Loaded 297 model results
+=== DEBUGGING TRAINING CURVES ===
+Training curves: 297 models (including final checkpoints)
+Baseline score: 50.0
+Ranks found: [np.int64(256), np.int64(1024), np.int64(64)]
+
+--- Processing Rank 64 ---
+  Total models: 99
+  Models with valid steps: 99/99
+  ✅ Added baseline line at 50.0%
+  ✅ Plotted default config: 18 points
+      Steps: [np.int64(6000), np.int64(6000), np.int64(12000), np.int64(12000), np.int64(18000), np.int64(18000), np.int64(24000), np.int64(24000), np.int64(30000), np.int64(30000), np.int64(36000), np.int64(36000), np.int64(42000), np.int64(42000), np.int64(48000), np.int64(48000), np.int64(55000), np.int64(55000)]
+      Scores: [88.6 88.5 87.8 87.8 87.1 87.1 86.1 84.4 78.3 88.6 88.5 87.8 87.8 87.1
+ 87.1 86.1 84.4 78.3]
+  Non-default models: 81
+  Unique learning rates: [np.float64(1e-06), np.float64(1e-05), np.float64(5e-05)]
+    LR 1e-06: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-06, WR=0.001: 9 points
+      ✅ Plotted LR=1e-06, WR=0.005: 9 points
+      ✅ Plotted LR=1e-06, WR=0.010: 9 points
+    LR 1e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-05, WR=0.001: 9 points
+      ✅ Plotted LR=1e-05, WR=0.005: 9 points
+      ✅ Plotted LR=1e-05, WR=0.010: 9 points
+    LR 5e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=5e-05, WR=0.001: 9 points
+      ✅ Plotted LR=5e-05, WR=0.005: 9 points
+      ✅ Plotted LR=5e-05, WR=0.010: 9 points
+  ✅ Total non-default configs plotted: 9
+  Y-axis range: (np.float64(57.739999999999995), np.float64(94.46000000000001))
+  ✅ Completed rank 64 subplot
+
+--- Processing Rank 256 ---
+  Total models: 99
+  Models with valid steps: 99/99
+  ✅ Added baseline line at 50.0%
+  ✅ Plotted default config: 18 points
+      Steps: [np.int64(6000), np.int64(6000), np.int64(12000), np.int64(12000), np.int64(18000), np.int64(18000), np.int64(24000), np.int64(24000), np.int64(30000), np.int64(30000), np.int64(36000), np.int64(36000), np.int64(42000), np.int64(42000), np.int64(48000), np.int64(48000), np.int64(55000), np.int64(55000)]
+      Scores: [91.9 91.7 91.5 91.4 90.9 90.7 90.6 89.2 87.1 91.9 91.7 91.5 91.4 90.9
+ 90.7 90.6 89.2 87.1]
+  Non-default models: 81
+  Unique learning rates: [np.float64(1e-06), np.float64(1e-05), np.float64(5e-05)]
+    LR 1e-06: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-06, WR=0.001: 9 points
+      ✅ Plotted LR=1e-06, WR=0.005: 9 points
+      ✅ Plotted LR=1e-06, WR=0.010: 9 points
+    LR 1e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-05, WR=0.001: 9 points
+      ✅ Plotted LR=1e-05, WR=0.005: 9 points
+      ✅ Plotted LR=1e-05, WR=0.010: 9 points
+    LR 5e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=5e-05, WR=0.001: 9 points
+      ✅ Plotted LR=5e-05, WR=0.005: 9 points
+      ✅ Plotted LR=5e-05, WR=0.010: 9 points
+  ✅ Total non-default configs plotted: 9
+  Y-axis range: (np.float64(59.56), np.float64(96.04))
+  ✅ Completed rank 256 subplot
+
+--- Processing Rank 1024 ---
+  Total models: 99
+  Models with valid steps: 99/99
+  ✅ Added baseline line at 50.0%
+  ✅ Plotted default config: 18 points
+      Steps: [np.int64(6000), np.int64(6000), np.int64(12000), np.int64(12000), np.int64(18000), np.int64(18000), np.int64(24000), np.int64(24000), np.int64(30000), np.int64(30000), np.int64(36000), np.int64(36000), np.int64(42000), np.int64(42000), np.int64(48000), np.int64(48000), np.int64(55000), np.int64(55000)]
+      Scores: [91.9 90.4 89.7 89.3 88.9 88.8 88.1 88.1 87.5 91.9 90.4 89.7 89.3 88.9
+ 88.8 88.1 88.1 87.5]
+  Non-default models: 81
+  Unique learning rates: [np.float64(1e-06), np.float64(1e-05), np.float64(5e-05)]
+    LR 1e-06: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-06, WR=0.001: 9 points
+      ✅ Plotted LR=1e-06, WR=0.005: 9 points
+      ✅ Plotted LR=1e-06, WR=0.010: 9 points
+    LR 1e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=1e-05, WR=0.001: 9 points
+      ✅ Plotted LR=1e-05, WR=0.005: 9 points
+      ✅ Plotted LR=1e-05, WR=0.010: 9 points
+    LR 5e-05: 27 models, warmup ratios: [np.float64(0.001), np.float64(0.005), np.float64(0.01)]
+      ✅ Plotted LR=5e-05, WR=0.001: 9 points
+      ✅ Plotted LR=5e-05, WR=0.005: 9 points
+      ✅ Plotted LR=5e-05, WR=0.010: 9 points
+  ✅ Total non-default configs plotted: 9
+  Y-axis range: (np.float64(63.85000000000001), np.float64(94.45))
+  ✅ Completed rank 1024 subplot
+  Removed empty subplot 3
+
+✅ Debug training curves plot saved to analysis_output/vs_base_llama3.1-8b/debug_training_curves_by_rank.png
+   Total subplots created: 3
