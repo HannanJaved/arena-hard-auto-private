@@ -323,29 +323,25 @@ def plot_hyperparameter_heatmap(df, output_dir):
             aggfunc='mean'
         )
         
-        # Create heatmap
-        im = axes[idx].imshow(pivot_data.values, cmap='RdYlBu_r', aspect='auto')
+        # Use seaborn heatmap for better control
+        ax = axes[idx]
+        sns.heatmap(
+            pivot_data,
+            ax=ax,
+            cmap="Blues",
+            annot=True,
+            fmt=".1f",
+            cbar=True,
+            linewidths=0,
+            linecolor=None,
+            annot_kws={"color": "white", "weight": "bold"}
+        )
         
-        # Set labels
-        axes[idx].set_title(f'Rank {int(rank)} Final Performance')
-        axes[idx].set_xlabel('Warmup Ratio')
-        axes[idx].set_ylabel('Learning Rate')
-        
-        # Set tick labels
-        axes[idx].set_xticks(range(len(pivot_data.columns)))
-        axes[idx].set_xticklabels([f'{x:.3f}' for x in pivot_data.columns])
-        axes[idx].set_yticks(range(len(pivot_data.index)))
-        axes[idx].set_yticklabels([f'{x:.0e}' for x in pivot_data.index])
-        
-        # Add colorbar
-        plt.colorbar(im, ax=axes[idx], label='Arena Hard Score (%)')
-        
-        # Add text annotations
-        for i in range(len(pivot_data.index)):
-            for j in range(len(pivot_data.columns)):
-                if pd.notna(pivot_data.values[i, j]):
-                    axes[idx].text(j, i, f'{pivot_data.values[i, j]:.1f}', 
-                                 ha='center', va='center', color='white', fontweight='bold')
+        ax.set_title(f'Rank {int(rank)} Final Performance')
+        ax.set_xlabel('Warmup Ratio')
+        ax.set_ylabel('Learning Rate')
+        ax.set_xticklabels([f'{x:.3f}' for x in pivot_data.columns])
+        ax.set_yticklabels([f'{x:.0e}' for x in pivot_data.index])
     
     plt.tight_layout()
     plt.savefig(f'{output_dir}/hyperparameter_heatmap.png', dpi=300, bbox_inches='tight')
@@ -524,19 +520,16 @@ def plot_learning_rate_effect(df, output_dir):
 
 def create_summary_table(df, output_dir):
     """Create summary statistics table"""
-    
+    import io
+    import csv
     baseline_score = df['baseline_score'].iloc[0] if not df.empty else 50.0
-    
     # Best overall performance
     best_overall = df.loc[df['score'].idxmax()]
-    
     # Best per rank
     best_per_rank = df.groupby('rank').apply(lambda x: x.loc[x['score'].idxmax()]).reset_index(drop=True)
-    
     # Default vs best tuned comparison
     default_final = df[(df['is_default']) & (df['is_final'])]
     tuned_final = df[(~df['is_default']) & (df['is_final'])]
-    
     summary_stats = {
         'Baseline (llama3.1-8b)': {
             'Score': f"{baseline_score:.1f}%",
@@ -554,7 +547,6 @@ def create_summary_table(df, output_dir):
             'Warmup Ratio': best_overall['warmup_ratio']
         }
     }
-    
     for _, row in best_per_rank.iterrows():
         rank = row['rank']
         if pd.notna(rank):
@@ -565,30 +557,37 @@ def create_summary_table(df, output_dir):
                 'Learning Rate': row['learning_rate'],
                 'Warmup Ratio': row['warmup_ratio']
             }
-    
     # Save to CSV
     summary_df = pd.DataFrame(summary_stats).T
-    summary_df.to_csv(f'{output_dir}/performance_summary.csv')
-    
-    print("\n=== PERFORMANCE SUMMARY vs llama3.1-8b ===")
-    print(summary_df.to_string())
-    
+    csv_path = f'{output_dir}/performance_summary.csv'
+    summary_df.to_csv(csv_path)
+    # Prepare the printed summary as a string
+    output = io.StringIO()
+    print("\n=== PERFORMANCE SUMMARY vs llama3.1-8b ===", file=output)
+    print(summary_df.to_string(), file=output)
     if not default_final.empty and not tuned_final.empty:
-        print(f"\nBaseline (llama3.1-8b): {baseline_score:.1f}%")
-        print(f"Default Tuned Performance (avg): {default_final['score'].mean():.1f}% (+{default_final['improvement_over_baseline'].mean():.1f}pp)")
-        print(f"Best Tuned Performance (avg): {tuned_final['score'].mean():.1f}% (+{tuned_final['improvement_over_baseline'].mean():.1f}pp)")
-        print(f"Best vs Default improvement: {tuned_final['score'].mean() - default_final['score'].mean():.1f} percentage points")
-    
-    # Add improvement analysis
-    print(f"\n=== IMPROVEMENT ANALYSIS ===")
-    print(f"Best overall improvement: +{best_overall['improvement_over_baseline']:.1f}pp ({best_overall['model_name']})")
-    
-    # Rank-wise improvements
+        print(f"\nBaseline (llama3.1-8b): {baseline_score:.1f}%", file=output)
+        print(f"Default Tuned Performance (avg): {default_final['score'].mean():.1f}% (+{default_final['improvement_over_baseline'].mean():.1f}pp)", file=output)
+        print(f"Best Tuned Performance (avg): {tuned_final['score'].mean():.1f}% (+{tuned_final['improvement_over_baseline'].mean():.1f}pp)", file=output)
+        print(f"Best vs Default improvement: {tuned_final['score'].mean() - default_final['score'].mean():.1f} percentage points", file=output)
+    print(f"\n=== IMPROVEMENT ANALYSIS ===", file=output)
+    print(f"Best overall improvement: +{best_overall['improvement_over_baseline']:.1f}pp ({best_overall['model_name']})", file=output)
     for rank in sorted(df['rank'].unique()):
         if pd.notna(rank):
             rank_data = df[df['rank'] == rank]
             best_rank = rank_data.loc[rank_data['score'].idxmax()]
-            print(f"Best Rank {int(rank)} improvement: +{best_rank['improvement_over_baseline']:.1f}pp ({best_rank['model_name']})")
+            print(f"Best Rank {int(rank)} improvement: +{best_rank['improvement_over_baseline']:.1f}pp ({best_rank['model_name']})", file=output)
+    # Append the summary string to the CSV file as a comment block
+    with open(csv_path, 'a') as f:
+        f.write('\n#\n')
+        for line in output.getvalue().splitlines():
+            f.write(f'# {line}\n')
+    # Save the summary as a .txt file for better formatting
+    txt_path = f'{output_dir}/performance_summary.txt'
+    with open(txt_path, 'w') as f:
+        f.write(output.getvalue())
+    # Also print to terminal as before
+    print(output.getvalue())
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze Arena Hard results')

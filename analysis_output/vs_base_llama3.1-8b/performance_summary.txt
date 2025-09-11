@@ -1,0 +1,19 @@
+
+=== PERFORMANCE SUMMARY vs llama3.1-8b ===
+                        Score     Improvement Rank Learning Rate Warmup Ratio                                    Model
+Baseline (llama3.1-8b)  50.0%  0.0 (baseline)  N/A           N/A          N/A                                      NaN
+Overall Best            93.0%         +43.0pp  256       0.00005         0.01  tulu3-8b-rank256-alpha5e5-010-step36000
+Best Rank 64            91.4%         +41.4pp  NaN       0.00005         0.01   tulu3-8b-rank64-alpha5e5-010-step30000
+Best Rank 256           93.0%         +43.0pp  NaN       0.00005         0.01  tulu3-8b-rank256-alpha5e5-010-step36000
+Best Rank 1024          91.9%         +41.9pp  NaN       0.00002         0.03      tulu3-8b-rank1024-default-step12000
+
+Baseline (llama3.1-8b): 50.0%
+Default Tuned Performance (avg): 88.9% (+38.9pp)
+Best Tuned Performance (avg): 84.2% (+34.2pp)
+Best vs Default improvement: -4.7 percentage points
+
+=== IMPROVEMENT ANALYSIS ===
+Best overall improvement: +43.0pp (tulu3-8b-rank256-alpha5e5-010-step36000)
+Best Rank 64 improvement: +41.4pp (tulu3-8b-rank64-alpha5e5-010-step30000)
+Best Rank 256 improvement: +43.0pp (tulu3-8b-rank256-alpha5e5-010-step36000)
+Best Rank 1024 improvement: +41.9pp (tulu3-8b-rank1024-default-step12000)
