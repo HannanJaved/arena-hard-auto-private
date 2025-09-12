@@ -118,6 +118,16 @@ llama3.1-8b-instruct:
     max_tokens: 4096
     temperature: 0.0
 
+llama3.1-8b-TULU:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 neuralmagic-llama3.1-70b-instruct-fp8:
     model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-70B-Instruct-FP8
     endpoints:

@@ -19,7 +19,7 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_configs"
 
 # Judge configuration
 JUDGE_MODEL = "neuralmagic-llama3.1-70b-instruct-fp8"
-BASELINE_MODEL = "llama3.1-8b-instruct"
+BASELINE_MODEL = "llama3.1-8b-TULU"
 JUDGE_PATH = "/data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-70B-Instruct-FP8"
 
 def load_api_config():
