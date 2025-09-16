@@ -1,3 +1,4 @@
 data/
 results/
 utils/__pycache__/
+analysis/__pycache__/

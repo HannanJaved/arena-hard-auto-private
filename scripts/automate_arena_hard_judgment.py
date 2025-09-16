@@ -19,8 +19,17 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_configs"
 
 # Judge configuration
 JUDGE_MODEL = "neuralmagic-llama3.1-70b-instruct-fp8"
-BASELINE_MODEL = "llama3.1-8b-TULU"
 JUDGE_PATH = "/data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-70B-Instruct-FP8"
+
+# Baseline configurations
+BASELINE_CONFIGS = {
+    "instruct": "llama3.1-8b-instruct",
+    "base": "llama3.1-8b", 
+    "tulu_finetuned": "llama3.1-8b-TULU"
+}
+
+# Default baseline
+DEFAULT_BASELINE = "instruct"
 
 def load_api_config():
     """Load the API configuration file."""
@@ -69,10 +78,13 @@ def create_directories():
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
-def create_judgment_config(models_to_judge, output_path):
+def create_judgment_config(models_to_judge, output_path, baseline_name):
     """Create an arena-hard config file for judging specific models."""
+    baseline_model = BASELINE_CONFIGS[baseline_name]
+    
     config = {
         'judge_model': JUDGE_MODEL,
+        'baseline': baseline_model,
         'temperature': 0.0,
         'max_tokens': 4096,
         'bench_name': 'arena-hard-v2.0',
@@ -88,8 +100,10 @@ def create_judgment_config(models_to_judge, output_path):
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name):
     """Create a SLURM script for judging a batch of models."""
+    
+    baseline_model = BASELINE_CONFIGS[baseline_name]
     
     # Create a meaningful job name from the first and last model
     if len(models_to_judge) == 1:
@@ -124,7 +138,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path)
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8        
 #SBATCH --mem=64G                
-#SBATCH --time=00:45:00          
+#SBATCH --time=01:45:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=c3
@@ -160,7 +174,7 @@ JUDGE_PORT=8001
 
 echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
 echo "Judge Model: {JUDGE_MODEL}"
-echo "Baseline Model: {BASELINE_MODEL}"
+echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
 
 # ===================================================================
@@ -201,7 +215,7 @@ echo "Judgment job completed successfully for models: {', '.join(models_to_judge
 
 # Display summary of generated judgments
 echo "--- Judgment Summary ---"
-JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{JUDGE_MODEL}"
+JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{JUDGE_MODEL}/compared_with_{baseline_name}"
 if [ -d "$JUDGMENT_DIR" ]; then
     echo "Generated judgment files:"
     for model in {' '.join(models_to_judge)}; do
@@ -223,11 +237,14 @@ fi
     # Make script executable
     os.chmod(script_path, 0o755)
 
-def validate_models_exist(models_to_judge, api_config):
+def validate_models_exist(models_to_judge, baseline, api_config):
     """Validate that all models exist in the API config and have generated answers."""
     available_models = set(api_config.keys())
     missing_models = []
     missing_answers = []
+    
+    # Get baseline model name from configuration
+    baseline_model = BASELINE_CONFIGS.get(baseline, baseline)
     
     answer_dir = f"{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_answer"
     
@@ -241,12 +258,12 @@ def validate_models_exist(models_to_judge, api_config):
                 missing_answers.append(model)
     
     # Check baseline model
-    if BASELINE_MODEL not in available_models:
-        missing_models.append(f"{BASELINE_MODEL} (baseline)")
+    if baseline_model not in available_models:
+        missing_models.append(f"{baseline_model} (baseline)")
     else:
-        baseline_answer_file = f"{answer_dir}/{BASELINE_MODEL}.jsonl"
+        baseline_answer_file = f"{answer_dir}/{baseline_model}.jsonl"
         if not os.path.exists(baseline_answer_file):
-            missing_answers.append(f"{BASELINE_MODEL} (baseline)")
+            missing_answers.append(f"{baseline_model} (baseline)")
     
     return missing_models, missing_answers
 
@@ -255,6 +272,11 @@ def main():
     parser.add_argument('--models', nargs='+', help='Specific model names to judge')
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to judge (default: arena_hard_models_to_test.txt)')
+    parser.add_argument('--missing-models-file', type=str,
+                       help='File containing list of missing/incomplete models to judge')
+    parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
+                       choices=['instruct', 'base', 'tulu_finetuned'],
+                       help=f'Baseline model type (default: {DEFAULT_BASELINE})')
     parser.add_argument('--all', action='store_true', help='Judge all tulu3 models from API config')
     parser.add_argument('--batch-size', type=int, default=1, 
                        help='Number of models to judge per job (default: 1)')
@@ -273,6 +295,13 @@ def main():
     # Get models to process
     if args.models:
         models_to_judge = args.models
+    elif args.missing_models_file:
+        # Load models from missing models file
+        models_to_judge = load_models_from_file(args.missing_models_file)
+        if not models_to_judge:
+            print(f"No models found in {args.missing_models_file}.")
+            return
+        print(f"Processing models from missing models file: {args.missing_models_file}")
     elif args.all:
         # Extract all tulu3 models
         models_to_judge = [model for model in api_config.keys() if model.startswith('tulu3-8b-rank')]
@@ -294,7 +323,7 @@ def main():
         return
     
     # Validate models
-    missing_models, missing_answers = validate_models_exist(models_to_judge, api_config)
+    missing_models, missing_answers = validate_models_exist(models_to_judge, args.baseline, api_config)
     
     if missing_models:
         print(f"\\nERROR: The following models are not found in API config:")
@@ -332,13 +361,13 @@ def main():
         # Create judgment config file
         config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
-        create_judgment_config(model_batch, config_path)
+        create_judgment_config(model_batch, config_path, args.baseline)
         print(f"  Created config: {config_path}")
         
         # Create SLURM script
         script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
-        create_judgment_slurm_script(model_batch, script_path, config_path)
+        create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline)
         print(f"  Created script: {script_path}")
         
         job_scripts.append(script_path)

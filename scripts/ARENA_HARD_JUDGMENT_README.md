@@ -13,6 +13,7 @@ This automation system generates Arena Hard judgments for multiple models in par
 1. **`automate_arena_hard_judgment.py`** - Main judgment automation script
 2. **`submit_arena_hard_judgment.sh`** - Simple bash wrapper for common operations
 3. **`monitor_arena_hard_judgments.py`** - Monitor judgment progress and results
+4. **`identify_invalid_judgments.py`** - Detect and clean invalid judgment scores
 
 ## Prerequisites
 
@@ -21,6 +22,46 @@ Before running judgment automation, ensure you have:
 1. **Generated answers** for all models you want to judge
 2. **Generated answers** for the baseline model (`llama3.1-8b-instruct`)
 3. **Judge model** available in your API config
+
+## Invalid Judgments Detection and Cleaning
+
+Sometimes judgment files may contain invalid scores (like `None`, incomplete scores, or corrupted entries) that need to be cleaned and regenerated.
+
+### Check for Invalid Judgments
+
+```bash
+# Scan all baselines for invalid judgments
+python3 identify_invalid_judgments.py
+
+# Check specific baseline only
+python3 identify_invalid_judgments.py --baseline instruct
+python3 identify_invalid_judgments.py --baseline base
+python3 identify_invalid_judgments.py --baseline tulu_finetuned
+
+# Dry run to see what would be cleaned
+python3 identify_invalid_judgments.py --baseline instruct --clean --dry-run
+```
+
+### Clean Invalid Judgments
+
+```bash
+# Clean invalid judgments from instruct baseline (removes invalid entries)
+python3 identify_invalid_judgments.py --baseline instruct --clean
+
+# Clean and automatically regenerate using existing workflow
+python3 identify_invalid_judgments.py --baseline instruct --clean --regenerate
+
+# Include backup creation (default: true)
+python3 identify_invalid_judgments.py --baseline instruct --clean --backup
+```
+
+### Valid Judgment Scores
+
+The script validates against these 10 valid judgment scores:
+- `A>B`, `A>>B`, `A=B`, `A<<B`, `A<B`
+- `B>A`, `B>>A`, `B=A`, `B<<A`, `B<A`
+
+Any other values (like `None`, `A`, `B`, `A=B>>B`) are considered invalid and will be removed.
 
 ## Usage Options
 
@@ -217,7 +258,17 @@ Edit SLURM parameters in `create_judgment_slurm_script()`:
    python3 monitor_arena_hard_judgments.py
    ```
 
-5. **Analyze results** (after completion):
+5. **Check for invalid judgments** (if needed):
+   ```bash
+   python3 identify_invalid_judgments.py --baseline instruct
+   ```
+
+6. **Clean invalid judgments** (if found):
+   ```bash
+   python3 identify_invalid_judgments.py --baseline instruct --clean --regenerate
+   ```
+
+7. **Analyze results** (after completion):
    ```bash
    cd arena-hard-auto
    python show_result.py
@@ -230,6 +281,8 @@ Edit SLURM parameters in `create_judgment_slurm_script()`:
 3. **Models not found**: Ensure model names match exactly with `api_config.yaml`
 4. **Out of memory**: Reduce batch size or increase memory allocation
 5. **Timeout errors**: Increase time limit in SLURM configuration
+6. **Invalid judgment scores**: Use `identify_invalid_judgments.py` to detect and clean corrupted judgment files
+7. **Judgment files with `None` values**: Run invalid judgment cleaning before proceeding with analysis
 
 ## Best Practices
 
@@ -238,3 +291,5 @@ Edit SLURM parameters in `create_judgment_slurm_script()`:
 3. **Monitor resources**: Watch GPU memory usage and adjust batch sizes
 4. **Check baseline**: Ensure baseline model answers are complete
 5. **Organize results**: Use consistent naming for easy analysis
+6. **Verify judgments**: Run invalid judgment detection after completion to ensure data quality
+7. **Clean invalid data**: Use automated cleaning for corrupted judgment files rather than manual fixes
