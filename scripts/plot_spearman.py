@@ -7,7 +7,7 @@ import os
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Plot Spearman correlation across training iterations for multi-fidelity BO rung sizes.')
-parser.add_argument('--csv_path', type=str, default='results/vs_base_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
+parser.add_argument('--csv_path', type=str, default='results/vs_tulu_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
 args = parser.parse_args()
 
 # Load data
@@ -18,15 +18,18 @@ df.rename(columns={'Model': 'model', 'Scores (%)': 'win_rate'}, inplace=True)
 
 # Function to parse model name
 def parse_model(model_name):
-    # Extract base (without step)
-    step_match = re.search(r'-step(\d+)', model_name)
-    rank_match = re.search(r'rank(\d+)', model_name)
-    if step_match:
-        base = model_name.replace(step_match.group(), '')
-        step = int(step_match.group(1))
+    if '-final' in model_name:
+        base = model_name.replace('-final', '')
+        step = 55000
     else:
-        base = model_name
-        step = None
+        step_match = re.search(r'-step(\d+)', model_name)
+        if step_match:
+            base = model_name.replace(step_match.group(), '')
+            step = int(step_match.group(1))
+        else:
+            base = model_name
+            step = None
+    rank_match = re.search(r'rank(\d+)', model_name)
     rank = int(rank_match.group(1)) if rank_match else None
     return base, step, rank
 
@@ -42,7 +45,7 @@ step_correlations = {64: {}, 256: {}, 1024: {}}
 for rank in [64, 256, 1024]:
     df_rank = df[df['rank'] == rank]
     if not df_rank.empty:
-        final_win = df_rank.groupby('base')['win_rate'].max().to_dict()
+        final_win = df_rank[df_rank['step'] == 55000].set_index('base')['win_rate'].to_dict()
         for step in sorted(df_rank['step'].unique()):
             sub_df = df_rank[df_rank['step'] == step]
             if len(sub_df) > 5:  # Require at least 6 data points for correlation
@@ -50,7 +53,9 @@ for rank in [64, 256, 1024]:
                 final_wins = [final_win[row['base']] for _, row in sub_df.iterrows()]
                 if len(set(final_wins)) > 1:  # Ensure variation in final wins
                     corr, _ = spearmanr(win_at_step, final_wins)
-                    step_correlations[rank][step] = corr
+                else:
+                    continue
+                step_correlations[rank][step] = corr
 
 # Plot
 plt.figure(figsize=(10, 6))
