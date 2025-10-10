@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Plot Spearman correlation between LR and Win Rate across iterations for tulu3 models.')
-parser.add_argument('--csv_path', type=str, default='results/vs_instruct_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
+parser.add_argument('--csv_path', type=str, default='results/vs_tulu_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
 parser.add_argument('--save_csv', action='store_true', help='Save results to a .csv file')
 parser.add_argument('--save_path', type=str, default=None, help='Path to save the results .csv file (default: same folder as CSV)')
 args = parser.parse_args()
@@ -42,8 +42,11 @@ def parse_model(model):
         LR = None
     
     # Extract step
-    step_match = re.search(r'step(\d+)', model)
-    step = int(step_match.group(1)) if step_match else None
+    if '-final' in model:
+        step = 55000
+    else:
+        step_match = re.search(r'step(\d+)', model)
+        step = int(step_match.group(1)) if step_match else None
     
     return rank, LR, step
 

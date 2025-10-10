@@ -7,7 +7,7 @@ import os
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Plot Spearman correlation across training iterations for multi-fidelity BO rung sizes.')
-parser.add_argument('--csv_path', type=str, default='results/vs_tulu_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
+parser.add_argument('--csv_path', type=str, default='results/vs_instruct_llama3.1-8b/hard_prompt_leaderboard_all.csv', help='Path to the CSV file')
 args = parser.parse_args()
 
 # Load data

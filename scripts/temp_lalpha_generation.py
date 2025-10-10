@@ -125,8 +125,8 @@ fi
 echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
 tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
 
-echo "Waiting 15 mins for server to load..."
-sleep 900
+echo "Waiting 17 mins for server to load..."
+sleep 1020
 
 cd {ARENA_HARD_AUTO_DIR}
 

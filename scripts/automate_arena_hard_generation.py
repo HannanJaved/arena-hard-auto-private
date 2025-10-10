@@ -24,10 +24,10 @@ def load_api_config():
         return yaml.safe_load(f)
 
 def extract_tulu_models(api_config):
-    """Extract all tulu3 models from API config."""
+    """Extract all tulu3 models from API config that have 'lalpha' in their name."""
     tulu_models = {}
     for model_name, config in api_config.items():
-        if model_name.startswith('tulu3-8b-'):
+        if model_name.startswith('tulu3-') and 'lalpha' in model_name:
             tulu_models[model_name] = config
     return tulu_models
 
@@ -53,18 +53,21 @@ def extract_model_details(model_name):
     
     # Extract rank, alpha, and step information
     rank = None
-    alpha = None
+    lr = None
     step = None
+    alpha = None
     
     for i, part in enumerate(parts):
         if part.startswith('rank'):
             rank = part
         elif part.startswith('alpha'):
-            alpha = f"{part}-{parts[i+1]}" if i+1 < len(parts) else part
+            lr = f"{part}-{parts[i+1]}" if i+1 < len(parts) else part
+        elif part.startswith('lalpha'):
+            alpha = part
         elif part.startswith('step') or part == 'final':
             step = part
     
-    return rank, alpha, step
+    return rank, lr, step, alpha
 
 def create_slurm_script(model_name, model_path, script_path):
     """Create a SLURM script for a specific model."""
