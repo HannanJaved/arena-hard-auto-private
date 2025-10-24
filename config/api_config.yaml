@@ -718,6 +718,16 @@ tulu3-8b-rank64-alpha1e6-010-final:
     max_tokens: 4096
     temperature: 0.0
 
+tulu3-8b-rank64-alpha1e6-010-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_010/DPO/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 # ******** Rank64 - Alpha 5e-5 - 0.01 WR ***************** #
 # Every 6000 steps
 tulu3-8b-rank64-alpha5e5-001-step6000:
@@ -1202,6 +1212,16 @@ tulu3-8b-rank256-alpha1e5-001-final:
     max_tokens: 4096
     temperature: 0.0
 
+tulu3-8b-rank256-alpha1e5-001-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_1e5_001/DPO/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 # ******** Rank256 - Alpha 1e-5 - 0.05 WR ***************** #
 # Every 6000 steps
 
@@ -1491,6 +1511,16 @@ tulu3-8b-rank256-alpha1e6-001-final:
     max_tokens: 4096
     temperature: 0.0
 
+tulu3-8b-rank256-alpha1e6-001-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_1e6_001/DPO/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 # ******** Rank256 - Alpha 1e-6 - 0.05 WR ***************** #
 # Every 6000 steps
 
@@ -1576,6 +1606,16 @@ tulu3-8b-rank256-alpha1e6-005-step48000:
 
 tulu3-8b-rank256-alpha1e6-005-final:
     model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_1e6_005/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank256-alpha1e6-005-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_1e6_005/DPO/final
     endpoints:
         - api_base: http://localhost:8000/v1
           api_key: '-'
@@ -1779,6 +1819,16 @@ tulu3-8b-rank256-alpha5e5-001-final:
     max_tokens: 4096
     temperature: 0.0
 
+tulu3-8b-rank256-alpha5e5-001-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_5e5_001/DPO/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
 # ******** Rank256 - Alpha 5e-5 - 0.05 WR ***************** #
 # Every 6000 steps
 
@@ -1967,6 +2017,16 @@ tulu3-8b-rank256-alpha5e5-010-step50000:
 
 tulu3-8b-rank256-alpha5e5-010-final:
     model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_5e5_010/final
+    endpoints:
+        - api_base: http://localhost:8000/v1
+          api_key: '-'
+    api_type: openai
+    parallel: 32
+    max_tokens: 4096
+    temperature: 0.0
+
+tulu3-8b-rank256-alpha5e5-010-dpo-final:
+    model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank256/alpha_5e5_010/DPO/final
     endpoints:
         - api_base: http://localhost:8000/v1
           api_key: '-'
