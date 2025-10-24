@@ -138,7 +138,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8        
 #SBATCH --mem=64G                
-#SBATCH --time=01:45:00          
+#SBATCH --time=02:45:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=c3

@@ -24,10 +24,10 @@ def load_api_config():
         return yaml.safe_load(f)
 
 def extract_tulu_models(api_config):
-    """Extract all tulu3 models from API config that have 'lalpha' in their name."""
+    """Extract all tulu3 models from API config that contain an alpha setting."""
     tulu_models = {}
     for model_name, config in api_config.items():
-        if model_name.startswith('tulu3-') and 'lalpha' in model_name:
+        if model_name.startswith('tulu3-') and 'alpha' in model_name:
             tulu_models[model_name] = config
     return tulu_models
 
@@ -50,24 +50,21 @@ def extract_model_details(model_name):
     """Extract model details from model name for directory structure."""
     # Parse model name like: tulu3-8b-rank64-alpha1e5-001-step48000
     parts = model_name.split('-')
-    
-    # Extract rank, alpha, and step information
+
     rank = None
-    lr = None
-    step = None
     alpha = None
-    
+    step = None
+
     for i, part in enumerate(parts):
         if part.startswith('rank'):
             rank = part
         elif part.startswith('alpha'):
-            lr = f"{part}-{parts[i+1]}" if i+1 < len(parts) else part
-        elif part.startswith('lalpha'):
-            alpha = part
+            alpha = f"{part}-{parts[i+1]}" if i + 1 < len(parts) else part
         elif part.startswith('step') or part == 'final':
             step = part
-    
-    return rank, lr, step, alpha
+
+    return rank, alpha, step
+    return rank, lr, step
 
 def create_slurm_script(model_name, model_path, script_path):
     """Create a SLURM script for a specific model."""
@@ -83,13 +80,13 @@ def create_slurm_script(model_name, model_path, script_path):
     
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={model_name}
-#SBATCH --error={log_dir}/{step or model_name}.err
-#SBATCH --output={log_dir}/{step or model_name}.out
+#SBATCH --error={log_dir}/dpo/{step or model_name}.err
+#SBATCH --output={log_dir}/dpo/{step or model_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
 #SBATCH --mem=32G                
-#SBATCH --time=01:00:00          
+#SBATCH --time=02:00:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=c3
@@ -126,17 +123,17 @@ echo "Starting model server on GPU 0 (Port 8000)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$MODEL_PATH" --port 8000 --tensor-parallel-size 1 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
-    > {log_dir}/{step or model_name}_vllm_model_server.log 2>&1 &
+    > {log_dir}/dpo/{step or model_name}_vllm_model_server.log 2>&1 &
 MODEL_PID=$!
 
 sleep 5
 if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
     echo "ERROR: Model server failed to start. Check vllm_model_server.log for details."
-    cat {log_dir}/{step or model_name}_vllm_model_server.log
+    cat {log_dir}/dpo/{step or model_name}_vllm_model_server.log
     exit 1
 fi
 echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
-tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
+tail -n 100 {log_dir}/dpo/{step or model_name}_vllm_model_server.log
 
 echo "Waiting 15 mins for server to load..."
 sleep 900
