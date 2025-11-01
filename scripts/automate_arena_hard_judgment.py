@@ -25,7 +25,8 @@ JUDGE_PATH = "/data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-
 BASELINE_CONFIGS = {
     "instruct": "llama3.1-8b-instruct",
     "base": "llama3.1-8b", 
-    "tulu_finetuned": "llama3.1-8b-TULU"
+    "tulu_finetuned": "llama3.1-8b-TULU",
+    "tulu_sft": "llama3.1-8b-TULU-SFT"
 }
 
 # Default baseline
@@ -275,7 +276,7 @@ def main():
     parser.add_argument('--missing-models-file', type=str,
                        help='File containing list of missing/incomplete models to judge')
     parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
-                       choices=['instruct', 'base', 'tulu_finetuned'],
+                       choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft'],
                        help=f'Baseline model type (default: {DEFAULT_BASELINE})')
     parser.add_argument('--all', action='store_true', help='Judge all tulu3 models from API config')
     parser.add_argument('--batch-size', type=int, default=1, 
