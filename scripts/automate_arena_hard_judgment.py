@@ -270,7 +270,7 @@ def validate_models_exist(models_to_judge, baseline, api_config):
 
 def main():
     parser = argparse.ArgumentParser(description='Automate Arena Hard judgment generation for multiple models')
-    parser.add_argument('--models', nargs='+', help='Specific model names to judge')
+    parser.add_argument('--models', nargs='+', help='Specific model names to judge, or a single .txt file containing model names (one per line)')
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to judge (default: arena_hard_models_to_test.txt)')
     parser.add_argument('--missing-models-file', type=str,
@@ -295,7 +295,16 @@ def main():
     
     # Get models to process
     if args.models:
-        models_to_judge = args.models
+        # Check if first argument is a .txt file
+        if len(args.models) == 1 and args.models[0].endswith('.txt'):
+            # Load models from the specified file
+            models_to_judge = load_models_from_file(args.models[0])
+            if not models_to_judge:
+                print(f"No models found in {args.models[0]}.")
+                return
+        else:
+            # Use models as provided
+            models_to_judge = args.models
     elif args.missing_models_file:
         # Load models from missing models file
         models_to_judge = load_models_from_file(args.missing_models_file)
