@@ -64,7 +64,7 @@ def extract_model_details(model_name):
             step = part
 
     return rank, alpha, step
-    return rank, lr, step
+    # return rank, lr, step
 
 def create_slurm_script(model_name, model_path, script_path):
     """Create a SLURM script for a specific model."""
@@ -86,7 +86,7 @@ def create_slurm_script(model_name, model_path, script_path):
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
 #SBATCH --mem=32G                
-#SBATCH --time=02:00:00          
+#SBATCH --time=04:00:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=c3
@@ -135,8 +135,37 @@ fi
 echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
 tail -n 100 {log_dir}/dpo/{step or model_name}_vllm_model_server.log
 
-echo "Waiting 15 mins for server to load..."
-sleep 900
+echo "Waiting for model server to become ready (checking health endpoint)..."
+MAX_WAIT=1800  # 30 minutes max wait time
+ELAPSED=0
+SLEEP_INTERVAL=30
+
+while [ $ELAPSED -lt $MAX_WAIT ]; do
+    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+        echo "Model server is ready after $ELAPSED seconds!"
+        break
+    fi
+    echo "Server not ready yet... waiting (elapsed: ${{ELAPSED}}s / max: ${{MAX_WAIT}}s)"
+    sleep $SLEEP_INTERVAL
+    ELAPSED=$((ELAPSED + SLEEP_INTERVAL))
+    
+    # Check if server process is still running
+    if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
+        echo "ERROR: Model server process died. Check logs:"
+        tail -n 50 {log_dir}/dpo/{step or model_name}_vllm_model_server.log
+        exit 1
+    fi
+done
+
+if [ $ELAPSED -ge $MAX_WAIT ]; then
+    echo "ERROR: Model server failed to become ready within $MAX_WAIT seconds"
+    echo "Last 100 lines of server log:"
+    tail -n 100 {log_dir}/dpo/{step or model_name}_vllm_model_server.log
+    kill $MODEL_PID
+    exit 1
+fi
+
+sleep 10  # Extra buffer after health check passes
 
 cd {ARENA_HARD_AUTO_DIR}
 
@@ -171,7 +200,7 @@ def load_models_from_file(file_path):
 
 def main():
     parser = argparse.ArgumentParser(description='Automate Arena Hard answer generation for multiple models')
-    parser.add_argument('--models', nargs='+', help='Specific model names to process')
+    parser.add_argument('--models', nargs='+', help='Specific model names to process, or a single .txt file containing model names (one per line)')
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to process (default: arena_hard_models_to_test.txt)')
     parser.add_argument('--missing-models-file', type=str, 
@@ -190,9 +219,21 @@ def main():
     
     # Get models to process
     if args.models:
+        # Check if first argument is a .txt file
+        if len(args.models) == 1 and args.models[0].endswith('.txt'):
+            # Load models from the specified file
+            model_names_from_file = load_models_from_file(args.models[0])
+            if not model_names_from_file:
+                print(f"No models found in {args.models[0]}.")
+                return
+            models_list = model_names_from_file
+        else:
+            # Use models as provided
+            models_list = args.models
+            
         models_to_process = {}
         available_models = extract_tulu_models(api_config)
-        for model in args.models:
+        for model in models_list:
             if model in available_models:
                 models_to_process[model] = available_models[model]
             else:
