@@ -9,6 +9,7 @@ import yaml
 import argparse
 import subprocess
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Configuration
 WORKSPACE_ROOT = "/data/horse/ws/hama901h-BFTranslation"
@@ -37,6 +38,71 @@ def load_api_config():
     config_path = f"{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
+
+
+def _find_api_base(obj):
+    """Recursively search the api_config for the first 'api_base' value.
+
+    Returns the URL string or None.
+    """
+    if isinstance(obj, dict):
+        if 'api_base' in obj and isinstance(obj['api_base'], str):
+            return obj['api_base']
+        for v in obj.values():
+            found = _find_api_base(v)
+            if found:
+                return found
+    elif isinstance(obj, list):
+        for item in obj:
+            found = _find_api_base(item)
+            if found:
+                return found
+    return None
+
+
+def parse_port_from_api_base(api_base_url):
+    """Parse and return port (int) from a URL like 'http://localhost:8001/v1'.
+
+    Returns None if not found or cannot parse.
+    """
+    if not api_base_url:
+        return None
+    try:
+        parsed = urlparse(api_base_url)
+        if parsed.port:
+            return parsed.port
+        netloc = parsed.netloc
+        if ':' in netloc:
+            return int(netloc.split(':')[-1])
+    except Exception:
+        return None
+    return None
+
+
+def get_port_for_model(api_config, model_name=None, default=8001):
+    """Get port to use for model server.
+
+    If model_name is provided, try to read api_base under that model's config.
+    Otherwise return the first api_base port found in the config. If none
+    found, return the provided default.
+    """
+    try:
+        if model_name and model_name in api_config:
+            entry = api_config[model_name]
+            api_base = None
+            if isinstance(entry, dict) and 'api_base' in entry:
+                api_base = entry['api_base']
+            else:
+                api_base = _find_api_base(entry)
+            port = parse_port_from_api_base(api_base)
+            if port:
+                return port
+    except Exception:
+        pass
+
+    api_base = _find_api_base(api_config)
+    port = parse_port_from_api_base(api_base)
+    return port or default
 
 def load_models_from_file(file_path):
     """Load model names from a text file, ignoring comments and empty lines."""
@@ -101,7 +167,7 @@ def create_judgment_config(models_to_judge, output_path, baseline_name):
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_port=8001):
     """Create a SLURM script for judging a batch of models."""
     
     baseline_model = BASELINE_CONFIGS[baseline_name]
@@ -131,6 +197,8 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     # Use SLURM_JOB_ID for unique filenames (no shell commands in SBATCH directives)
     log_file_base = f"{job_name}_${{SLURM_JOB_ID}}"
     
+    judge_port_val = judge_port or 8001
+
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
 #SBATCH --error={log_dir}/{log_file_base}.err
@@ -171,7 +239,7 @@ echo "---------------------"
 JUDGE_PATH="{JUDGE_PATH}"
 API_CONFIG_FILE="{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
 JUDGMENT_CONFIG_FILE="{config_file_path}"
-JUDGE_PORT=8001
+JUDGE_PORT={judge_port_val}
 
 echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
 echo "Judge Model: {JUDGE_MODEL}"
@@ -181,9 +249,9 @@ echo "Config File: $JUDGMENT_CONFIG_FILE"
 # ===================================================================
 # Start Judge Server and Generate Judgments
 # ===================================================================
-echo "Starting judge server on GPU 0 (Port 8001)..."
+echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
-    --model "$JUDGE_PATH" --port 8001 --tensor-parallel-size 1 \\
+    --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
     > {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log 2>&1 &
@@ -377,7 +445,9 @@ def main():
         # Create SLURM script
         script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
-        create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline)
+    # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
+    judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
+    create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline, judge_port=judge_port)
         print(f"  Created script: {script_path}")
         
         job_scripts.append(script_path)

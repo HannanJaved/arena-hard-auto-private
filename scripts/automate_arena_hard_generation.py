@@ -9,6 +9,7 @@ import yaml
 import argparse
 import subprocess
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Configuration
 WORKSPACE_ROOT = "/data/horse/ws/hama901h-BFTranslation"
@@ -22,6 +23,75 @@ def load_api_config():
     config_path = f"{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
+
+
+def _find_api_base(obj):
+    """Recursively search the api_config for the first 'api_base' value.
+
+    Returns the URL string or None.
+    """
+    if isinstance(obj, dict):
+        if 'api_base' in obj and isinstance(obj['api_base'], str):
+            return obj['api_base']
+        for v in obj.values():
+            found = _find_api_base(v)
+            if found:
+                return found
+    elif isinstance(obj, list):
+        for item in obj:
+            found = _find_api_base(item)
+            if found:
+                return found
+    return None
+
+
+def parse_port_from_api_base(api_base_url):
+    """Parse and return port (int) from a URL like 'http://localhost:8000/v1'.
+
+    Returns None if not found or cannot parse.
+    """
+    if not api_base_url:
+        return None
+    try:
+        parsed = urlparse(api_base_url)
+        if parsed.port:
+            return parsed.port
+        # Fallback: try to parse port from netloc
+        netloc = parsed.netloc
+        if ':' in netloc:
+            return int(netloc.split(':')[-1])
+    except Exception:
+        return None
+    return None
+
+
+def get_port_for_model(api_config, model_name=None, default=8000):
+    """Get port to use for model server.
+
+    If model_name is provided, try to read api_base under that model's config.
+    Otherwise return the first api_base port found in the config. If none
+    found, return the provided default.
+    """
+    # Try model-specific entry first
+    try:
+        if model_name and model_name in api_config:
+            entry = api_config[model_name]
+            api_base = None
+            if isinstance(entry, dict) and 'api_base' in entry:
+                api_base = entry['api_base']
+            else:
+                # might be nested
+                api_base = _find_api_base(entry)
+            port = parse_port_from_api_base(api_base)
+            if port:
+                return port
+    except Exception:
+        pass
+
+    # Fallback: search entire config for any api_base
+    api_base = _find_api_base(api_config)
+    port = parse_port_from_api_base(api_base)
+    return port or default
 
 def extract_tulu_models(api_config):
     """Extract all tulu3 models from API config that contain an alpha setting."""
@@ -66,7 +136,7 @@ def extract_model_details(model_name):
     return rank, alpha, step
     # return rank, lr, step
 
-def create_slurm_script(model_name, model_path, script_path):
+def create_slurm_script(model_name, model_path, script_path, model_port=8000):
     """Create a SLURM script for a specific model."""
     rank, alpha, step = extract_model_details(model_name)
     
@@ -78,10 +148,13 @@ def create_slurm_script(model_name, model_path, script_path):
     # Generate config file path
     config_file = f"{CONFIGS_DIR}/gen_answer_config_{model_name}.yaml"
     
+# Use the configured model port
+    model_port_val = model_port or 8000
+
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={model_name}
-#SBATCH --error={log_dir}/dpo/{step or model_name}.err
-#SBATCH --output={log_dir}/dpo/{step or model_name}.out
+#SBATCH --error={log_dir}/{step or model_name}.err
+#SBATCH --output={log_dir}/{step or model_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
@@ -89,7 +162,6 @@ def create_slurm_script(model_name, model_path, script_path):
 #SBATCH --time=04:00:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
-#SBATCH --exclude=c3
 
 # Exit on any error
 set -e
@@ -113,15 +185,15 @@ echo "---------------------"
 # --- DEFINE PATHS AND PORTS ---
 MODEL_PATH="{model_path}"
 API_CONFIG_FILE="{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
-MODEL_PORT=8000
+MODEL_PORT={model_port_val}
 
 # ===================================================================
 # Generate Answers for {model_name}
 # ===================================================================
 echo "### GENERATING ANSWERS FOR {model_name} ###"
-echo "Starting model server on GPU 0 (Port 8000)..."
+echo "Starting model server on GPU 0 (Port {model_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
-    --model "$MODEL_PATH" --port 8000 --tensor-parallel-size 1 \\
+    --model "$MODEL_PATH" --port $MODEL_PORT --tensor-parallel-size 1 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
     > {log_dir}/dpo/{step or model_name}_vllm_model_server.log 2>&1 &
 MODEL_PID=$!
@@ -141,7 +213,7 @@ ELAPSED=0
 SLEEP_INTERVAL=30
 
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+    if curl -s http://localhost:$MODEL_PORT/health > /dev/null 2>&1; then
         echo "Model server is ready after $ELAPSED seconds!"
         break
     fi
@@ -232,7 +304,8 @@ def main():
             models_list = args.models
             
         models_to_process = {}
-        available_models = extract_tulu_models(api_config)
+        # Use the raw api_config to check availability of provided models
+        available_models = api_config
         for model in models_list:
             if model in available_models:
                 models_to_process[model] = available_models[model]
@@ -245,7 +318,8 @@ def main():
             print(f"No models found in {args.missing_models_file}.")
             return
         
-        available_models = extract_tulu_models(api_config)
+        # Use the raw api_config to check availability of provided models
+        available_models = api_config
         models_to_process = {}
         for model in model_names_from_file:
             if model in available_models:
@@ -255,8 +329,8 @@ def main():
         
         print(f"Processing {len(models_to_process)} missing models from {args.missing_models_file}")
     elif args.all:
-        # Process all tulu3 models
-        models_to_process = extract_tulu_models(api_config)
+        # Process all tulu3 models (build inline instead of calling helper)
+        models_to_process = {k: v for k, v in api_config.items() if k.startswith('tulu3-') and 'alpha' in k}
     else:
         # Load models from file
         model_names_from_file = load_models_from_file(args.models_file)
@@ -264,13 +338,14 @@ def main():
             print(f"No models found in {args.models_file}. Use --all to process all models or --models to specify models directly.")
             return
         
-        available_models = extract_tulu_models(api_config)
-        models_to_process = {}
-        for model in model_names_from_file:
-            if model in available_models:
-                models_to_process[model] = available_models[model]
-            else:
-                print(f"Warning: Model '{model}' from file not found in API config")
+    # Use the raw api_config to check availability of models listed in the file
+    available_models = api_config
+    models_to_process = {}
+    for model in model_names_from_file:
+        if model in available_models:
+            models_to_process[model] = available_models[model]
+        else:
+            print(f"Warning: Model '{model}' from file not found in API config")
     
     print(f"Found {len(models_to_process)} models to process:")
     for model_name in models_to_process.keys():
@@ -283,19 +358,21 @@ def main():
     # Generate scripts and configs for each model
     job_scripts = []
     for model_name, model_config in models_to_process.items():
-        print(f"\\nProcessing {model_name}...")
-        
+        print(f"\nProcessing {model_name}...")
+
         # Create gen_answer config file
         config_path = f"{CONFIGS_DIR}/gen_answer_config_{model_name}.yaml"
         create_gen_answer_config(model_name, config_path)
         print(f"  Created config: {config_path}")
-        
+
         # Create SLURM script
         script_path = f"{SCRIPTS_DIR}/run_arena_hard_{model_name}.sh"
         model_path = model_config['model']
-        create_slurm_script(model_name, model_path, script_path)
+        # Determine model port from api_config (fall back to 8000)
+        model_port = get_port_for_model(api_config, model_name=model_name, default=8000)
+        create_slurm_script(model_name, model_path, script_path, model_port=model_port)
         print(f"  Created script: {script_path}")
-        
+
         job_scripts.append(script_path)
     
     print(f"\\nGenerated {len(job_scripts)} job scripts in {SCRIPTS_DIR}")

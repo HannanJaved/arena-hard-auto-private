@@ -3327,7 +3327,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step2000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step4000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_4000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8001/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3336,7 +3336,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step4000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_6000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8002/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3345,7 +3345,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step6000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step8000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_8000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8003/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3354,7 +3354,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step8000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step10000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_10000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8004/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3363,7 +3363,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step10000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_12000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8005/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3372,7 +3372,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step12000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step14000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_14000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8006/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3381,7 +3381,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step14000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step16000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_16000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8007/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3390,7 +3390,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step16000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_18000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8008/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3399,7 +3399,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step18000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step20000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_20000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8009/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3408,7 +3408,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step20000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step22000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_22000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8010/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3417,7 +3417,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step22000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_24000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8011/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3426,7 +3426,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step24000:
 tulu3-8b-rank64-alpha5e5-001-alpha32-step26000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha32/step_26000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8012/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3435,7 +3435,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha32-step26000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step2000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_2000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8013/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3444,7 +3444,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step2000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step4000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_4000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8014/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3453,7 +3453,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step4000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_6000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8015/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3462,7 +3462,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step6000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step8000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_8000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8016/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3471,7 +3471,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step8000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step10000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_10000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8017/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3480,7 +3480,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step10000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_12000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8018/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3489,7 +3489,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step12000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step14000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_14000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8019/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3498,7 +3498,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step14000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step16000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_16000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8020/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3507,7 +3507,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step16000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_18000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8021/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3516,7 +3516,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step18000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step20000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_20000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8022/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3525,7 +3525,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step20000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step22000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_22000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8023/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3534,7 +3534,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step22000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_24000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8024/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3543,7 +3543,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step24000:
 tulu3-8b-rank64-alpha5e5-001-alpha64-step26000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha64/step_26000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8025/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3552,7 +3552,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha64-step26000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step2000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_2000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8026/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3561,7 +3561,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step2000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step4000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_4000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8027/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3570,7 +3570,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step4000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_6000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8028/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3579,7 +3579,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step6000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step8000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_8000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8029/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3588,7 +3588,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step8000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step10000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_10000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8030/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3597,7 +3597,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step10000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_12000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8031/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3606,7 +3606,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step12000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step14000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_14000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8032/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3615,7 +3615,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step14000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step16000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_16000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8033/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3624,7 +3624,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step16000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_18000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8034/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3633,7 +3633,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step18000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step20000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_20000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8035/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3642,7 +3642,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step20000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step22000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_22000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8036/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3651,7 +3651,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step22000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_24000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8037/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -3660,7 +3660,7 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step24000:
 tulu3-8b-rank64-alpha5e5-001-alpha128-step26000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_5e5_001/alpha128/step_26000
   endpoints:
-  - api_base: http://localhost:8000/v1
+  - api_base: http://localhost:8038/v1
     api_key: '-'
   api_type: openai
   parallel: 32
