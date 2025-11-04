@@ -337,19 +337,19 @@ def main():
         if not model_names_from_file:
             print(f"No models found in {args.models_file}. Use --all to process all models or --models to specify models directly.")
             return
+        for model in model_names_from_file:
+            if model in available_models:
+                models_to_process[model] = available_models[model]
+            else:
+                print(f"Warning: Model '{model}' from file not found in API config")
         
-    # Use the raw api_config to check availability of models listed in the file
-    available_models = api_config
-    models_to_process = {}
-    for model in model_names_from_file:
-        if model in available_models:
-            models_to_process[model] = available_models[model]
-        else:
-            print(f"Warning: Model '{model}' from file not found in API config")
-    
-    print(f"Found {len(models_to_process)} models to process:")
-    for model_name in models_to_process.keys():
-        print(f"  - {model_name}")
+        # Use the raw api_config to check availability of models listed in the file
+        available_models = api_config
+        models_to_process = {}        
+        
+        print(f"Found {len(models_to_process)} models to process:")
+        for model_name in models_to_process.keys():
+            print(f"  - {model_name}")
     
     if not models_to_process:
         print("No models to process. Exiting.")

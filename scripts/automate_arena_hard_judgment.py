@@ -448,9 +448,9 @@ def main():
     # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
     judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
     create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline, judge_port=judge_port)
-        print(f"  Created script: {script_path}")
-        
-        job_scripts.append(script_path)
+    print(f"  Created script: {script_path}")
+    
+    job_scripts.append(script_path)
     
     print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
     print(f"Generated {len(model_batches)} config files in {CONFIGS_DIR}")
