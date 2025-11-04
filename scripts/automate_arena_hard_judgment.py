@@ -145,12 +145,22 @@ def create_directories():
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
-def create_judgment_config(models_to_judge, output_path, baseline_name):
+def extract_judge_path_from_api_config(api_config, model_name):
+    """Extract the model path for the judge model from the API config."""
+    entry = api_config.get(model_name, {})
+    if isinstance(entry, dict):
+        if 'model_path' in entry:
+            return entry['model_path']
+        elif 'model' in entry:
+            return entry['model']
+    return JUDGE_PATH  # Fallback to default judge path
+
+def create_judgment_config(models_to_judge, output_path, baseline_name, judge_model=JUDGE_MODEL):
     """Create an arena-hard config file for judging specific models."""
     baseline_model = BASELINE_CONFIGS[baseline_name]
     
     config = {
-        'judge_model': JUDGE_MODEL,
+        'judge_model': judge_model,
         'baseline': baseline_model,
         'temperature': 0.0,
         'max_tokens': 4096,
@@ -167,7 +177,7 @@ def create_judgment_config(models_to_judge, output_path, baseline_name):
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_port=8001):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001):
     """Create a SLURM script for judging a batch of models."""
     
     baseline_model = BASELINE_CONFIGS[baseline_name]
@@ -235,13 +245,13 @@ $PYTHON_EXEC -m pip list | grep vllm
 echo "---------------------"
 
 # --- DEFINE PATHS AND PORTS ---
-JUDGE_PATH="{JUDGE_PATH}"
+JUDGE_PATH="{judge_path}"
 API_CONFIG_FILE="{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
 JUDGMENT_CONFIG_FILE="{config_file_path}"
 JUDGE_PORT={judge_port_val}
 
 echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
-echo "Judge Model: {JUDGE_MODEL}"
+echo "Judge Model: {judge_model}"
 echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
 
@@ -312,7 +322,7 @@ echo "Judgment job completed successfully for models: {', '.join(models_to_judge
 
 # Display summary of generated judgments
 echo "--- Judgment Summary ---"
-JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{JUDGE_MODEL}/compared_with_{baseline_name}"
+JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/compared_with_{baseline_name}"
 if [ -d "$JUDGMENT_DIR" ]; then
     echo "Generated judgment files:"
     for model in {' '.join(models_to_judge)}; do
@@ -374,6 +384,8 @@ def main():
     parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
                        choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft'],
                        help=f'Baseline model type (default: {DEFAULT_BASELINE})')
+    parser.add_argument('--judge-model', type=str, default=JUDGE_MODEL,
+                       help=f'Judge model to use (default: {JUDGE_MODEL})')
     parser.add_argument('--all', action='store_true', help='Judge all tulu3 models from API config')
     parser.add_argument('--batch-size', type=int, default=1, 
                        help='Number of models to judge per job (default: 1)')
@@ -467,15 +479,30 @@ def main():
         # Create judgment config file
         config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
-        create_judgment_config(model_batch, config_path, args.baseline)
+        create_judgment_config(model_batch, config_path, args.baseline, judge_model=args.judge_model)
         print(f"  Created config: {config_path}")
         
         # Create SLURM script
         script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
         # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
-        judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
-        create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline, judge_port=judge_port)
+
+        if args.judge_model:
+            judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
+            model_name = args.judge_model
+            model_path = extract_judge_path_from_api_config(api_config, args.judge_model)
+        else:
+            judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
+
+        create_judgment_slurm_script(
+                model_batch, 
+                script_path, 
+                config_path,
+                args.baseline,
+                judge_model=model_name, 
+                judge_path=model_path, 
+                judge_port=judge_port
+            )
         print(f"  Created script: {script_path}")
         
         job_scripts.append(script_path)
