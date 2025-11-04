@@ -18,7 +18,7 @@ from utils.judge_utils import JUDGE_SETTINGS
 from utils.math_utils import one_hot_encode, to_winrate_probabilities, bootstrap_pairwise_model
 
 
-def load_judgments_batch(judge_names, benchmark, batch_size=50, weight=3):
+def load_judgments_batch(judge_names, benchmark, batch_size=50, weight=3, subdir=""):
     """Load judgments in batches to avoid memory issues"""
     print(f"Loading judgments in batches of {batch_size}...")
     
@@ -28,7 +28,8 @@ def load_judgments_batch(judge_names, benchmark, batch_size=50, weight=3):
             "data",
             benchmark, 
             "model_judgment", 
-            judge_name, 
+            judge_name,
+            subdir,  # Include the subdir argument here
             "*.jsonl"
         ))
         all_files.extend(files)
@@ -237,7 +238,7 @@ def load_judgments_memory_mapped(judge_names, benchmark, weight=3):
         os.rmdir(temp_dir)
 
 
-def load_judgments(judge_names, benchmark, weight=3, memory_efficient=True, batch_size=30):
+def load_judgments(judge_names, benchmark, weight=3, memory_efficient=True, batch_size=30, subdir=""):
     """
     Load judgments with memory optimization
     
@@ -250,7 +251,7 @@ def load_judgments(judge_names, benchmark, weight=3, memory_efficient=True, batc
     """
     if memory_efficient:
         if batch_size > 0:
-            return load_judgments_batch(judge_names, benchmark, batch_size, weight)
+            return load_judgments_batch(judge_names, benchmark, batch_size, weight, subdir)
         else:
             return load_judgments_memory_mapped(judge_names, benchmark, weight)
     else:
@@ -510,6 +511,8 @@ if __name__ == "__main__":
                        help="Output results to CSV files")
     parser.add_argument("--output-dir", type=str, default="results",
                        help="Directory to save CSV files (default: results)")
+    parser.add_argument("--subdir", type=str, default="", 
+                    help="Optional subdirectory under judge-name to look for judgment files")
     args = parser.parse_args()
     
     # Handle memory efficiency flags
@@ -528,7 +531,8 @@ if __name__ == "__main__":
         args.judge_names, 
         args.benchmark, 
         memory_efficient=args.memory_efficient,
-        batch_size=args.batch_size
+        batch_size=args.batch_size,
+        subdir=args.subdir
     )
     
     if battles.empty:
