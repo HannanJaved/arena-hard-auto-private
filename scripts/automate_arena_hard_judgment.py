@@ -207,10 +207,9 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8        
 #SBATCH --mem=64G                
-#SBATCH --time=02:45:00          
+#SBATCH --time=04:00:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
-#SBATCH --exclude=c3
 
 # Exit on any error
 set -e
@@ -266,8 +265,37 @@ fi
 echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log
 
-echo "Waiting 15 mins for judge server to load..."
-sleep 900
+echo "Waiting for judge server to become ready (checking health endpoint)..."
+MAX_WAIT=1800  # 30 minutes max wait time
+ELAPSED=0
+SLEEP_INTERVAL=30
+
+while [ $ELAPSED -lt $MAX_WAIT ]; do
+    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
+        echo "Judge server is ready after $ELAPSED seconds!"
+        break
+    fi
+    echo "Server not ready yet... waiting (elapsed: ${{ELAPSED}}s / max: ${{MAX_WAIT}}s)"
+    sleep $SLEEP_INTERVAL
+    ELAPSED=$((ELAPSED + SLEEP_INTERVAL))
+    
+    # Check if server process is still running
+    if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
+        echo "ERROR: Judge server process died. Check logs:"
+        tail -n 50 {log_dir}/{step or model_name}_vllm_judge_server.log
+        exit 1
+    fi
+done
+
+if [ $ELAPSED -ge $MAX_WAIT ]; then
+    echo "ERROR: Judge server failed to become ready within $MAX_WAIT seconds"
+    echo "Last 100 lines of server log:"
+    tail -n 100 {log_dir}/{step or model_name}_vllm_judge_server.log
+    kill $JUDGE_PID
+    exit 1
+fi
+
+sleep 10  # Extra buffer after health check passes
 
 cd {ARENA_HARD_AUTO_DIR}
 
@@ -445,15 +473,15 @@ def main():
         # Create SLURM script
         script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
-    # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
-    judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
-    create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline, judge_port=judge_port)
-    print(f"  Created script: {script_path}")
-    
-    job_scripts.append(script_path)
-    
-    print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
-    print(f"Generated {len(model_batches)} config files in {CONFIGS_DIR}")
+        # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
+        judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
+        create_judgment_slurm_script(model_batch, script_path, config_path, args.baseline, judge_port=judge_port)
+        print(f"  Created script: {script_path}")
+        
+        job_scripts.append(script_path)
+        
+        print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
+        print(f"Generated {len(model_batches)} config files in {CONFIGS_DIR}")
     
     if args.dry_run:
         print("\\nDry run complete. Scripts generated but not submitted.")
