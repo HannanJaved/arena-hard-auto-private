@@ -205,7 +205,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     Path(log_dir).mkdir(parents=True, exist_ok=True)
     
     # Use SLURM_JOB_ID for unique filenames (no shell commands in SBATCH directives)
-    log_file_base = f"{job_name}_${{SLURM_JOB_ID}}"
+    log_file_base = f"{job_name}_$SLURM_JOB_ID"
     
     judge_port_val = judge_port or 8001
 
@@ -227,6 +227,7 @@ set -e
 # Create timestamp for additional log files
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 UNIQUE_ID="${{SLURM_JOB_ID}}_${{TIMESTAMP}}"
+SERVER_LOG_FILE="{log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log"
 
 # --- SETUP ENVIRONMENT ---
 echo "Setting up the environment for Arena Hard judgment..."
@@ -254,6 +255,7 @@ echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
 echo "Judge Model: {judge_model}"
 echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
+echo "Judge Server Log: $SERVER_LOG_FILE"
 
 # ===================================================================
 # Start Judge Server and Generate Judgments
@@ -263,17 +265,17 @@ CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
-    > {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log 2>&1 &
+    > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 
 sleep 5
 if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
-    echo "ERROR: Judge server failed to start. Check vllm_judge_server.log for details."
-    cat {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log
+    echo "ERROR: Judge server failed to start. Check log: $SERVER_LOG_FILE"
+    cat "$SERVER_LOG_FILE"
     exit 1
 fi
 echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
-tail -n 100 {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log
+tail -n 100 "$SERVER_LOG_FILE"
 
 echo "Waiting for judge server to become ready (checking health endpoint)..."
 MAX_WAIT=1800  # 30 minutes max wait time
@@ -292,7 +294,7 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
     # Check if server process is still running
     if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
         echo "ERROR: Judge server process died. Check logs:"
-        tail -n 50 {log_dir}/{step or model_name}_vllm_judge_server.log
+        tail -n 50 "$SERVER_LOG_FILE"
         exit 1
     fi
 done
@@ -300,7 +302,7 @@ done
 if [ $ELAPSED -ge $MAX_WAIT ]; then
     echo "ERROR: Judge server failed to become ready within $MAX_WAIT seconds"
     echo "Last 100 lines of server log:"
-    tail -n 100 {log_dir}/{step or model_name}_vllm_judge_server.log
+    tail -n 100 "$SERVER_LOG_FILE"
     kill $JUDGE_PID
     exit 1
 fi
@@ -508,8 +510,8 @@ def main():
         
         job_scripts.append(script_path)
         
-        print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
-        print(f"Generated {len(model_batches)} config files in {CONFIGS_DIR}")
+    print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
+    print(f"Generated {len(model_batches)} config files in {CONFIGS_DIR}")
     
     if args.dry_run:
         print("\\nDry run complete. Scripts generated but not submitted.")
