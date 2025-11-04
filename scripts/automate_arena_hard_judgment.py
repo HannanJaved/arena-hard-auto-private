@@ -323,6 +323,7 @@ echo "Judgment job completed successfully for models: {', '.join(models_to_judge
 # Display summary of generated judgments
 echo "--- Judgment Summary ---"
 JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/compared_with_{baseline_name}"
+mkdir -p "$JUDGMENT_DIR"
 if [ -d "$JUDGMENT_DIR" ]; then
     echo "Generated judgment files:"
     for model in {' '.join(models_to_judge)}; do
