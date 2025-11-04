@@ -4,7 +4,8 @@
 # temperature: 1.0
 # max_tokens: 32000
 
-judge_model: neuralmagic-llama3.1-70b-instruct-fp8
+# judge_model: neuralmagic-llama3.1-70b-instruct-fp8
+judge_model: Qwen3-Next-80B-A3B-Instruct-FP8
 temperature: 0.0
 max_tokens: 4096
 
