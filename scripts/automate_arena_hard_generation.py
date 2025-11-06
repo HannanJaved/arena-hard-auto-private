@@ -106,10 +106,10 @@ def create_directories():
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
-def create_gen_answer_config(model_name, output_path):
+def create_gen_answer_config(model_name, output_path, bench_name):
     """Create a gen_answer_config.yaml file for a specific model."""
     config = {
-        'bench_name': 'arena-hard-v2.0',
+        'bench_name': bench_name,
         'model_list': [model_name]
     }
     
@@ -280,6 +280,9 @@ def main():
     parser.add_argument('--all', action='store_true', help='Process all tulu3 models from API config')
     parser.add_argument('--dry-run', action='store_true', help='Generate scripts but do not submit jobs')
     parser.add_argument('--submit', action='store_true', help='Submit jobs after generating scripts')
+    parser.add_argument('--bench-name', type=str, default='arena-hard-v2.0',
+                       help='Benchmark name to use in config files (default: arena-hard-v2.0)',
+                       choices=['arena-hard-v0.1', 'arena-hard-v2.0', 'hard_prompt', 'coding', 'math', 'creative_writing'])
     
     args = parser.parse_args()
     
@@ -356,6 +359,8 @@ def main():
         print("No models to process. Exiting.")
         return
     
+    bench_name = args.bench_name
+
     # Generate scripts and configs for each model
     job_scripts = []
     for model_name, model_config in models_to_process.items():
@@ -363,7 +368,7 @@ def main():
 
         # Create gen_answer config file
         config_path = f"{CONFIGS_DIR}/gen_answer_config_{model_name}.yaml"
-        create_gen_answer_config(model_name, config_path)
+        create_gen_answer_config(model_name, config_path, bench_name)
         print(f"  Created config: {config_path}")
 
         # Create SLURM script
