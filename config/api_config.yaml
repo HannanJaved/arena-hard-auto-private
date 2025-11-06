@@ -3677,3 +3677,88 @@ tulu3-8b-rank64-alpha5e5-001-alpha128-step26000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
+
+#####################
+#### FULL RUNS ####
+####################
+
+tulu3-8b-SFT-full-final:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/
+  endpoints:
+  - api_base: http://localhost:8038/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step2000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_2000
+  endpoints:
+  - api_base: http://localhost:8039/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step4000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_4000
+  endpoints:
+  - api_base: http://localhost:8040/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step6000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_6000
+  endpoints:
+  - api_base: http://localhost:8041/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+tulu3-8b-SFT-full-step8000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_8000
+  endpoints:
+  - api_base: http://localhost:8042/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step10000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_10000
+  endpoints:
+  - api_base: http://localhost:8043/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step12000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_12000
+  endpoints:
+  - api_base: http://localhost:8044/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-SFT-full-step14000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/SFT/step_14000
+  endpoints:
+  - api_base: http://localhost:8045/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
