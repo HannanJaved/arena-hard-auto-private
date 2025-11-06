@@ -27,7 +27,8 @@ BASELINE_CONFIGS = {
     "instruct": "llama3.1-8b-instruct",
     "base": "llama3.1-8b", 
     "tulu_finetuned": "llama3.1-8b-TULU",
-    "tulu_sft": "llama3.1-8b-TULU-SFT"
+    "tulu_sft": "llama3.1-8b-TULU-SFT",
+    "tulu_dpo": "llama3.1-8b-TULU-DPO"
 }
 
 # Default baseline
@@ -264,7 +265,7 @@ echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
+    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/tulu_template.j2 \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 
