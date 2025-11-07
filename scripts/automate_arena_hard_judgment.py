@@ -2,6 +2,8 @@
 """
 Automation script to generate Arena Hard judgments for multiple models.
 This script creates individual SLURM jobs for judging each model against the baseline.
+
+Use this for Tulu: --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/tulu_template.j2 \\
 """
 
 import os
@@ -17,6 +19,7 @@ ARENA_HARD_AUTO_DIR = f"{WORKSPACE_ROOT}/arena-hard-auto"
 LOGS_DIR = f"{WORKSPACE_ROOT}/logs/arena-hard"
 SCRIPTS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_scripts"
 CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_configs"
+JUDGE_UTILS_PATH = f"{ARENA_HARD_AUTO_DIR}/utils/judge_utils.py"
 
 # Judge configuration
 JUDGE_MODEL = "neuralmagic-llama3.1-70b-instruct-fp8"
@@ -146,6 +149,27 @@ def create_directories():
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
+def update_baseline_in_judge_utils(baseline_name):
+    """Update the BASELINE_MODEL in judge_utils.py to match the selected baseline."""
+    baseline_model = BASELINE_CONFIGS[baseline_name]
+    
+    # Read the current judge_utils.py
+    with open(JUDGE_UTILS_PATH, 'r') as f:
+        content = f.read()
+    
+    # Find and replace the BASELINE_MODEL line
+    import re
+    pattern = r'BASELINE_MODEL = "[^"]*"'
+    replacement = f'BASELINE_MODEL = "{baseline_model}"'
+    
+    new_content = re.sub(pattern, replacement, content)
+    
+    # Write back to file
+    with open(JUDGE_UTILS_PATH, 'w') as f:
+        f.write(new_content)
+    
+    print(f"Updated BASELINE_MODEL in judge_utils.py to: {baseline_model}")
+
 def extract_judge_path_from_api_config(api_config, model_name):
     """Extract the model path for the judge model from the API config."""
     entry = api_config.get(model_name, {})
@@ -265,7 +289,7 @@ echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/tulu_template.j2 \\
+    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/chat_template.jinja \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 
@@ -327,6 +351,13 @@ echo "Judgment job completed successfully for models: {', '.join(models_to_judge
 echo "--- Judgment Summary ---"
 JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/compared_with_{baseline_name}"
 mkdir -p "$JUDGMENT_DIR"
+# Move generated judgment files to JUDGMENT_DIR
+for model in {' '.join(models_to_judge)}; do
+    src_file="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/$model.jsonl"
+    if [ -f "$src_file" ]; then
+        mv "$src_file" "$JUDGMENT_DIR/"
+    fi
+done
 if [ -d "$JUDGMENT_DIR" ]; then
     echo "Generated judgment files:"
     for model in {' '.join(models_to_judge)}; do
@@ -386,7 +417,7 @@ def main():
     parser.add_argument('--missing-models-file', type=str,
                        help='File containing list of missing/incomplete models to judge')
     parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
-                       choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft'],
+                       choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft', 'tulu_dpo'],
                        help=f'Baseline model type (default: {DEFAULT_BASELINE})')
     parser.add_argument('--judge-model', type=str, default=JUDGE_MODEL,
                        help=f'Judge model to use (default: {JUDGE_MODEL})')
@@ -466,6 +497,10 @@ def main():
     if args.validate_only:
         print(f"\\nValidation complete. {len(models_to_judge)} models ready for judgment.")
         return
+    
+    # Update baseline in judge_utils.py
+    print(f"\\nUpdating baseline configuration...")
+    update_baseline_in_judge_utils(args.baseline)
     
     # Create batches of models
     model_batches = []

@@ -194,7 +194,7 @@ echo "### GENERATING ANSWERS FOR {model_name} ###"
 echo "Starting model server on GPU 0 (Port {model_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$MODEL_PATH" --port $MODEL_PORT --tensor-parallel-size 1 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/tulu_template.j2 \\
+    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/chat_template.jinja \\
     > {log_dir}/{step or model_name}_vllm_model_server.log 2>&1 &
 MODEL_PID=$!
 
