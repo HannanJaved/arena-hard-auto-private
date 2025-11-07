@@ -3774,7 +3774,7 @@ tulu3-8b-SFT-full-step14000:
 
 ##### DPO #####
 
-tulu3-8b-SFT-full-final:
+tulu3-8b-DPO-full-final:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO/Llama-3.1-8B_Tulu3_Full_DPO_Run1/
   endpoints:
   - api_base: http://localhost:8046/v1
@@ -3784,10 +3784,122 @@ tulu3-8b-SFT-full-final:
   max_tokens: 4096
   temperature: 0.0
 
-tulu3-8b-SFT-full-step2000:
+tulu3-8b-DPO-full-step2000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO/Llama-3.1-8B_Tulu3_Full_DPO_Run1/step_2000
   endpoints:
   - api_base: http://localhost:8047/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+####### DPO ON THE TULU SFT CHECKPOINT #######
+tulu3-8b-DPO-on-SFT-final:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/
+  endpoints:
+  - api_base: http://localhost:8048/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step200:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_200
+  endpoints:
+  - api_base: http://localhost:8049/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step400:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_400
+  endpoints:
+  - api_base: http://localhost:8050/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step600:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_600
+  endpoints:
+  - api_base: http://localhost:8051/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step800:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_800
+  endpoints:
+  - api_base: http://localhost:8052/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step1000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_1000
+  endpoints:
+  - api_base: http://localhost:8053/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step1200:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_1200
+  endpoints:
+  - api_base: http://localhost:8054/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step1400:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_1400
+  endpoints:
+  - api_base: http://localhost:8055/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step1600:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_1600
+  endpoints:
+  - api_base: http://localhost:8056/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step1800:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_1800
+  endpoints:
+  - api_base: http://localhost:8057/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-DPO-on-SFT-step2000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/step_2000
+  endpoints:
+  - api_base: http://localhost:8058/v1
     api_key: '-'
   api_type: openai
   parallel: 32
