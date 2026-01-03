@@ -4307,3 +4307,95 @@ tulu3-setting-dpo:
   max_tokens: 4096
   temperature: 0.0
 #####################
+
+########### DIFFERENT BETA VALUES FOR DPO ###########
+tulu3-8b-bs64-lr5e7-beta0.2:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS64_LR5e-7/beta_0.2
+  endpoints:
+  - api_base: http://localhost:8102/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs64-lr5e7-beta0.3:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS64_LR5e-7/beta_0.3
+  endpoints:
+  - api_base: http://localhost:8103/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs64-lr5e7-beta0.5:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS64_LR5e-7/beta_0.5
+  endpoints:
+  - api_base: http://localhost:8104/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs128-lr5e7-beta0.2:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.2
+  endpoints:
+  - api_base: http://localhost:8105/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs128-lr5e7-beta0.3:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.3
+  endpoints:
+  - api_base: http://localhost:8106/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+tulu3-8b-bs128-lr5e7-beta0.5:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.5
+  endpoints:
+  - api_base: http://localhost:8107/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+tulu3-8b-bs256-lr5e7-beta0.2:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS256_LR5e-7/beta_0.2
+  endpoints:
+  - api_base: http://localhost:8108/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs256-lr5e7-beta0.3:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS256_LR5e-7/beta_0.3
+  endpoints:
+  - api_base: http://localhost:8109/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+tulu3-8b-bs256-lr5e7-beta0.5:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS256_LR5e-7/beta_0.5
+  endpoints:
+  - api_base: http://localhost:8110/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+######################
