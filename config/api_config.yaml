@@ -4339,6 +4339,26 @@ tulu3-8b-bs64-lr5e7-beta0.5:
   max_tokens: 4096
   temperature: 0.0
 
+tulu3-8b-bs128-lr5e7-beta0.01:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.01
+  endpoints:
+  - api_base: http://localhost:8111/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs128-lr5e7-beta0.05:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.05
+  endpoints:
+  - api_base: http://localhost:8112/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
 tulu3-8b-bs128-lr5e7-beta0.2:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.2
   endpoints:
