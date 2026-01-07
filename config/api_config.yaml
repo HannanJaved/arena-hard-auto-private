@@ -4419,3 +4419,86 @@ tulu3-8b-bs256-lr5e7-beta0.5:
   max_tokens: 4096
   temperature: 0.0
 ######################
+
+######## DPO ON THE 16516_0 SFT CHECKPOINT ##########
+x_16516_1066_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/1066_steps
+  endpoints:
+  - api_base: http://localhost:8113/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+x_16516_3216_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/3216_steps
+  endpoints:
+  - api_base: http://localhost:8114/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+x_16516_4266_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/4266_steps
+  endpoints:
+  - api_base: http://localhost:8115/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0 
+
+x_16516_5366_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/5366_steps
+  endpoints:
+  - api_base: http://localhost:8116/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+x_16516_6182_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/6182_steps
+  endpoints:
+  - api_base: http://localhost:8117/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+x_16516_7416_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/7416_steps
+  endpoints:
+  - api_base: http://localhost:8118/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096  
+  temperature: 0.0
+
+x_16516_8258_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/8258_steps
+  endpoints:
+  - api_base: http://localhost:8119/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+x_16516_9916_dpo:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline/9916_steps
+  endpoints:
+  - api_base: http://localhost:8120/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+#########################################################
