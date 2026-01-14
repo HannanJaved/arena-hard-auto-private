@@ -4276,16 +4276,6 @@ x_16516_0_sft:
   max_tokens: 4096
   temperature: 0.0
 
-x_16516_0_dpo:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_16516_0/tulu3-dpo-pipeline
-  endpoints:
-  - api_base: http://localhost:8099/v1
-    api_key: '-'
-  api_type: openai  
-  parallel: 32
-  max_tokens: 4096
-  temperature: 0.0
-
 ######## tulu3-setting #########
 tulu3-setting-sft:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/tulu3-setting/tulu3-sft-pipeline
