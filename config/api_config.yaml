@@ -124,7 +124,7 @@ llama3.1-8b-TULU-DPO:
 Qwen3-Next-80B-A3B-Instruct-FP8:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen3-Next-80B-A3B-Instruct-FP8
   endpoints:
-  - api_base: http://localhost:8050/v1
+  - api_base: http://localhost:8250/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -4329,6 +4329,26 @@ tulu3-8b-bs64-lr5e7-beta0.5:
   max_tokens: 4096
   temperature: 0.0
 
+tulu3-8b-bs128-lr5e7-beta0.0001:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.0001
+  endpoints:
+  - api_base: http://localhost:8113/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+tulu3-8b-bs128-lr5e7-beta0.001:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.001
+  endpoints:
+  - api_base: http://localhost:8113/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
 tulu3-8b-bs128-lr5e7-beta0.01:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/beta_0.01
   endpoints:
@@ -4492,3 +4512,14 @@ x_16516_9916_dpo:
   temperature: 0.0
 
 #########################################################
+
+########### DPO NORM ###########
+tulu3-setting-dpo-norm:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/DPO_Norm/Tulu3-setting
+  endpoints:
+  - api_base: http://localhost:8121/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
