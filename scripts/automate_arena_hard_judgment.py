@@ -303,7 +303,7 @@ echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 "$SERVER_LOG_FILE"
 
 echo "Waiting for judge server to become ready (checking health endpoint)..."
-MAX_WAIT=1800  # 30 minutes max wait time
+MAX_WAIT=2400  # 40 minutes max wait time
 ELAPSED=0
 SLEEP_INTERVAL=30
 
