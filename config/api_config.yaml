@@ -4523,3 +4523,55 @@ tulu3-setting-dpo-norm:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
+tulu3-setting-dpo-norm-linear:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-Tulu-3-8B-SFT/TRL_DPO_BS128_LR5e-7/DPO_Norm/Tulu3-setting-linear
+  endpoints:
+  - api_base: http://localhost:8122/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+##### My checkpoints ######
+
+x_15450_2133_dpo_norm_linear:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_15450_1066/tulu3-sft-pipeline/TRL_DPO_BS128_LR5e-7/DPO_Norm/Tulu3-setting-linear/
+  endpoints:
+  - api_base: http://localhost:8123/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+x_15450_2133_dpo_norm:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/x_15450_1066/tulu3-sft-pipeline/TRL_DPO_BS128_LR5e-7/DPO_Norm/Tulu3-setting/
+  endpoints:
+  - api_base: http://localhost:8124/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+recreate-tulu3-setting-dpo-norm-linear:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/tulu3-setting/tulu3-sft-pipeline/dpo_norm_linear/
+  endpoints:
+  - api_base: http://localhost:8101/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+recreate-tulu3-setting-dpo-norm-cosine:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/tulu3-setting/tulu3-sft-pipeline/dpo_norm_cosine/
+  endpoints:
+  - api_base: http://localhost:8102/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
