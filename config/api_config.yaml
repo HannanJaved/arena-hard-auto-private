@@ -4559,7 +4559,7 @@ x_15450_2133_dpo_norm:
 recreate-tulu3-setting-dpo-norm-linear:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/tulu3-setting/tulu3-sft-pipeline/dpo_norm_linear/
   endpoints:
-  - api_base: http://localhost:8101/v1
+  - api_base: http://localhost:8125/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -4569,7 +4569,123 @@ recreate-tulu3-setting-dpo-norm-linear:
 recreate-tulu3-setting-dpo-norm-cosine:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/optimal-N/tulu3-setting/tulu3-sft-pipeline/dpo_norm_cosine/
   endpoints:
-  - api_base: http://localhost:8102/v1
+  - api_base: http://localhost:8126/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+########## MixtureVitae SFT HP GRID ##########
+mv1.7B-tulu3-sft-lr1e5:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR1e5/
+  endpoints:
+  - api_base: http://localhost:8127/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+mv1.7B-tulu3-sft-lr1e6:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR1e6/
+  endpoints:
+  - api_base: http://localhost:8128/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0  
+
+mv1.7B-tulu3-sft-lr3e5:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR3e5/
+  endpoints:
+  - api_base: http://localhost:8129/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+mv1.7B-tulu3-sft-lr3e6:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR3e6/
+  endpoints:
+  - api_base: http://localhost:8126/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+mv1.7B-tulu3-sft-lr5e5:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR5e5/
+  endpoints:
+  - api_base: http://localhost:8130/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+mv1.7B-tulu3-sft-lr5e6:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR5e6/
+  endpoints:
+  - api_base: http://localhost:8131/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+mv1.7B-tulu3-sft-lr7e6:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR7e6/
+  endpoints:
+  - api_base: http://localhost:8132/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+mv1.7B-tulu3-sft-lr7e7:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/tulu3-sft/LR7e7/
+  endpoints:
+  - api_base: http://localhost:8133/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+########## MixtureVitae SFT HP GRID OLMO3 ##########
+mv1.7B-olmo3-sft-lr5e6-bs128:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/olmo3-sft/LR5e6/
+  endpoints:
+  - api_base: http://localhost:8134/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+mv1.7B-olmo3-sft-lr5e6-bs256:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/olmo3-sft/LR5e6_BS256/
+  endpoints:
+  - api_base: http://localhost:8135/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+mv1.7B-olmo3-sft-lr5e6-bs512:
+  model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/olmo3-sft/LR5e6_BS512/
+  endpoints:
+  - api_base: http://localhost:8136/v1
     api_key: '-'
   api_type: openai
   parallel: 32
