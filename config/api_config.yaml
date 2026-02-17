@@ -4583,7 +4583,7 @@ mv1.7B-tulu3-sft-lr1e5:
   endpoints:
   - api_base: http://localhost:8127/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0  
@@ -4593,7 +4593,7 @@ mv1.7B-tulu3-sft-lr1e6:
   endpoints:
   - api_base: http://localhost:8128/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0  
@@ -4603,7 +4603,7 @@ mv1.7B-tulu3-sft-lr3e5:
   endpoints:
   - api_base: http://localhost:8129/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4613,7 +4613,7 @@ mv1.7B-tulu3-sft-lr3e6:
   endpoints:
   - api_base: http://localhost:8126/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4623,7 +4623,7 @@ mv1.7B-tulu3-sft-lr5e5:
   endpoints:
   - api_base: http://localhost:8130/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4633,7 +4633,7 @@ mv1.7B-tulu3-sft-lr5e6:
   endpoints:
   - api_base: http://localhost:8131/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4643,7 +4643,7 @@ mv1.7B-tulu3-sft-lr7e6:
   endpoints:
   - api_base: http://localhost:8132/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4653,7 +4653,7 @@ mv1.7B-tulu3-sft-lr7e7:
   endpoints:
   - api_base: http://localhost:8133/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
@@ -4665,29 +4665,118 @@ mv1.7B-olmo3-sft-lr5e6-bs128:
   endpoints:
   - api_base: http://localhost:8134/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
-
 
 mv1.7B-olmo3-sft-lr5e6-bs256:
   model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/olmo3-sft/LR5e6_BS256/
   endpoints:
   - api_base: http://localhost:8135/v1
     api_key: '-'
-  api_type: openai
+  api_type: huggingface
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
-
 
 mv1.7B-olmo3-sft-lr5e6-bs512:
   model: /data/cat/ws/hama901h-Posttraining/checkpoints/1.7b-MixtureVitae-300BT-v1/olmo3-sft/LR5e6_BS512/
   endpoints:
   - api_base: http://localhost:8136/v1
     api_key: '-'
+  api_type: huggingface
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+############ Whittle trials - Qwen3 ########
+qwen3-4b-olmo3-sft-4096tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8137/v1
+    api_key: '-'
   api_type: openai
   parallel: 32
   max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-olmo3-sft-8192tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8140/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 8192
+  temperature: 0.0
+
+qwen3-4b-olmo3-sft-16384tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8141/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 16384
+  temperature: 0.0
+
+qwen3-8b-olmo3-sft-4096tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8138/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-8b-olmo3-sft-8192tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8142/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 8192
+  temperature: 0.0
+
+qwen3-8b-olmo3-sft-16384tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8143/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 16384
+  temperature: 0.0
+
+qwen3-14b-olmo3-sft-4096tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8139/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-14b-olmo3-sft-8192tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8144/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 8192
+  temperature: 0.0
+
+qwen3-14b-olmo3-sft-16384tokens:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/olmo3-sft/
+  endpoints:
+  - api_base: http://localhost:8145/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 16384
   temperature: 0.0
