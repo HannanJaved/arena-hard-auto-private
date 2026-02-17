@@ -8,6 +8,13 @@ import pandas as pd
 
 import requests
 from typing import Optional
+import re
+
+import torch
+import tiktoken
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from utils.add_markdown_info import count_markdown_elements, remove_pattern
 import boto3
 
 from glob import glob
@@ -38,6 +45,151 @@ def register_engine(engine_type):
         return func
 
     return decorator
+
+
+def _build_chat_prompt(tokenizer, messages):
+    if hasattr(tokenizer, "apply_chat_template"):
+        try:
+            return tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
+        except Exception:
+            pass
+
+    parts = []
+    for message in messages:
+        role = message.get("role", "user").capitalize()
+        parts.append(f"{role}: {message.get('content', '')}")
+    parts.append("Assistant:")
+    return "\n".join(parts)
+
+
+def _load_existing_uids(answer_file: str) -> set:
+    existing = set()
+    if not os.path.exists(answer_file):
+        return existing
+    try:
+        with open(answer_file, "r", encoding="utf-8") as fin:
+            for line in fin:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    payload = json.loads(line)
+                    if "uid" in payload:
+                        existing.add(payload["uid"])
+                except json.JSONDecodeError:
+                    continue
+    except OSError:
+        pass
+    return existing
+
+
+@register_engine("huggingface")
+def local_completion_huggingface(
+    model,
+    answer_file,
+    batch_context,
+    max_tokens=4096,
+    temperature=0.0,
+    batch_size=1,
+    sys_prompt=None,
+    trust_remote_code=False,
+    **kwargs,
+):
+    model_path = model
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_path,
+        use_fast=True,
+        trust_remote_code=trust_remote_code,
+    )
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token or tokenizer.unk_token
+
+    use_device_map = False
+    try:
+        import accelerate  # noqa: F401
+        use_device_map = True
+    except Exception:
+        use_device_map = False
+
+    model_kwargs = {
+        "dtype": "auto",
+        "trust_remote_code": trust_remote_code,
+    }
+    if use_device_map:
+        model_kwargs["device_map"] = "auto"
+
+    hf_model = AutoModelForCausalLM.from_pretrained(model_path, **model_kwargs)
+    if not use_device_map:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        hf_model.to(device)
+    hf_model.eval()
+
+    model_name = os.path.splitext(os.path.basename(answer_file))[0]
+    existing_uids = _load_existing_uids(answer_file)
+    pattern = re.compile("```([^`]*)```")
+    encoding = tiktoken.encoding_for_model("gpt-4o")
+
+    pending_questions = [q for q in batch_context if q.get("uid") not in existing_uids]
+    if not pending_questions:
+        return
+
+    os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+    for start in tqdm(range(0, len(pending_questions), batch_size)):
+        batch = pending_questions[start : start + batch_size]
+        batch_messages = []
+        prompts = []
+
+        for question in batch:
+            messages = []
+            if sys_prompt:
+                messages.append({"role": "system", "content": sys_prompt})
+            messages.append({"role": "user", "content": question["prompt"]})
+            batch_messages.append(messages)
+            prompts.append(_build_chat_prompt(tokenizer, messages))
+
+        inputs = tokenizer(
+            prompts,
+            return_tensors="pt",
+            padding=True,
+        ).to(hf_model.device)
+
+        do_sample = temperature is not None and temperature > 0
+        with torch.no_grad():
+            output_ids = hf_model.generate(
+                **inputs,
+                max_new_tokens=int(max_tokens),
+                do_sample=do_sample,
+                temperature=float(temperature) if do_sample else None,
+            )
+
+        attention_mask = inputs["attention_mask"]
+        for idx, question in enumerate(batch):
+            input_len = int(attention_mask[idx].sum().item())
+            generated_ids = output_ids[idx][input_len:]
+            answer_text = tokenizer.decode(generated_ids, skip_special_tokens=True)
+
+            output = {"answer": answer_text}
+            ans = {
+                "uid": question["uid"],
+                "ans_id": shortuuid.uuid(),
+                "model": model_name,
+                "messages": batch_messages[idx] + [{"role": "assistant", "content": output}],
+                "tstamp": time.time(),
+            }
+
+            metadata = {
+                "token_len": len(encoding.encode(answer_text, disallowed_special=()))
+            }
+            ans["metadata"] = metadata | count_markdown_elements(
+                remove_pattern(answer_text, pattern),
+                suffix="",
+            )
+
+            with open(answer_file, "a", encoding="utf-8") as fout:
+                fout.write(json.dumps(ans, ensure_ascii=False) + "\n")
 
 
 def load_questions(question_file: str):
