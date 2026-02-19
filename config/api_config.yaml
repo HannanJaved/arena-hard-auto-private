@@ -4820,3 +4820,23 @@ qwen3-14b-olmo3-sft-16384tokens:
   parallel: 32
   max_tokens: 16384
   temperature: 0.0
+
+qwen3-4b-base:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base
+  endpoints:
+  - api_base: http://localhost:8001/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-8b-base:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
