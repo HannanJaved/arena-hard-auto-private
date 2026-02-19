@@ -209,7 +209,7 @@ echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
 tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
 
 echo "Waiting for model server to become ready (checking health endpoint)..."
-MAX_WAIT=1800  # 30 minutes max wait time
+MAX_WAIT=2400  # 40 minutes max wait time
 ELAPSED=0
 SLEEP_INTERVAL=30
 
