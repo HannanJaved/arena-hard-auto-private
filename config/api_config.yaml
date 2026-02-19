@@ -140,6 +140,7 @@ neuralmagic-llama3.1-70b-instruct-fp8:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_6000
   endpoints:
@@ -149,6 +150,7 @@ tulu3-8b-rank64-alpha1e5-001-step6000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_12000
   endpoints:
@@ -158,6 +160,7 @@ tulu3-8b-rank64-alpha1e5-001-step12000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_18000
   endpoints:
@@ -167,6 +170,7 @@ tulu3-8b-rank64-alpha1e5-001-step18000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_24000
   endpoints:
@@ -176,6 +180,7 @@ tulu3-8b-rank64-alpha1e5-001-step24000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step30000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_30000
   endpoints:
@@ -185,6 +190,7 @@ tulu3-8b-rank64-alpha1e5-001-step30000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step36000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_36000
   endpoints:
@@ -194,6 +200,7 @@ tulu3-8b-rank64-alpha1e5-001-step36000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step42000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_42000
   endpoints:
@@ -203,6 +210,7 @@ tulu3-8b-rank64-alpha1e5-001-step42000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-step48000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/step_48000
   endpoints:
@@ -212,6 +220,7 @@ tulu3-8b-rank64-alpha1e5-001-step48000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-001-final:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_001/final
   endpoints:
@@ -221,6 +230,7 @@ tulu3-8b-rank64-alpha1e5-001-final:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_6000
   endpoints:
@@ -230,6 +240,7 @@ tulu3-8b-rank64-alpha1e5-005-step6000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_12000
   endpoints:
@@ -239,6 +250,7 @@ tulu3-8b-rank64-alpha1e5-005-step12000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_18000
   endpoints:
@@ -248,6 +260,7 @@ tulu3-8b-rank64-alpha1e5-005-step18000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_24000
   endpoints:
@@ -257,6 +270,7 @@ tulu3-8b-rank64-alpha1e5-005-step24000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step30000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_30000
   endpoints:
@@ -266,6 +280,7 @@ tulu3-8b-rank64-alpha1e5-005-step30000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step36000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_36000
   endpoints:
@@ -275,6 +290,7 @@ tulu3-8b-rank64-alpha1e5-005-step36000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step42000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_42000
   endpoints:
@@ -284,6 +300,7 @@ tulu3-8b-rank64-alpha1e5-005-step42000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-step48000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/step_48000
   endpoints:
@@ -293,6 +310,7 @@ tulu3-8b-rank64-alpha1e5-005-step48000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-005-final:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_005/final
   endpoints:
@@ -302,6 +320,7 @@ tulu3-8b-rank64-alpha1e5-005-final:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_6000
   endpoints:
@@ -311,6 +330,7 @@ tulu3-8b-rank64-alpha1e5-010-step6000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_12000
   endpoints:
@@ -320,6 +340,7 @@ tulu3-8b-rank64-alpha1e5-010-step12000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_18000
   endpoints:
@@ -329,6 +350,7 @@ tulu3-8b-rank64-alpha1e5-010-step18000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_24000
   endpoints:
@@ -338,6 +360,7 @@ tulu3-8b-rank64-alpha1e5-010-step24000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step30000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_30000
   endpoints:
@@ -347,6 +370,7 @@ tulu3-8b-rank64-alpha1e5-010-step30000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step36000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_36000
   endpoints:
@@ -356,6 +380,7 @@ tulu3-8b-rank64-alpha1e5-010-step36000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step42000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_42000
   endpoints:
@@ -365,6 +390,7 @@ tulu3-8b-rank64-alpha1e5-010-step42000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step48000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_48000
   endpoints:
@@ -374,6 +400,7 @@ tulu3-8b-rank64-alpha1e5-010-step48000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-step50000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/step_50000
   endpoints:
@@ -383,6 +410,7 @@ tulu3-8b-rank64-alpha1e5-010-step50000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e5-010-final:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e5_010/final
   endpoints:
@@ -392,6 +420,7 @@ tulu3-8b-rank64-alpha1e5-010-final:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_6000
   endpoints:
@@ -401,6 +430,7 @@ tulu3-8b-rank64-alpha1e6-001-step6000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_12000
   endpoints:
@@ -410,6 +440,7 @@ tulu3-8b-rank64-alpha1e6-001-step12000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_18000
   endpoints:
@@ -419,6 +450,7 @@ tulu3-8b-rank64-alpha1e6-001-step18000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step24000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_24000
   endpoints:
@@ -428,6 +460,7 @@ tulu3-8b-rank64-alpha1e6-001-step24000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step30000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_30000
   endpoints:
@@ -437,6 +470,7 @@ tulu3-8b-rank64-alpha1e6-001-step30000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step36000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_36000
   endpoints:
@@ -446,6 +480,7 @@ tulu3-8b-rank64-alpha1e6-001-step36000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step42000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_42000
   endpoints:
@@ -455,6 +490,7 @@ tulu3-8b-rank64-alpha1e6-001-step42000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-step48000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/step_48000
   endpoints:
@@ -464,6 +500,7 @@ tulu3-8b-rank64-alpha1e6-001-step48000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-001-final:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_001/final
   endpoints:
@@ -473,6 +510,7 @@ tulu3-8b-rank64-alpha1e6-001-final:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-005-step6000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_6000
   endpoints:
@@ -482,6 +520,7 @@ tulu3-8b-rank64-alpha1e6-005-step6000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
 tulu3-8b-rank64-alpha1e6-005-step12000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_12000
   endpoints:
@@ -491,6 +530,7 @@ tulu3-8b-rank64-alpha1e6-005-step12000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+  
 tulu3-8b-rank64-alpha1e6-005-step18000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/Rank64/alpha_1e6_005/step_18000
   endpoints:
