@@ -22,8 +22,10 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_configs"
 JUDGE_UTILS_PATH = f"{ARENA_HARD_AUTO_DIR}/utils/judge_utils.py"
 
 # Judge configuration
-JUDGE_MODEL = "neuralmagic-llama3.1-70b-instruct-fp8"
-JUDGE_PATH = "/data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-70B-Instruct-FP8"
+# JUDGE_MODEL = "neuralmagic-llama3.1-70b-instruct-fp8"
+JUDGE_MODEL = "Qwen3-Next-80B-A3B-Instruct-FP8"
+JUDGE_PATH = f"{WORKSPACE_ROOT}/checkpoints/Qwen3-Next-80B-A3B-Instruct-FP8"
+# JUDGE_PATH = "/data/horse/ws/hama901h-BFTranslation/checkpoints/meta-llama/Meta-Llama-3.1-70B-Instruct-FP8"
 
 # Baseline configurations
 BASELINE_CONFIGS = {
@@ -289,7 +291,6 @@ echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/chat_template.jinja \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 
