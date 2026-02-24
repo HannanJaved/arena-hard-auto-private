@@ -4893,7 +4893,7 @@ qwen3-1.7b-olmo3-sft-Lr5e3:
   temperature: 0.0
 
 qwen3-1.7b-olmo3-sft-Lr5e4:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e4
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR5e4
   endpoints:
   - api_base: http://localhost:8008/v1
     api_key: '-'
@@ -4903,7 +4903,7 @@ qwen3-1.7b-olmo3-sft-Lr5e4:
   temperature: 0.0
 
 qwen3-1.7b-olmo3-sft-Lr5e5:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e5
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR5e5
   endpoints:
   - api_base: http://localhost:8009/v1
     api_key: '-'
