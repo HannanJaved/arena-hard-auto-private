@@ -5826,7 +5826,7 @@ qwen3-1.7b-sft-lr5e5-step30000:
   temperature: 0.0
 
 qwen3-1.7b-sft-lr8e5-step3000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-3000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-3000
   endpoints:
   - api_base: http://localhost:8260/v1
     api_key: '-'
@@ -5835,7 +5835,7 @@ qwen3-1.7b-sft-lr8e5-step3000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step6000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-6000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-6000
   endpoints:
   - api_base: http://localhost:8261/v1
     api_key: '-'
@@ -5844,7 +5844,7 @@ qwen3-1.7b-sft-lr8e5-step6000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step9000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-9000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-9000
   endpoints:
   - api_base: http://localhost:8262/v1
     api_key: '-'
@@ -5853,7 +5853,7 @@ qwen3-1.7b-sft-lr8e5-step9000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step12000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-12000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-12000
   endpoints:
   - api_base: http://localhost:8263/v1
     api_key: '-'
@@ -5862,7 +5862,7 @@ qwen3-1.7b-sft-lr8e5-step12000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step15000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-15000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-15000
   endpoints:
   - api_base: http://localhost:8264/v1
     api_key: '-'
@@ -5871,7 +5871,7 @@ qwen3-1.7b-sft-lr8e5-step15000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step18000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-18000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-18000
   endpoints:
   - api_base: http://localhost:8265/v1
     api_key: '-'
@@ -5880,7 +5880,7 @@ qwen3-1.7b-sft-lr8e5-step18000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step21000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-21000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-21000
   endpoints:
   - api_base: http://localhost:8266/v1
     api_key: '-'
@@ -5889,7 +5889,7 @@ qwen3-1.7b-sft-lr8e5-step21000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step24000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-24000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-24000
   endpoints:
   - api_base: http://localhost:8267/v1
     api_key: '-'
@@ -5898,7 +5898,7 @@ qwen3-1.7b-sft-lr8e5-step24000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step27000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-27000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-27000
   endpoints:
   - api_base: http://localhost:8268/v1
     api_key: '-'
@@ -5907,7 +5907,7 @@ qwen3-1.7b-sft-lr8e5-step27000:
   max_tokens: 4096
   temperature: 0.0
 qwen3-1.7b-sft-lr8e5-step30000:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR8e5/checkpoint-30000
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/test-runs/32K/checkpoint-30000
   endpoints:
   - api_base: http://localhost:8269/v1
     api_key: '-'
