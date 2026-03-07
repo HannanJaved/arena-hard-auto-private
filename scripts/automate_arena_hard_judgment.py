@@ -454,6 +454,14 @@ def main():
     if not models_to_judge:
         print("No models to judge. Exiting.")
         return
+    
+    missing_models, missing_answers = validate_models_exist(models_to_judge, args.baseline, api_config)
+    
+    if missing_models:
+        print(f"\\nERROR: The following models are not found in API config:")
+        for model in missing_models:
+            print(f"  - {model}")
+        return
         
     if missing_answers:
         print(f"\\nWARNING: The following models don't have generated answers yet:")
