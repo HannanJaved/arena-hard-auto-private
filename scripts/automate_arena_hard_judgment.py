@@ -415,8 +415,6 @@ def main():
     parser.add_argument('--models', nargs='+', help='Specific model names to judge, or a single .txt file containing model names (one per line)')
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to judge (default: arena_hard_models_to_test.txt)')
-    parser.add_argument('--missing-models-file', type=str,
-                       help='File containing list of missing/incomplete models to judge')
     parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
                        choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft', 'tulu_dpo'],
                        help=f'Baseline model type (default: {DEFAULT_BASELINE})')
@@ -439,26 +437,7 @@ def main():
     
     # Get models to process
     if args.models:
-        # Check if first argument is a .txt file
-        if len(args.models) == 1 and args.models[0].endswith('.txt'):
-            # Load models from the specified file
-            models_to_judge = load_models_from_file(args.models[0])
-            if not models_to_judge:
-                print(f"No models found in {args.models[0]}.")
-                return
-        else:
-            # Use models as provided
-            models_to_judge = args.models
-    elif args.missing_models_file:
-        # Load models from missing models file
-        models_to_judge = load_models_from_file(args.missing_models_file)
-        if not models_to_judge:
-            print(f"No models found in {args.missing_models_file}.")
-            return
-        print(f"Processing models from missing models file: {args.missing_models_file}")
-    elif args.all:
-        # Extract all tulu3 models
-        models_to_judge = [model for model in api_config.keys() if model.startswith('tulu3-8b-rank')]
+        models_to_judge = args.models
     else:
         # Load models from file
         models_to_judge = load_models_from_file(args.models_file)
@@ -475,16 +454,7 @@ def main():
     if not models_to_judge:
         print("No models to judge. Exiting.")
         return
-    
-    # Validate models
-    missing_models, missing_answers = validate_models_exist(models_to_judge, args.baseline, api_config)
-    
-    if missing_models:
-        print(f"\\nERROR: The following models are not found in API config:")
-        for model in missing_models:
-            print(f"  - {model}")
-        return
-    
+        
     if missing_answers:
         print(f"\\nWARNING: The following models don't have generated answers yet:")
         for model in missing_answers:
