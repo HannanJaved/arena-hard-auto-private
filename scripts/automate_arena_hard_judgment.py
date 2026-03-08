@@ -491,20 +491,29 @@ def main():
     
     # Generate scripts and configs for each batch
     job_scripts = []
+
     for batch_idx, model_batch in enumerate(model_batches):
-        print(f"\\nProcessing batch {batch_idx + 1}/{len(model_batches)} ({len(model_batch)} models)...")
-        
-        # Create judgment config file
-        config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
+        print(f"\nProcessing batch {batch_idx + 1}/{len(model_batches)} ({len(model_batch)} models)...")
+
+        # Determine config and script filenames based on model names
+        if len(model_batch) == 1:
+            model_id = model_batch[0]
+        else:
+            model_id = '__'.join(model_batch)
+
+        # Sanitize model_id for filesystem (replace / and spaces)
+        import re
+        safe_model_id = re.sub(r'[^A-Za-z0-9_.-]', '_', model_id)
+
+        config_filename = f"arena_hard_judgment_{safe_model_id}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
         create_judgment_config(model_batch, config_path, args.baseline, judge_model=args.judge_model)
         print(f"  Created config: {config_path}")
-        
-        # Create SLURM script
-        script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
-        script_path = f"{SCRIPTS_DIR}/{script_filename}"
-        # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
 
+        script_filename = f"run_arena_hard_judgment_{safe_model_id}.sh"
+        script_path = f"{SCRIPTS_DIR}/{script_filename}"
+
+        # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
         if args.judge_model:
             judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
             model_name = args.judge_model
@@ -513,16 +522,16 @@ def main():
             judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
 
         create_judgment_slurm_script(
-                model_batch, 
-                script_path, 
-                config_path,
-                args.baseline,
-                judge_model=model_name, 
-                judge_path=model_path, 
-                judge_port=judge_port
-            )
+            model_batch,
+            script_path,
+            config_path,
+            args.baseline,
+            judge_model=model_name,
+            judge_path=model_path,
+            judge_port=judge_port
+        )
         print(f"  Created script: {script_path}")
-        
+
         job_scripts.append(script_path)
         
     print(f"\\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
