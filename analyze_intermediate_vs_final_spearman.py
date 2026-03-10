@@ -138,6 +138,9 @@ def build_joined_dataframe(intermediate_dir: Path, final_dir: Path) -> pd.DataFr
     final["lr"] = final["Model"].apply(parse_final_lr)
     final = final.dropna(subset=["lr"])
 
+    # Rank within the subset of models that have a valid LR (i.e., the LR groups we track).
+    final["weighted_rank"] = final["weighted_score"].rank(method="average", ascending=False)
+
     final = final[["Model", "lr", "hard_prompt", "creative_writing", "weighted_score", "weighted_rank"]].rename(
         columns={
             "Model": "final_model",
@@ -158,6 +161,24 @@ def build_joined_dataframe(intermediate_dir: Path, final_dir: Path) -> pd.DataFr
             "weighted_rank": "intermediate_weighted_rank",
         }
     )
+
+    # Add final models as step 30500 virtual checkpoints
+    final_as_checkpoints = final.copy().rename(
+        columns={
+            "final_model": "intermediate_model",
+            "final_hard_prompt": "intermediate_hard_prompt",
+            "final_creative_writing": "intermediate_creative_writing",
+            "final_weighted_score": "intermediate_weighted_score",
+            "final_weighted_rank": "intermediate_weighted_rank",
+        }
+    )
+    final_as_checkpoints["step"] = 30500
+    # Add back the final_* columns to the virtual checkpoints so plotting works
+    for col in ["final_model", "final_hard_prompt", "final_creative_writing", "final_weighted_score", "final_weighted_rank"]:
+        final_as_checkpoints[col] = final[col]
+
+    joined = pd.concat([joined, final_as_checkpoints], ignore_index=True)
+
     return joined.sort_values(["final_weighted_rank", "step"]).reset_index(drop=True)
 
 
