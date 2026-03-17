@@ -151,9 +151,9 @@ def create_directories():
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
-def update_baseline_in_judge_utils(baseline_name):
+def update_baseline_in_judge_utils(baseline_name, api_config):
     """Update the BASELINE_MODEL in judge_utils.py to match the selected baseline."""
-    baseline_model = BASELINE_CONFIGS[baseline_name]
+    baseline_model = resolve_baseline_model(baseline_name, api_config)
     
     # Read the current judge_utils.py
     with open(JUDGE_UTILS_PATH, 'r') as f:
@@ -182,9 +182,9 @@ def extract_judge_path_from_api_config(api_config, model_name):
             return entry['model']
     return JUDGE_PATH  # Fallback to default judge path
 
-def create_judgment_config(models_to_judge, output_path, baseline_name, judge_model=JUDGE_MODEL):
+def create_judgment_config(models_to_judge, output_path, baseline_name, judge_model=JUDGE_MODEL, api_config=None):
     """Create an arena-hard config file for judging specific models."""
-    baseline_model = BASELINE_CONFIGS[baseline_name]
+    baseline_model = resolve_baseline_model(baseline_name, api_config or {})
     
     config = {
         'judge_model': judge_model,
@@ -204,10 +204,10 @@ def create_judgment_config(models_to_judge, output_path, baseline_name, judge_mo
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, api_config=None):
     """Create a SLURM script for judging a batch of models."""
     
-    baseline_model = BASELINE_CONFIGS[baseline_name]
+    baseline_model = resolve_baseline_model(baseline_name, api_config or {})
     
     # Create a meaningful job name from the first and last model
     if len(models_to_judge) == 1:
@@ -263,7 +263,7 @@ source {WORKSPACE_ROOT}/ah-eval/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
-module load CUDA/12.4.0
+module load CUDA
 
 # [DEBUG] Verify the environment and installation
 echo "--- Sanity Checks ---"
@@ -380,14 +380,33 @@ fi
     # Make script executable
     os.chmod(script_path, 0o755)
 
+def resolve_baseline_model(baseline, api_config):
+    """Resolve the baseline model name.
+
+    If `baseline` is a key in BASELINE_CONFIGS, return the mapped model name.
+    Otherwise, treat `baseline` as a literal model name and verify it exists in
+    api_config. Raises ValueError if it cannot be resolved.
+    """
+    if baseline in BASELINE_CONFIGS:
+        return BASELINE_CONFIGS[baseline]
+    # Treat as a direct model name — look it up in api_config
+    if baseline in api_config:
+        return baseline
+    raise ValueError(
+        f"Baseline '{baseline}' is not a known alias in BASELINE_CONFIGS and was not "
+        f"found in api_config.yaml. Available aliases: {list(BASELINE_CONFIGS.keys())}. "
+        f"Available api_config models (first 10): {list(api_config.keys())[:10]}"
+    )
+
+
 def validate_models_exist(models_to_judge, baseline, api_config):
     """Validate that all models exist in the API config and have generated answers."""
     available_models = set(api_config.keys())
     missing_models = []
     missing_answers = []
     
-    # Get baseline model name from configuration
-    baseline_model = BASELINE_CONFIGS.get(baseline, baseline)
+    # Get baseline model name from configuration (alias or direct name)
+    baseline_model = resolve_baseline_model(baseline, api_config)
     
     answer_dir = f"{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_answer"
     
@@ -416,8 +435,8 @@ def main():
     parser.add_argument('--models-file', type=str, default=f'{WORKSPACE_ROOT}/arena_hard_models_to_test.txt',
                        help='File containing list of models to judge (default: arena_hard_models_to_test.txt)')
     parser.add_argument('--baseline', type=str, default=DEFAULT_BASELINE,
-                       choices=['instruct', 'base', 'tulu_finetuned', 'tulu_sft', 'tulu_dpo'],
-                       help=f'Baseline model type (default: {DEFAULT_BASELINE})')
+                       help=f'Baseline model: a known alias ({", ".join(BASELINE_CONFIGS.keys())}) '
+                            f'or a model name from api_config.yaml (default: {DEFAULT_BASELINE})')
     parser.add_argument('--judge-model', type=str, default=JUDGE_MODEL,
                        help=f'Judge model to use (default: {JUDGE_MODEL})')
     parser.add_argument('--all', action='store_true', help='Judge all tulu3 models from API config')
@@ -458,7 +477,7 @@ def main():
     missing_models, missing_answers = validate_models_exist(models_to_judge, args.baseline, api_config)
     
     if missing_models:
-        print(f"\\nERROR: The following models are not found in API config:")
+        print(f"\nERROR: The following models are not found in API config:")
         for model in missing_models:
             print(f"  - {model}")
         return

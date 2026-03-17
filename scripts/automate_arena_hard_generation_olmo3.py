@@ -173,7 +173,7 @@ source {WORKSPACE_ROOT}/ah-eval/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
-module load CUDA/12.4.0
+module load CUDA
 
 # [DEBUG] Verify the environment and installation
 echo "--- Sanity Checks ---"
