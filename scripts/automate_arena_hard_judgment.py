@@ -389,6 +389,8 @@ def resolve_baseline_model(baseline, api_config):
     """
     if baseline in BASELINE_CONFIGS:
         return BASELINE_CONFIGS[baseline]
+    if not isinstance(api_config, dict):
+        api_config = {}
     # Treat as a direct model name — look it up in api_config
     if baseline in api_config:
         return baseline
@@ -498,7 +500,7 @@ def main():
     
     # Update baseline in judge_utils.py
     print(f"\\nUpdating baseline configuration...")
-    update_baseline_in_judge_utils(args.baseline)
+    update_baseline_in_judge_utils(args.baseline, api_config)
     
     # Create batches of models
     model_batches = []
@@ -526,7 +528,13 @@ def main():
 
         config_filename = f"arena_hard_judgment_{safe_model_id}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
-        create_judgment_config(model_batch, config_path, args.baseline, judge_model=args.judge_model)
+        create_judgment_config(
+            model_batch,
+            config_path,
+            args.baseline,
+            judge_model=args.judge_model,
+            api_config=api_config,
+        )
         print(f"  Created config: {config_path}")
 
         script_filename = f"run_arena_hard_judgment_{safe_model_id}.sh"
@@ -547,7 +555,8 @@ def main():
             args.baseline,
             judge_model=model_name,
             judge_path=model_path,
-            judge_port=judge_port
+            judge_port=judge_port,
+            api_config=api_config,
         )
         print(f"  Created script: {script_path}")
 
