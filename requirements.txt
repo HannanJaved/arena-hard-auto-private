@@ -2,6 +2,8 @@ tiktoken
 openai
 numpy
 pandas
+matplotlib
+seaborn
 shortuuid
 tqdm
 gradio==5.25.2
@@ -11,3 +13,4 @@ boto3
 transformers
 accelerate
 sentencepiece
+pyyaml
