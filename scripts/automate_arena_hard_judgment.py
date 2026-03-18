@@ -582,15 +582,15 @@ def main():
             except subprocess.CalledProcessError as e:
                 print(f"  Failed to submit {script}: {e}")
         
-        print(f"\\nSuccessfully submitted {len(submitted_jobs)} judgment jobs")
-        print("\\nTo monitor jobs:")
+        print(f"\nSuccessfully submitted {len(submitted_jobs)} judgment jobs")
+        print("\nTo monitor jobs:")
         print("  squeue -u $USER")
-        print("\\nTo cancel all jobs:")
+        print("\nTo cancel all jobs:")
         print("  scancel -u $USER")
     else:
-        print("\\nTo submit jobs, run:")
+        print("\nTo submit jobs, run:")
         print(f"  python {__file__} --submit")
-        print("\\nOr submit individual jobs with:")
+        print("\nOr submit individual jobs with:")
         for script in job_scripts[:3]:  # Show first 3 as examples
             print(f"  sbatch {script}")
         if len(job_scripts) > 3:
