@@ -52,43 +52,6 @@ export HF_HOME="{hf_home}"
 export HF_DATASETS_CACHE="{hf_datasets_cache}"
 export PYTHONPATH="{pythonpath}"
 
-export NCCL_SOCKET_IFNAME='ibp3s0.8002,ibp35s0.8002,ibp163s0.8002,ibp195s0.8002'
-export NCCL_IB_PKEY=0x2
-
-export NCCL_NSOCKS_PERTHREAD=4
-export NCCL_SOCKET_NTHREADS=2
-export NCCL_MIN_CHANNELS=32
-export NCCL_DEBUG=INFO
-export NCCL_IB_RETRY_CNT=10
-export NCCL_MIN_NCHANNELS=11
-export NCCL_TREE_THRESHOLD=4294967296
-export TORCH_DISTRIBUTED_DEBUG=INFO
-export TORCH_DISTRIBUTED_TIMEOUT=300
-export TORCHELASTIC_MAX_FAILED_CONNECTIONS=60
-export TORCH_DISTRIBUTED_HEARTBEAT_TIMEOUT=300
-export TORCH_DISTRIBUTED_COODINATOR_TIMEOUT=300
-export OMP_NUM_THREADS=18
-
-export MASTER_PORT=$(shuf -i 20000-29999 -n 1)
-master_addr=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
-export MASTER_ADDR=$master_addr
-export LOCAL_RANK=$SLURM_LOCALID
-export RANK=$SLURM_PROCID
-export WORLD_SIZE=$((SLURM_GPUS_ON_NODE*SLURM_NNODES))
-
-nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
-nodes_array=($nodes)
-head_node=${{nodes_array[0]}}
-
-export RDZV_HOST=$head_node
-export RDZV_PORT=29400
-
-echo "head_node=$head_node"
-
-NPROC_PER_NODE=$(nvidia-smi -L | wc -l)
-
-echo NPROC_PER_NODE=$NPROC_PER_NODE
-
 cd {lm_eval_dir}
 
 echo "JOBNAME" $SLURM_JOB_NAME
@@ -113,14 +76,13 @@ echo "END TIME: $(date)"
 echo "END $SLURM_JOBID: $(date)"
 """
 
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Submit IFEval jobs for a list of model names.")
     parser.add_argument("--models-txt", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="ifeval_", help="Prefix for Slurm job name.")
     parser.add_argument("--batch-size", type=int, default=16, help="Batch size for lm_eval.")
-    parser.add_argument("--dtype", default="float", help="dtype passed to lm_eval model_args.")
+    parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="01:00:00", help="Slurm wall time.")
     parser.add_argument("--gres", default="gpu:1", help="Slurm gres.")
