@@ -22,6 +22,7 @@ DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/conf
 DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/bin/activate"
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
 DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
+DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/ifeval"
 DEFAULT_HF_HOME = "/data/cat/ws/hama901h-Posttraining/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/cat/ws/hama901h-Posttraining/.cache"
 DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.12/site-packages"
@@ -57,10 +58,53 @@ cd {lm_eval_dir}
 echo "JOBNAME" $SLURM_JOB_NAME
 pwd -P
 
+mkdir -p {output_dir}
+
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\" \
     --tasks ifeval \
-    --batch_size {batch_size}"
+    --batch_size {batch_size} \
+    --output_path {output_dir}"
+
+SRUN_ARGS=" \
+    --wait=60 \
+    --kill-on-bad-exit=1 \
+    "
+
+export ACC_LAUNCHER="accelerate launch -m "
+
+srun $SRUN_ARGS --jobid $SLURM_JOB_ID bash -c "$ACC_LAUNCHER $CMD"
+
+echo "END TIME: $(date)"
+
+echo "END $SLURM_JOBID: $(date)"
+"""
+
+SBATCH_BODY_MULTI_GPU = """\
+echo "JOB NAME" $SLURM_JOB_NAME
+
+module load CUDA
+source {venv_activate}
+
+export HF_HOME="{hf_home}"
+export HF_DATASETS_CACHE="{hf_datasets_cache}"
+export PYTHONPATH="{pythonpath}"
+
+cd {lm_eval_dir}
+
+echo "JOBNAME" $SLURM_JOB_NAME
+pwd -P
+
+mkdir -p {output_dir}
+
+NPROC_PER_NODE=$(nvidia-smi -L | wc -l)
+TOTAL_BATCH_SIZE=$((NPROC_PER_NODE*{batch_size}))
+
+export CMD="lm_eval --model hf \
+    --model_args pretrained={model_path},dtype=\"{dtype}\" \
+    --tasks ifeval \
+    --batch_size $TOTAL_BATCH_SIZE \
+    --output_path {output_dir}"
 
 SRUN_ARGS=" \
     --wait=60 \
@@ -81,7 +125,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models-txt", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="ifeval_", help="Prefix for Slurm job name.")
-    parser.add_argument("--batch-size", type=int, default=16, help="Batch size for lm_eval.")
+    parser.add_argument("--batch-size", type=int, default=16, help="Batch size per GPU for lm_eval.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="01:00:00", help="Slurm wall time.")
@@ -92,6 +136,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-exclusive", dest="exclusive", action="store_false")
     parser.set_defaults(exclusive=True)
     parser.add_argument("--log-dir", default=DEFAULT_LOG_DIR, help="Directory for Slurm logs.")
+    parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory where lm_eval saves results.")
     parser.add_argument("--venv-activate", default=DEFAULT_VENV_ACTIVATE, help="Path to venv activate script.")
     parser.add_argument("--lm-eval-dir", default=DEFAULT_LM_EVAL_DIR, help="Path to lm-evaluation-harness.")
     parser.add_argument("--hf-home", default=DEFAULT_HF_HOME, help="HF cache home.")
@@ -147,16 +192,30 @@ def build_sbatch_script(
         exclusive=exclusive_line,
     )
 
-    body = SBATCH_BODY.format(
-        venv_activate=args.venv_activate,
-        hf_home=args.hf_home,
-        hf_datasets_cache=args.hf_datasets_cache,
-        pythonpath=args.pythonpath,
-        lm_eval_dir=args.lm_eval_dir,
-        model_path=model_path,
-        dtype=args.dtype,
-        batch_size=args.batch_size,
-    )
+    if args.gres == "gpu:1":
+        body = SBATCH_BODY.format(
+            venv_activate=args.venv_activate,
+            hf_home=args.hf_home,
+            hf_datasets_cache=args.hf_datasets_cache,
+            pythonpath=args.pythonpath,
+            lm_eval_dir=args.lm_eval_dir,
+            model_path=model_path,
+            dtype=args.dtype,
+            batch_size=args.batch_size,
+            output_dir=args.output_dir,
+        )
+    else:
+        body = SBATCH_BODY_MULTI_GPU.format(
+            venv_activate=args.venv_activate,
+            hf_home=args.hf_home,
+            hf_datasets_cache=args.hf_datasets_cache,
+            pythonpath=args.pythonpath,
+            lm_eval_dir=args.lm_eval_dir,
+            model_path=model_path,
+            dtype=args.dtype,
+            batch_size=args.batch_size,
+            output_dir=args.output_dir,
+        )
 
     return f"{header}{body}"
 
