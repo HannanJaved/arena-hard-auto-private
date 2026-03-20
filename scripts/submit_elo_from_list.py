@@ -20,7 +20,7 @@ from typing import Dict, List
 import yaml
 
 DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/config/api_config.yaml"
-DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-openjury/bin/activate"
+DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/OpenJury/.venv/bin/activate"
 DEFAULT_OPENJURY_DIR = "/data/horse/ws/hama901h-BFTranslation/OpenJury"
 DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/openjury-elo"
 DEFAULT_RESULT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/openjury-elo"
@@ -88,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--judge-model", required=True, help="Judge model key in api_config.yaml.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="elo_", help="Prefix for Slurm job name.")
-    parser.add_argument("--arena", default="ComparIA", choices=["LMArena", "ComparIA"], help="Arena to use.")
+    parser.add_argument("--arena", default="LMArena", choices=["LMArena", "ComparIA"], help="Arena to use.")
     parser.add_argument("--n-instructions", type=int, default=200, help="Number of battles to sample.")
     parser.add_argument(
         "--n-instructions-per-language",
