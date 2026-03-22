@@ -498,7 +498,7 @@ def print_leaderboard_with_style_features(battles, benchmark, category, control_
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", "-b", type=str, default="arena-hard-v2.0")
-    parser.add_argument("--judge-names", "-j", nargs="+", default=["neuralmagic-llama3.1-70b-instruct-fp8"])
+    parser.add_argument("--judge-names", "-j", nargs="+", default=["Qwen3-Next-80B-A3B-Instruct-FP8"])
     parser.add_argument("--control-features", "-f", nargs="+", default=[])
     parser.add_argument("--category", "-c", nargs="+", default=['hard_prompt'])
     parser.add_argument("--memory-efficient", action="store_true", default=True, 
