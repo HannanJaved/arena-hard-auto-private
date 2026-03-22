@@ -10650,4 +10650,42 @@ ag1.50_eps0.20_ema0.10_step2031:
   max_tokens: 4096
   temperature: 0.0 
 
-  
+epsmax010_epsmin010:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e5/EMDPODecay/epsmax010_epsmin010
+  endpoints:
+  - api_base: http://localhost:8100/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+epsmax020_epsmin010: 
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e5/EMDPODecay/epsmax020_epsmin010
+  endpoints:
+  - api_base: http://localhost:8101/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+epsmax030_epsmin010: 
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e5/EMDPODecay/epsmax030_epsmin010
+  endpoints:
+  - api_base: http://localhost:8102/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+epsmax030_epsmin005:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/Lr5e5/EMDPODecay/epsmax030_epsmin005
+  endpoints:
+  - api_base: http://localhost:8103/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
