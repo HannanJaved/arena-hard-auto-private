@@ -66,14 +66,16 @@ export CMD="lm_eval --model hf \
     --batch_size {batch_size} \
     --output_path {output_dir}"
 
-SRUN_ARGS=" \
-    --wait=60 \
-    --kill-on-bad-exit=1 \
-    "
+python -m $CMD
 
-export ACC_LAUNCHER="accelerate launch -m "
+# SRUN_ARGS=" \
+#     --wait=60 \
+#     --kill-on-bad-exit=1 \
+#     "
 
-srun $SRUN_ARGS --jobid $SLURM_JOB_ID bash -c "$ACC_LAUNCHER $CMD"
+# export ACC_LAUNCHER="accelerate launch -m "
+
+# srun $SRUN_ARGS --jobid $SLURM_JOB_ID bash -c "$ACC_LAUNCHER $CMD"
 
 echo "END TIME: $(date)"
 
@@ -122,7 +124,7 @@ echo "END $SLURM_JOBID: $(date)"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Submit IFEval jobs for a list of model names.")
-    parser.add_argument("--models-txt", required=True, help="Path to text file with model names.")
+    parser.add_argument("--models-file", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="ifeval_", help="Prefix for Slurm job name.")
     parser.add_argument("--batch-size", type=int, default=16, help="Batch size per GPU for lm_eval.")
@@ -130,11 +132,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="01:00:00", help="Slurm wall time.")
     parser.add_argument("--gres", default="gpu:1", help="Slurm gres.")
-    parser.add_argument("--cpus-per-task", type=int, default=14, help="Slurm CPUs per task.")
-    parser.add_argument("--mem", default="32G", help="Slurm memory.")
+    parser.add_argument("--cpus-per-task", type=int, default=4, help="Slurm CPUs per task.")
+    parser.add_argument("--mem", default="16G", help="Slurm memory.")
     parser.add_argument("--exclusive", action="store_true", help="Request exclusive node.")
     parser.add_argument("--no-exclusive", dest="exclusive", action="store_false")
-    parser.set_defaults(exclusive=True)
+    parser.set_defaults(exclusive=False)
     parser.add_argument("--log-dir", default=DEFAULT_LOG_DIR, help="Directory for Slurm logs.")
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory where lm_eval saves results.")
     parser.add_argument("--venv-activate", default=DEFAULT_VENV_ACTIVATE, help="Path to venv activate script.")
@@ -241,7 +243,7 @@ def main() -> int:
     args = parse_args()
     os.makedirs(args.log_dir, exist_ok=True)
 
-    models = read_models_list(args.models_txt)
+    models = read_models_list(args.models_file)
     if not models:
         print("No models found in list.")
         return 1
