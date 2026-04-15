@@ -498,9 +498,8 @@ def main():
         print(f"\\nValidation complete. {len(models_to_judge)} models ready for judgment.")
         return
     
-    # Update baseline in judge_utils.py
-    print(f"\\nUpdating baseline configuration...")
-    update_baseline_in_judge_utils(args.baseline, api_config)
+    # NOTE: Do NOT update judge_utils.py here. Baseline is now taken from the
+    # per-job config file to avoid cross-job races in SLURM.
     
     # Create batches of models
     model_batches = []

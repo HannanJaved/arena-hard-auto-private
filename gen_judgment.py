@@ -145,6 +145,14 @@ if __name__ == "__main__":
     
     output_files = {}
     output_dir = f"data/{configs['bench_name']}/model_judgment/{configs['judge_model']}"
+    # Resolve baseline from config (string or per-category dict)
+    baseline_config = configs.get("baseline")
+
+    def resolve_baseline_for_category(category):
+        if isinstance(baseline_config, dict):
+            return baseline_config.get(category)
+        return baseline_config
+
     for model in models:
         output_files[model] = os.path.join(
             output_dir,
@@ -177,9 +185,12 @@ if __name__ == "__main__":
 
                 kwargs["answer"] = model_answers[model][uid]
     
-                kwargs["baseline"] = model_answers[
-                    JUDGE_SETTINGS[question["category"]]["baseline"]
-                ][uid]
+                baseline_name = resolve_baseline_for_category(question["category"])
+                if not baseline_name:
+                    raise ValueError(
+                        f"Baseline not specified for category '{question['category']}' in setting file."
+                    )
+                kwargs["baseline"] = model_answers[baseline_name][uid]
                 
                 if ref_answers:
                     kwargs["reference"] = [ref_answer[uid] for ref_answer in ref_answers]
