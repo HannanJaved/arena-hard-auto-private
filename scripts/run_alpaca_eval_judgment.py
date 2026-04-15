@@ -6,6 +6,8 @@ Generates annotations and computes raw + length-controlled win rates.
 
 import argparse
 import json
+import os
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -58,6 +60,16 @@ def main() -> None:
     parser.add_argument("--annotation-chunksize", type=int, default=128)
     parser.add_argument("--save-raw", action="store_true")
     parser.add_argument("--save-length-controlled", action="store_true")
+    parser.add_argument(
+        "--cache-path",
+        default=None,
+        help="Optional explicit cache path for annotations.",
+    )
+    parser.add_argument(
+        "--cache-run-id",
+        default=None,
+        help="Optional run id to make cache paths unique. Defaults to timestamp+pid.",
+    )
 
     args = parser.parse_args()
 
@@ -82,8 +94,15 @@ def main() -> None:
     if not annotators_config.exists():
         raise FileNotFoundError(f"Annotators config not found: {annotators_config}")
 
+    if args.cache_path:
+        caching_path = Path(args.cache_path)
+    else:
+        run_id = args.cache_run_id or f"{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}_{os.getpid()}"
+        caching_path = output_dir / f"annotations_cache_{run_id}.json"
+
     annotator = annotators.PairwiseAnnotator(
         annotators_config=str(annotators_config),
+        caching_path=str(caching_path),
     )
 
     decoding_kwargs = {"chunksize": args.annotation_chunksize}
