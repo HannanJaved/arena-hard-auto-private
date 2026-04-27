@@ -146,7 +146,7 @@ def process_batch_data(data, weight=3):
         print(f"  Filtered out {filtered_count} judgments with invalid scores from batch")
     
     # Explode scores to create individual battles
-    battles = _data[['uid', 'model', 'category', 'scores']].explode('scores').reset_index(drop=True)
+    battles = _data[['uid', 'model', 'category', 'baseline', 'scores']].explode('scores').reset_index(drop=True)
     
     return battles
 
@@ -319,10 +319,20 @@ def format_confidence_interval(mean_scores, lower_scores, upper_scores, baseline
     return _leaderboard.sort_values(by="Scores (%)", ascending=False).reset_index(drop=True)
 
 
+def resolve_baseline_from_battles(battles, category):
+    category_battles = battles[battles.category == category]
+    if "baseline" not in category_battles.columns or category_battles.empty:
+        return JUDGE_SETTINGS[category]["baseline"]
+    baseline_counts = category_battles["baseline"].dropna().value_counts()
+    if baseline_counts.empty:
+        return JUDGE_SETTINGS[category]["baseline"]
+    return baseline_counts.idxmax()
+
+
 def print_leaderboard(battles, category, output_csv=False, output_dir=None):
-    baseline = JUDGE_SETTINGS[category]["baseline"]
+    baseline = resolve_baseline_from_battles(battles, category)
     
-    _battles = battles.drop(columns=['category'])[['model', 'scores']]
+    _battles = battles.drop(columns=['category', 'baseline'])[['model', 'scores']]
     
     # remove model path
     _battles['model'] = _battles['model'].map(lambda x: x.split('/')[-1])
@@ -350,27 +360,12 @@ def print_leaderboard(battles, category, output_csv=False, output_dir=None):
         overall_filename = os.path.join(output_dir, f"{category}_leaderboard_all.csv")
         _leaderboard.to_csv(overall_filename, index=False)
         print(f"Saved overall leaderboard to: {overall_filename}")
-        
-        # Split by rank and save separate CSV files
-        rank_categories = {
-            'rank64': _leaderboard[_leaderboard['Model'].str.contains('rank64', na=False)],
-            'rank256': _leaderboard[_leaderboard['Model'].str.contains('rank256', na=False)],
-            'rank1024': _leaderboard[_leaderboard['Model'].str.contains('rank1024', na=False)],
-            'default': _leaderboard[_leaderboard['Model'].str.contains('default', na=False)]
-        }
-        
-        for rank_name, rank_df in rank_categories.items():
-            if not rank_df.empty:
-                rank_filename = os.path.join(output_dir, f"{category}_leaderboard_{rank_name}.csv")
-                rank_df.to_csv(rank_filename, index=False)
-                print(f"Saved {rank_name} leaderboard to: {rank_filename}")
-            else:
-                print(f"No {rank_name} models found in the results")
     
     return _leaderboard
         
 
 def print_leaderboard_with_style_features(battles, benchmark, category, control_features, output_csv=False, output_dir=None):        
+    baseline = resolve_baseline_from_battles(battles, category)
     style_metadata = get_model_style_metadata(benchmark)
     
     model_features = battles.apply(lambda row: 
@@ -378,7 +373,7 @@ def print_leaderboard_with_style_features(battles, benchmark, category, control_
         axis=1
     ).tolist()
     baseline_features = battles.apply(
-        lambda row: style_metadata[JUDGE_SETTINGS[row['category']]["baseline"]][row['uid']], 
+        lambda row: style_metadata[baseline][row['uid']], 
         axis=1
     ).tolist()
     
@@ -430,7 +425,7 @@ def print_leaderboard_with_style_features(battles, benchmark, category, control_
     
     model_features, unique_models = one_hot_encode(
         battles.model.tolist(), 
-        baseline=JUDGE_SETTINGS[category]["baseline"]
+        baseline=baseline
     )
     all_features = torch.cat([model_features, normalized_feature_tensor], dim=1)
     
@@ -464,6 +459,7 @@ def print_leaderboard_with_style_features(battles, benchmark, category, control_
         table.quantile(0.5).to_frame("scores").reset_index().rename(columns={"index": "model"}), 
         table.quantile(0.05).to_frame("lower").reset_index().rename(columns={"index": "model"}), 
         table.quantile(0.95).to_frame("upper").reset_index().rename(columns={"index": "model"}), 
+        baseline=baseline,
     )
 
     print(f"##### Category: {category} #####")
@@ -476,22 +472,6 @@ def print_leaderboard_with_style_features(battles, benchmark, category, control_
         _leaderboard.to_csv(overall_filename, index=False)
         print(f"Saved overall leaderboard with features to: {overall_filename}")
         
-        # Split by rank and save separate CSV files
-        rank_categories = {
-            'rank64': _leaderboard[_leaderboard['Model'].str.contains('rank64', na=False)],
-            'rank256': _leaderboard[_leaderboard['Model'].str.contains('rank256', na=False)],
-            'rank1024': _leaderboard[_leaderboard['Model'].str.contains('rank1024', na=False)],
-            'default': _leaderboard[_leaderboard['Model'].str.contains('default', na=False)]
-        }
-        
-        for rank_name, rank_df in rank_categories.items():
-            if not rank_df.empty:
-                rank_filename = os.path.join(output_dir, f"{category}_leaderboard_with_features_{rank_name}.csv")
-                rank_df.to_csv(rank_filename, index=False)
-                print(f"Saved {rank_name} leaderboard with features to: {rank_filename}")
-            else:
-                print(f"No {rank_name} models found in the results")
-    
     return _leaderboard
 
 

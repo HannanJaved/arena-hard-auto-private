@@ -5,6 +5,7 @@ import yaml
 import random
 import shortuuid
 import pandas as pd
+import logging
 
 import requests
 from typing import Optional
@@ -26,6 +27,8 @@ from utils.bedrock_utils import create_llama3_body, create_nova_messages, extrac
 API_MAX_RETRY = 3
 API_RETRY_SLEEP = 10
 API_ERROR_OUTPUT = None
+
+logger = logging.getLogger(__name__)
 
 registered_api_completion = {}
 registered_engine_completion = {}
@@ -83,6 +86,25 @@ def _load_existing_uids(answer_file: str) -> set:
     except OSError:
         pass
     return existing
+
+
+def _iter_jsonl_lines(jsonl_path: str):
+    """Yield parsed JSON objects from a JSONL file, skipping invalid lines."""
+    try:
+        with open(jsonl_path, "r", encoding="utf-8") as fin:
+            for line_num, line in enumerate(fin, start=1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError:
+                    logger.warning(
+                        "Skipping invalid JSONL line %s in %s", line_num, jsonl_path
+                    )
+                    continue
+    except OSError:
+        return
 
 
 @register_engine("huggingface")
@@ -215,9 +237,8 @@ def load_model_answers(answer_dir: str):
     for filename in filenames:
         model_name = os.path.basename(filename)[:-6]
         answer = {}
-        with open(filename) as fin:
-            for line in fin:
-                line = json.loads(line)
+        for line in _iter_jsonl_lines(filename):
+            if "uid" in line:
                 answer[line["uid"]] = line
         model_answers[model_name] = answer
 
@@ -236,15 +257,13 @@ def load_id_to_model_answers(answer_dir: str):
 
     for filename in filenames:
         model_name = os.path.basename(filename)[:-6]
-        
-        with open(filename) as fin:
-            for line in fin:
-                line = json.loads(line)
-                
-                if line["uid"] in model_answers:
-                    model_answers[line["uid"]][model_name] = line
-                else:
-                    model_answers[line["uid"]] = {model_name: line}
+        for line in _iter_jsonl_lines(filename):
+            if "uid" not in line:
+                continue
+            if line["uid"] in model_answers:
+                model_answers[line["uid"]][model_name] = line
+            else:
+                model_answers[line["uid"]] = {model_name: line}
                 
     return model_answers
 

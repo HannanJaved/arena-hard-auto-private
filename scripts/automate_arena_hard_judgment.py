@@ -146,6 +146,19 @@ def extract_model_details(model_name):
     
     return rank, alpha, step
 
+
+def safe_batch_id(value, max_len=180):
+    """Create a filesystem-safe identifier with hashing for long names."""
+    import hashlib
+    import re
+
+    safe_value = re.sub(r'[^A-Za-z0-9_.-]', '_', value)
+    if len(safe_value) <= max_len:
+        return safe_value
+    digest = hashlib.sha1(safe_value.encode("utf-8")).hexdigest()[:12]
+    head = safe_value[: max(0, max_len - 13)]
+    return f"{head}-{digest}"
+
 def create_directories():
     """Create necessary directories for scripts, configs, and logs."""
     for directory in [SCRIPTS_DIR, CONFIGS_DIR, LOGS_DIR]:
@@ -243,7 +256,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=6        
-#SBATCH --mem=16G                
+#SBATCH --mem=32G                
 #SBATCH --time=02:00:00          
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
@@ -304,7 +317,7 @@ echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 "$SERVER_LOG_FILE"
 
 echo "Waiting for judge server to become ready (checking health endpoint)..."
-MAX_WAIT=2400  # 40 minutes max wait time
+MAX_WAIT=3600  # 60 minutes max wait time
 ELAPSED=0
 SLEEP_INTERVAL=30
 
@@ -506,6 +519,8 @@ def main():
     for i in range(0, len(models_to_judge), args.batch_size):
         batch = models_to_judge[i:i + args.batch_size]
         model_batches.append(batch)
+
+    baseline_model_name = resolve_baseline_model(args.baseline, api_config)
     
     print(f"\\nCreating {len(model_batches)} judgment batches (batch size: {args.batch_size})")
     
@@ -521,9 +536,9 @@ def main():
         else:
             model_id = '__'.join(model_batch)
 
-        # Sanitize model_id for filesystem (replace / and spaces)
-        import re
-        safe_model_id = re.sub(r'[^A-Za-z0-9_.-]', '_', model_id)
+        # Include baseline in filenames to avoid overwriting across runs
+        combined_id = f"baseline_{baseline_model_name}__{model_id}"
+        safe_model_id = safe_batch_id(combined_id)
 
         config_filename = f"arena_hard_judgment_{safe_model_id}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
