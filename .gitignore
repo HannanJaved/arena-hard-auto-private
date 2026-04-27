@@ -6,3 +6,5 @@ analysis_output/vs_base_llama3.1-8b-200-Inst/
 plots/
 scripts/__pycache__/
 __pycache__/
+utils/__pycache__/*
+*/__pycache__/*
