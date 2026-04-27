@@ -11353,7 +11353,7 @@ qwen3-sft-3e-5-dpo-beta1.0-lr1e-7:
 qwen3-0.6b-sft-lr1e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-SFT-LR1e-5
   endpoints:
-  - api_base: http://localhost:8400/v1
+  - api_base: http://localhost:8100/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11363,7 +11363,7 @@ qwen3-0.6b-sft-lr1e-5:
 qwen3-0.6b-sft-lr1e-6:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-SFT-LR1e-6
   endpoints:
-  - api_base: http://localhost:8401/v1
+  - api_base: http://localhost:8101/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11373,7 +11373,7 @@ qwen3-0.6b-sft-lr1e-6:
 qwen3-0.6b-sft-lr3e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-SFT-LR3e-5
   endpoints:
-  - api_base: http://localhost:8402/v1
+  - api_base: http://localhost:8102/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11383,7 +11383,7 @@ qwen3-0.6b-sft-lr3e-5:
 qwen3-0.6b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-SFT-LR5e-4
   endpoints:
-  - api_base: http://localhost:8403/v1
+  - api_base: http://localhost:8103/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11393,7 +11393,7 @@ qwen3-0.6b-sft-lr5e-4:
 qwen3-0.6b-sft-lr5e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-SFT-LR5e-5
   endpoints:
-  - api_base: http://localhost:8404/v1
+  - api_base: http://localhost:8104/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11403,7 +11403,7 @@ qwen3-0.6b-sft-lr5e-5:
 qwen3-1.7b-sft-lr1e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR1e5
   endpoints:
-  - api_base: http://localhost:8405/v1
+  - api_base: http://localhost:8105/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11413,7 +11413,7 @@ qwen3-1.7b-sft-lr1e-5:
 qwen3-1.7b-sft-lr1e-6:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR1e6
   endpoints:
-  - api_base: http://localhost:8406/v1
+  - api_base: http://localhost:8106/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11423,7 +11423,7 @@ qwen3-1.7b-sft-lr1e-6:
 qwen3-1.7b-sft-lr3e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-SFT-LR3e-5
   endpoints:
-  - api_base: http://localhost:8407/v1
+  - api_base: http://localhost:8107/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11433,7 +11433,7 @@ qwen3-1.7b-sft-lr3e-5:
 qwen3-1.7b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR5e4
   endpoints:
-  - api_base: http://localhost:8408/v1
+  - api_base: http://localhost:8108/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11443,7 +11443,7 @@ qwen3-1.7b-sft-lr5e-4:
 qwen3-1.7b-sft-lr5e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT/LR5e5
   endpoints:
-  - api_base: http://localhost:8409/v1
+  - api_base: http://localhost:8109/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11453,7 +11453,7 @@ qwen3-1.7b-sft-lr5e-5:
 qwen3-4b-sft-lr1e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR1e-5
   endpoints:
-  - api_base: http://localhost:8410/v1
+  - api_base: http://localhost:8110/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11463,7 +11463,7 @@ qwen3-4b-sft-lr1e-5:
 qwen3-4b-sft-lr1e-6:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR1e-6
   endpoints:
-  - api_base: http://localhost:8411/v1
+  - api_base: http://localhost:8111/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11473,7 +11473,7 @@ qwen3-4b-sft-lr1e-6:
 qwen3-4b-sft-lr3e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR3e-5
   endpoints:
-  - api_base: http://localhost:8412/v1
+  - api_base: http://localhost:8112/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11483,7 +11483,7 @@ qwen3-4b-sft-lr3e-5:
 qwen3-4b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR5e-4
   endpoints:
-  - api_base: http://localhost:8413/v1
+  - api_base: http://localhost:8113/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11493,7 +11493,7 @@ qwen3-4b-sft-lr5e-4:
 qwen3-4b-sft-lr5e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR5e-5
   endpoints:
-  - api_base: http://localhost:8414/v1
+  - api_base: http://localhost:8114/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11503,7 +11503,7 @@ qwen3-4b-sft-lr5e-5:
 qwen3-8b-sft-lr1e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep/Qwen3-8B-SFT-LR1e-5
   endpoints:
-  - api_base: http://localhost:8415/v1
+  - api_base: http://localhost:8115/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11513,7 +11513,7 @@ qwen3-8b-sft-lr1e-5:
 qwen3-8b-sft-lr1e-6:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep/Qwen3-8B-SFT-LR1e-6
   endpoints:
-  - api_base: http://localhost:8416/v1
+  - api_base: http://localhost:8116/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11523,7 +11523,7 @@ qwen3-8b-sft-lr1e-6:
 qwen3-8b-sft-lr3e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep/Qwen3-8B-SFT-LR3e-5
   endpoints:
-  - api_base: http://localhost:8417/v1
+  - api_base: http://localhost:8117/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11533,7 +11533,7 @@ qwen3-8b-sft-lr3e-5:
 qwen3-8b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep/Qwen3-8B-SFT-LR5e-4
   endpoints:
-  - api_base: http://localhost:8418/v1
+  - api_base: http://localhost:8118/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11543,7 +11543,7 @@ qwen3-8b-sft-lr5e-4:
 qwen3-8b-sft-lr5e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep/Qwen3-8B-SFT-LR5e-5
   endpoints:
-  - api_base: http://localhost:8419/v1
+  - api_base: http://localhost:8119/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11553,7 +11553,7 @@ qwen3-8b-sft-lr5e-5:
 qwen3-14b-sft-lr1e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep/Qwen3-14B-SFT-LR1e-5
   endpoints:
-  - api_base: http://localhost:8420/v1
+  - api_base: http://localhost:8120/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11563,7 +11563,7 @@ qwen3-14b-sft-lr1e-5:
 qwen3-14b-sft-lr1e-6:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep/Qwen3-14B-SFT-LR1e-6
   endpoints:
-  - api_base: http://localhost:8421/v1
+  - api_base: http://localhost:8121/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11573,7 +11573,7 @@ qwen3-14b-sft-lr1e-6:
 qwen3-14b-sft-lr3e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep/Qwen3-14B-SFT-LR3e-5
   endpoints:
-  - api_base: http://localhost:8422/v1
+  - api_base: http://localhost:8122/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11583,7 +11583,7 @@ qwen3-14b-sft-lr3e-5:
 qwen3-14b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep/Qwen3-14B-SFT-LR5e-4
   endpoints:
-  - api_base: http://localhost:8423/v1
+  - api_base: http://localhost:8123/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -11593,7 +11593,588 @@ qwen3-14b-sft-lr5e-4:
 qwen3-14b-sft-lr5e-5:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep/Qwen3-14B-SFT-LR5e-5
   endpoints:
-  - api_base: http://localhost:8424/v1
+  - api_base: http://localhost:8124/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+###### BO for Qwen3-1.7B ######
+qwen3-1.7b-dpo-bo0:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial000-b0.8651-lr3.05e-05
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo1:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial001-b0.1153-lr3.00e-05
+  endpoints:
+  - api_base: http://localhost:8003/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo2:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial002-b0.0105-lr2.49e-06
+  endpoints:
+  - api_base: http://localhost:8005/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo3:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial003-b0.0638-lr5.39e-06
+  endpoints:
+  - api_base: http://localhost:8006/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo5:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial005-b0.4412-lr4.86e-05
+  endpoints:
+  - api_base: http://localhost:8007/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo6:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial006-b0.0321-lr1.67e-05
+  endpoints:
+  - api_base: http://localhost:8008/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo7:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial007-b0.2518-lr1.22e-06
+  endpoints:
+  - api_base: http://localhost:8009/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo9:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial009-b0.0328-lr9.75e-06
+  endpoints:
+  - api_base: http://localhost:8010/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo10:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial010-b0.0110-lr4.93e-05
+  endpoints:
+  - api_base: http://localhost:8011/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo11:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial011-b0.0105-lr4.46e-05
+  endpoints:
+  - api_base: http://localhost:8012/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo12:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial012-b0.0109-lr4.69e-05
+  endpoints:
+  - api_base: http://localhost:8013/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo13:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial013-b0.0252-lr1.83e-05
+  endpoints:
+  - api_base: http://localhost:8014/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo14:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial014-b0.0236-lr4.25e-06
+  endpoints:
+  - api_base: http://localhost:8015/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo15:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial015-b0.0163-lr2.91e-05
+  endpoints:
+  - api_base: http://localhost:8016/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo16:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial016-b0.0558-lr1.12e-05
+  endpoints:
+  - api_base: http://localhost:8017/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo17:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial017-b0.0143-lr3.61e-05
+  endpoints:
+  - api_base: http://localhost:8018/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo18:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial018-b0.0195-lr2.38e-05
+  endpoints:
+  - api_base: http://localhost:8019/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-1.7b-dpo-bo19:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial019-b0.0442-lr1.30e-05
+  endpoints:
+  - api_base: http://localhost:8020/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo00:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial000-b0.8651-lr3.05e-05
+  endpoints:
+  - api_base: http://localhost:8100/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo01:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial001-b0.1153-lr3.00e-05
+  endpoints:
+  - api_base: http://localhost:8101/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo02:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial002-b0.0105-lr2.49e-06
+  endpoints:
+  - api_base: http://localhost:8102/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo03:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial003-b0.0638-lr5.39e-06
+  endpoints:
+  - api_base: http://localhost:8103/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo04:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial004-b0.0905-lr7.73e-06
+  endpoints:
+  - api_base: http://localhost:8104/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo05:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial005-b0.4412-lr4.86e-05
+  endpoints:
+  - api_base: http://localhost:8105/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo06:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial006-b0.0321-lr1.67e-05
+  endpoints:
+  - api_base: http://localhost:8106/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo07:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial007-b0.0126-lr1.22e-05
+  endpoints:
+  - api_base: http://localhost:8107/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo08:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial008-b0.0383-lr1.16e-06
+  endpoints:
+  - api_base: http://localhost:8108/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo09:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial009-b0.0245-lr1.25e-05
+  endpoints:
+  - api_base: http://localhost:8109/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo10:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial010-b0.2479-lr4.04e-06
+  endpoints:
+  - api_base: http://localhost:8110/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo11:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial011-b0.0294-lr1.44e-05
+  endpoints:
+  - api_base: http://localhost:8111/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo12:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial012-b0.0277-lr1.42e-05
+  endpoints:
+  - api_base: http://localhost:8112/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo13:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial013-b0.0208-lr2.19e-05
+  endpoints:
+  - api_base: http://localhost:8113/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo14:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial014-b0.0163-lr2.46e-05
+  endpoints:
+  - api_base: http://localhost:8114/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo15:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial015-b0.0164-lr2.60e-05
+  endpoints:
+  - api_base: http://localhost:8115/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo16:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial016-b0.0563-lr4.76e-05
+  endpoints:
+  - api_base: http://localhost:8116/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo17:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial017-b0.1604-lr2.25e-05
+  endpoints:
+  - api_base: http://localhost:8117/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo18:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial018-b0.0186-lr7.77e-06
+  endpoints:
+  - api_base: http://localhost:8118/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo19:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial019-b0.0505-lr2.45e-06
+  endpoints:
+  - api_base: http://localhost:8119/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+###### BO for Qwen3-0.6B ######
+qwen3-0.6b-dpo-bo00:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial000-b0.9701-lr3.05e-05
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo01:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial001-b0.5543-lr3.00e-05
+  endpoints:
+  - api_base: http://localhost:8003/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+qwen3-0.6b-dpo-bo02:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial002-b0.0608-lr2.49e-06
+  endpoints:
+  - api_base: http://localhost:8004/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo03:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial003-b0.4322-lr5.39e-06
+  endpoints:
+  - api_base: http://localhost:8005/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo04:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial004-b0.5045-lr7.73e-06
+  endpoints:
+  - api_base: http://localhost:8006/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo05:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial005-b0.5541-lr1.27e-06
+  endpoints:
+  - api_base: http://localhost:8007/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo06:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial006-b0.2637-lr1.05e-05
+  endpoints:
+  - api_base: http://localhost:8008/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo07:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial007-b0.0938-lr1.29e-05
+  endpoints:
+  - api_base: http://localhost:8009/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo08:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial008-b0.0526-lr1.83e-05
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo09:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial009-b0.8814-lr4.84e-05
+  endpoints:
+  - api_base: http://localhost:8011/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo10:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial010-b0.7569-lr1.83e-05
+  endpoints:
+  - api_base: http://localhost:8012/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo11:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial011-b0.0551-lr1.44e-05
+  endpoints:
+  - api_base: http://localhost:8013/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo12:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial012-b0.2388-lr3.59e-06
+  endpoints:
+  - api_base: http://localhost:8014/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo13:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial013-b0.2322-lr1.80e-05
+  endpoints:
+  - api_base: http://localhost:8015/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo14:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial014-b0.2568-lr2.20e-05
+  endpoints:
+  - api_base: http://localhost:8016/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo15:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial015-b0.3828-lr8.36e-06
+  endpoints:
+  - api_base: http://localhost:8017/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo16:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial016-b0.2095-lr4.71e-05
+  endpoints:
+  - api_base: http://localhost:8018/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo17:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial017-b0.1856-lr5.09e-06
+  endpoints:
+  - api_base: http://localhost:8019/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo18:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial018-b0.3596-lr2.20e-05
+  endpoints:
+  - api_base: http://localhost:8020/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-0.6b-dpo-bo19:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial019-b0.1466-lr1.53e-05
+  endpoints:
+  - api_base: http://localhost:8021/v1
     api_key: '-'
   api_type: openai
   parallel: 32
