@@ -10,3 +10,7 @@ utils/__pycache__/*
 */__pycache__/*
 venv/
 utils/__pycache__/
+analysis/
+plot_random_search_results.py
+scripts/automate_arena_hard_judgment_multigpu.py
+scripts/automate_alpaca_eval_alpha.py
