@@ -271,9 +271,9 @@ SERVER_LOG_FILE="{log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log"
 
 # --- SETUP ENVIRONMENT ---
 echo "Setting up the environment for Arena Hard judgment..."
-source {WORKSPACE_ROOT}/ah-eval/bin/activate
+source {WORKSPACE_ROOT}/arena-hard-auto/venv/bin/activate
 
-PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
+PYTHON_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
 module load CUDA
@@ -304,6 +304,7 @@ echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
+    --chat-template {WORKSPACE_ROOT}/checkpoints/olmo3_chat_template.jinja \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 

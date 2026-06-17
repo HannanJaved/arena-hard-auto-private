@@ -168,9 +168,9 @@ set -e
 
 # --- SETUP ENVIRONMENT ---
 echo "Setting up the environment for {model_name}..."
-source {WORKSPACE_ROOT}/ah-eval/bin/activate
+source {WORKSPACE_ROOT}/arena-hard-auto/venv/bin/activate
 
-PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
+PYTHON_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
 module load CUDA
