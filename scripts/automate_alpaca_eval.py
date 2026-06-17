@@ -155,6 +155,7 @@ echo "Setting up the environment for AlpacaEval generation: {model_name}..."
 source {WORKSPACE_ROOT}/venv-alpacaeval/bin/activate
 
 PYTHON_EXEC={WORKSPACE_ROOT}/venv-alpacaeval/bin/python
+VLLM_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 module load CUDA
 
 MODEL_PORT={model_port}
@@ -167,7 +168,7 @@ default:
 EOF
 
 echo "Starting VLLM server for {model_name} on port $MODEL_PORT..."
-CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
+CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --model "{model_path}" \
     --port $MODEL_PORT \
     --tensor-parallel-size 1 \

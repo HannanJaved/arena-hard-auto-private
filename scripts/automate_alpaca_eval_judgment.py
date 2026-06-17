@@ -157,7 +157,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --time=01:00:00
+#SBATCH --time=02:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 
@@ -195,7 +195,7 @@ if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
     exit 1
 fi
 
-MAX_WAIT=2400
+MAX_WAIT=3000
 ELAPSED=0
 SLEEP_INTERVAL=30
 while [ $ELAPSED -lt $MAX_WAIT ]; do
