@@ -9,3 +9,4 @@ __pycache__/
 utils/__pycache__/*
 */__pycache__/*
 venv/
+utils/__pycache__/
