@@ -23,9 +23,9 @@ DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/bin/
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
 DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
 DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/ifeval"
-DEFAULT_HF_HOME = "/data/cat/ws/hama901h-Posttraining/.cache"
-DEFAULT_HF_DATASETS_CACHE = "/data/cat/ws/hama901h-Posttraining/.cache"
-DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.12/site-packages"
+DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
+DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
+DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.11/site-packages"
 
 SBATCH_HEADER = """\
 #!/bin/bash
@@ -233,10 +233,19 @@ def submit_job(script_contents: str, dry_run: bool) -> None:
         temp_path = handle.name
 
     try:
-        result = subprocess.run(["sbatch", temp_path], check=True, capture_output=True, text=True)
+        result = subprocess.run(["sbatch", temp_path], capture_output=True, text=True)
+        if result.returncode != 0:
+            print("sbatch failed.")
+            if result.stdout:
+                print("\nSTDOUT:\n" + result.stdout.strip())
+            if result.stderr:
+                print("\nSTDERR:\n" + result.stderr.strip())
+            print(f"Temporary script preserved at: {temp_path}")
+            return
         print(result.stdout.strip())
     finally:
-        os.unlink(temp_path)
+        if result.returncode == 0:
+            os.unlink(temp_path)
 
 
 def main() -> int:

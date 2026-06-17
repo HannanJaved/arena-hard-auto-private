@@ -25,7 +25,7 @@ DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
 DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/aime25"
 DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
-DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.12/site-packages"
+DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.11/site-packages"
 
 SBATCH_HEADER = """\
 #!/bin/bash

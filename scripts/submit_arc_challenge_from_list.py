@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Submit HellaSwag jobs for models listed in a text file.
+"""Submit ARC-Challenge jobs for models listed in a text file.
 
 The text file should contain one model name per line matching keys in
 `arena-hard-auto/config/api_config.yaml`.
@@ -21,7 +21,7 @@ DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/conf
 DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/bin/activate"
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
 DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
-DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/hellaswag"
+DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/arc_challenge"
 DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.11/site-packages"
@@ -61,8 +61,8 @@ mkdir -p {output_dir}
 
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\" \
-    --tasks hellaswag \
-    --num_fewshot 10 \
+    --tasks arc_challenge \
+    --num_fewshot 25 \
     --batch_size {batch_size} \
     --output_path {output_dir}"
 
@@ -95,8 +95,8 @@ TOTAL_BATCH_SIZE=$((NPROC_PER_NODE*{batch_size}))
 
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\" \
-    --tasks hellaswag \
-    --num_fewshot 10 \
+    --tasks arc_challenge \
+    --num_fewshot 25 \
     --batch_size $TOTAL_BATCH_SIZE \
     --output_path {output_dir}"
 
@@ -116,11 +116,11 @@ echo "END $SLURM_JOBID: $(date)"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Submit HellaSwag jobs for a list of model names.")
+    parser = argparse.ArgumentParser(description="Submit ARC-Challenge jobs for a list of model names.")
     parser.add_argument("--models-file", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
-    parser.add_argument("--job-name-prefix", default="hellaswag_", help="Prefix for Slurm job name.")
-    parser.add_argument("--batch-size", type=int, default=16, help="Batch size per GPU for lm_eval.")
+    parser.add_argument("--job-name-prefix", default="arc_challenge_", help="Prefix for Slurm job name.")
+    parser.add_argument("--batch-size", type=int, default=32, help="Batch size per GPU for lm_eval.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="01:00:00", help="Slurm wall time.")

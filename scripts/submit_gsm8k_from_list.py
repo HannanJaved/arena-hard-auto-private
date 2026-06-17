@@ -20,11 +20,11 @@ import yaml
 DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/config/api_config.yaml"
 DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/bin/activate"
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
-DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
+DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval/test_gsm8k"
 DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/gsm8k"
 DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
-DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.12/site-packages"
+DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/lib/python3.11/site-packages"
 
 SBATCH_HEADER = """\
 #!/bin/bash
@@ -120,7 +120,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models-file", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="gsm8k_", help="Prefix for Slurm job name.")
-    parser.add_argument("--batch-size", type=int, default=32, help="Batch size per GPU for lm_eval.")
+    parser.add_argument("--batch-size", type=int, default=64, help="Batch size per GPU for lm_eval.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="02:00:00", help="Slurm wall time.")
@@ -272,7 +272,7 @@ def main() -> int:
             print(f"Skipping {model_name}: no 'model' path found in api_config.")
             continue
 
-        output_subdir = model_path.lstrip("/").replace("/", "__")
+        output_subdir = model_path.replace("/", "__")
         result_dir = os.path.join(args.output_dir, output_subdir)
         if os.path.isdir(result_dir) and any(
             f.startswith("results_") and f.endswith(".json")
