@@ -17,3 +17,4 @@ scripts/automate_alpaca_eval_alpha.py
 README_random*
 *.err
 *.out
+scripts/run_random_search_plots.py
