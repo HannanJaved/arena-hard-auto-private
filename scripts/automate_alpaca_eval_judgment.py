@@ -167,6 +167,8 @@ echo "Setting up the environment for AlpacaEval judgment..."
 source {WORKSPACE_ROOT}/venv-alpacaeval/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/venv-alpacaeval/bin/python
 module load CUDA
+export PATH={WORKSPACE_ROOT}/venv-alpacaeval/bin:$PATH
+source {WORKSPACE_ROOT}/cache.sh
 
 JUDGE_PORT={judge_port}
 OPENAI_CONFIG_FILE={openai_config_file}
@@ -183,6 +185,8 @@ CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
     --max-model-len 26304 \
     --port $JUDGE_PORT \
     --tensor-parallel-size 1 \
+    --max-num-seqs 512 \
+    --gpu-memory-utilization 0.95 \
     --served-model-name "{args.judge_model}" \
     {gdn_prefill_flag} \
     > {log_dir}/{job_name}_vllm_judge.log 2>&1 &
