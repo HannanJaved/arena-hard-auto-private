@@ -40,7 +40,7 @@ DEFAULT_PARTITION = "capella"
 DEFAULT_TIME = "04:00:00"
 DEFAULT_GPUS = 2
 DEFAULT_CPUS = 4
-DEFAULT_MEM = "32G"
+DEFAULT_MEM = "128G"
 DEFAULT_MAX_OUT_TOKENS_MODELS = 4096
 DEFAULT_MAX_OUT_TOKENS_JUDGE = 2048
 DEFAULT_TRUNCATE_INPUT_CHARS = 8192
@@ -48,21 +48,21 @@ DEFAULT_MAX_MODEL_LEN = 32768
 DEFAULT_PROVIDER_PREFIX = "VLLM"
 DEFAULT_ENGINE_KWARGS = {
     "tensor_parallel_size": 1,
-    "enforce_eager": True,
-    "max_batch_size": 8,
-    "max_num_seqs": 8,
-    "max_num_batched_tokens": 4096,
+    "max_batch_size": 64,
+    "max_num_seqs": 64,
+    "max_num_batched_tokens": 65536,
 }
 DEFAULT_PYTHON_EXEC = f"{WORKSPACE_ROOT}/venv-openjury/bin/python"
 DEFAULT_ACTIVATE = f"{WORKSPACE_ROOT}/venv-openjury/bin/activate"
+DEFAULT_VLLM_EXEC = f"{WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python"
 
 # Judge server defaults (vLLM OpenAI server)
 DEFAULT_JUDGE_SERVER_PORT = 8010
 DEFAULT_JUDGE_SERVER_TP = 1
 DEFAULT_JUDGE_SERVER_MAX_MODEL_LEN = 26304
-DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 1
-DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 2048
-DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 32
+DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 16384
+DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "FULL"
 
 
 @dataclass(frozen=True)
@@ -156,6 +156,8 @@ def resolve_model_spec(api_config: dict, model_key: str, provider_prefix: str) -
     if provider_prefix:
         if model_path.startswith(f"{provider_prefix}/"):
             return model_path
+        # model_path may be an absolute filesystem path (starts with "/");
+        # use "VLLM:" style separation won't work — just concatenate carefully.
         return f"{provider_prefix}/{model_path}"
     return model_path
 
@@ -229,6 +231,7 @@ def create_slurm_script(
     partition: str,
     time_limit: str,
     python_exec: str,
+    vllm_exec: str,
     activate_path: str | None,
     logs_dir: str,
 ):
@@ -247,8 +250,8 @@ def create_slurm_script(
         optional_flags.append(f"    --max_model_len {max_model_len} \\")
     if chat_template:
         optional_flags.append(f"    --chat_template {shlex.quote(chat_template)} \\")
-    if use_tqdm:
-        optional_flags.append("    --use_tqdm \\")
+    # use_tqdm=True serializes vLLM inference (one request at a time via ainvoke);
+    # always omit it so the batch path is used.
 
     optional_flags_block = "\n".join(optional_flags)
     if optional_flags_block:
@@ -286,6 +289,8 @@ echo "  Started : $(date)"
 
 # --- ENVIRONMENT ---
 {activate_line}PYTHON_EXEC={python_exec}
+VLLM_EXEC={vllm_exec}
+export PATH=$(dirname {vllm_exec}):$PATH
 module load CUDA
 
 echo "Python: $PYTHON_EXEC"
@@ -293,6 +298,13 @@ echo "Python: $PYTHON_EXEC"
 export CUDA_VISIBLE_DEVICES=$(seq -s, 0 $(({num_gpus}-1)))
 export VLLM_USE_FLASHINFER_MOE_FP8=0
 export VLLM_MOE_FP8_BACKEND=TRITON
+# Throttle FlashInfer/nvcc JIT compilation so concurrent cicc processes
+# don't exhaust host RAM and get OOM-killed (signal 9), which previously
+# left the judge server unable to start.
+export MAX_JOBS=2
+export NVCC_THREADS=1
+
+source {WORKSPACE_ROOT}/cache.sh
 
 export PYTHONPATH={JUDGEARENA_DIR}:$PYTHONPATH
 export PYTHONUNBUFFERED=1
@@ -304,7 +316,7 @@ JUDGE_MODEL_PATH="{judge_model_path}"
 JUDGE_SERVED_NAME="{judge_served_name}"
 JUDGE_LOG="{log_dir}/judge_vllm_${{SLURM_JOB_ID}}.log"
 
-CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
+CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --model "$JUDGE_MODEL_PATH" \
     --port $JUDGE_PORT \
     --tensor-parallel-size {judge_server_tp} \
@@ -553,7 +565,13 @@ def main() -> None:
         "--python-exec",
         type=str,
         default=DEFAULT_PYTHON_EXEC,
-        help=f"Python executable to use (default: {DEFAULT_PYTHON_EXEC}).",
+        help=f"Python executable for judgearena (default: {DEFAULT_PYTHON_EXEC}).",
+    )
+    parser.add_argument(
+        "--vllm-exec",
+        type=str,
+        default=DEFAULT_VLLM_EXEC,
+        help=f"Python executable for the vLLM server (default: {DEFAULT_VLLM_EXEC}).",
     )
     parser.add_argument(
         "--activate",
@@ -784,6 +802,7 @@ def main() -> None:
             partition=args.partition,
             time_limit=args.time_limit,
             python_exec=args.python_exec,
+            vllm_exec=args.vllm_exec,
             activate_path=activate_path,
             logs_dir=args.logs_dir,
         )

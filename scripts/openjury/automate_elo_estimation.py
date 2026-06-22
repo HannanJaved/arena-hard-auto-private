@@ -27,13 +27,14 @@ DEFAULT_JUDGE = "Qwen3-Next-80B-A3B-Instruct-FP8"
 DEFAULT_ARENA = "LMArena"
 DEFAULT_N_INSTRUCTIONS = 500
 DEFAULT_SWAP_MODE = "both"
-DEFAULT_RESULT_FOLDER = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/openjury-elo/"
+DEFAULT_RESULT_FOLDER = f"{WORKSPACE_ROOT}/evaluation_results/openjury-elo/"
 DEFAULT_PARTITION = "capella"
-DEFAULT_TIME = "02:00:00"
+DEFAULT_TIME = "04:00:00"
 DEFAULT_GPUS = 1
 DEFAULT_MAX_MODEL_LEN = 32768
 DEFAULT_MAX_OUT_TOKENS_MODELS = 4096
 DEFAULT_MAX_OUT_TOKENS_JUDGE = 2048
+OPENJURY_DATA=f"{WORKSPACE_ROOT}/openjury-data"
 
 
 def load_api_config():
@@ -63,7 +64,7 @@ def create_slurm_script(
     judge_path: str,
     script_path: str,
     arena: str,
-    n_instructions: int | None,
+    n_instructions: int,
     n_instructions_per_language: int | None,
     languages: list[str] | None,
     swap_mode: str,
@@ -118,7 +119,7 @@ def create_slurm_script(
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH --time={time_limit}
 #SBATCH --partition={partition}
 #SBATCH --gres=gpu:{num_gpus}
@@ -135,6 +136,7 @@ echo "  Started: $(date)"
 source {WORKSPACE_ROOT}/venv-openjury/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/venv-openjury/bin/python
 module load CUDA
+source {WORKSPACE_ROOT}/cache.sh
 
 echo "Python: $PYTHON_EXEC"
 
