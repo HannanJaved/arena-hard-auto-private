@@ -9247,7 +9247,7 @@ qwen3-1.7b-dpo-bo03_step1200:
 qwen3-1.7b-dpo-bo04_step400:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial004-b0.0905-lr7.73e-06/checkpoint-400
   endpoints:
-  - api_base: http://localhost:8009/v1
+  - api_base: http://localhost:8111/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9257,7 +9257,7 @@ qwen3-1.7b-dpo-bo04_step400:
 qwen3-1.7b-dpo-bo04_step1200:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial004-b0.0905-lr7.73e-06/checkpoint-1200
   endpoints:
-  - api_base: http://localhost:8010/v1
+  - api_base: http://localhost:8110/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9327,7 +9327,7 @@ qwen3-1.7b-dpo-bo07_step1200:
 qwen3-1.7b-dpo-bo08_step400:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial008-b0.0383-lr1.16e-06/checkpoint-400
   endpoints:
-  - api_base: http://localhost:8017/v1
+  - api_base: http://localhost:8109/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9337,7 +9337,7 @@ qwen3-1.7b-dpo-bo08_step400:
 qwen3-1.7b-dpo-bo08_step1200:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-1.7B-Base/SFT-sweep/Qwen3-1.7B-DPO-BO-trial008-b0.0383-lr1.16e-06/checkpoint-1200
   endpoints:
-  - api_base: http://localhost:8018/v1
+  - api_base: http://localhost:8108/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9568,7 +9568,7 @@ qwen3-1.7b-dpo-bo19_step1200:
 qwen3-4b-dpo-bo00_step400:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial000-b0.8651-lr3.05e-05/checkpoint-400
   endpoints:
-  - api_base: http://localhost:8041/v1
+  - api_base: http://localhost:8104/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9578,7 +9578,7 @@ qwen3-4b-dpo-bo00_step400:
 qwen3-4b-dpo-bo00_step1200:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial000-b0.8651-lr3.05e-05/checkpoint-1200
   endpoints:
-  - api_base: http://localhost:8042/v1
+  - api_base: http://localhost:8105/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9728,7 +9728,7 @@ qwen3-4b-dpo-bo07_step1200:
 qwen3-4b-dpo-bo08_step400:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial008-b0.2708-lr3.12e-06/checkpoint-400
   endpoints:
-  - api_base: http://localhost:8057/v1
+  - api_base: http://localhost:8106/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9738,7 +9738,7 @@ qwen3-4b-dpo-bo08_step400:
 qwen3-4b-dpo-bo08_step1200:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial008-b0.2708-lr3.12e-06/checkpoint-1200
   endpoints:
-  - api_base: http://localhost:8058/v1
+  - api_base: http://localhost:8107/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -9848,7 +9848,7 @@ qwen3-4b-dpo-bo13_step1200:
 qwen3-4b-dpo-bo14_step400:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-DPO-BO-trial014-b0.0163-lr2.46e-05/checkpoint-400
   endpoints:
-  - api_base: http://localhost:8069/v1
+  - api_base: http://localhost:8005/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10339,7 +10339,7 @@ qwen3-0.6b-dpo-bo18_step400:
 qwen3-0.6b-dpo-bo18_step1200:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial018-b0.3596-lr2.20e-05/checkpoint-1200
   endpoints:
-  - api_base: http://localhost:8018/v1
+  - api_base: http://localhost:8003/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10460,7 +10460,7 @@ qwen3-8b-dpo-bo08_step1000:
 qwen3-8b-dpo-bo09_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep-fsdp/Qwen3-8B-DPO-BO-FSDP-trial009-b0.0245-lr1.95e-05/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8030/v1
+  - api_base: http://localhost:8100/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10470,7 +10470,7 @@ qwen3-8b-dpo-bo09_step1000:
 qwen3-8b-dpo-bo10_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep-fsdp/Qwen3-8B-DPO-BO-FSDP-trial010-b0.0321-lr1.38e-05/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8031/v1
+  - api_base: http://localhost:8101/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10480,7 +10480,7 @@ qwen3-8b-dpo-bo10_step1000:
 qwen3-8b-dpo-bo11_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep-fsdp/Qwen3-8B-DPO-BO-FSDP-trial011-b0.0288-lr3.85e-06/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8032/v1
+  - api_base: http://localhost:8102/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10530,7 +10530,7 @@ qwen3-8b-dpo-bo15_step1000:
 qwen3-8b-dpo-bo16_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-8B-Base/SFT-sweep-fsdp/Qwen3-8B-DPO-BO-FSDP-trial016-b0.0184-lr1.49e-06/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8037/v1
+  - api_base: http://localhost:8103/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10571,7 +10571,7 @@ qwen3-8b-dpo-bo19_step1000:
 qwen3-14b-dpo-bo00_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep-fsdp/Qwen3-14B-DPO-BO-FSDP-trial000-b0.8651-lr3.05e-05/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8061/v1
+  - api_base: http://localhost:8006/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10661,7 +10661,7 @@ qwen3-14b-dpo-bo08_step1000:
 qwen3-14b-dpo-bo09_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep-fsdp/Qwen3-14B-DPO-BO-FSDP-trial009-b0.3068-lr3.49e-06/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8070/v1
+  - api_base: http://localhost:8007/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10751,7 +10751,7 @@ qwen3-14b-dpo-bo17_step1000:
 qwen3-14b-dpo-bo18_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep-fsdp/Qwen3-14B-DPO-BO-FSDP-trial018-b0.0163-lr1.60e-06/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8079/v1
+  - api_base: http://localhost:8100/v1
     api_key: '-'
   api_type: openai
   parallel: 32
@@ -10761,7 +10761,7 @@ qwen3-14b-dpo-bo18_step1000:
 qwen3-14b-dpo-bo19_step1000:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-14B-Base/SFT-sweep-fsdp/Qwen3-14B-DPO-BO-FSDP-trial019-b0.0508-lr1.98e-06/checkpoint-1000
   endpoints:
-  - api_base: http://localhost:8080/v1
+  - api_base: http://localhost:8101/v1
     api_key: '-'
   api_type: openai
   parallel: 32
