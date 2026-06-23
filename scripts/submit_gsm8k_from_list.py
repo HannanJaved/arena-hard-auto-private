@@ -123,7 +123,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=64, help="Batch size per GPU for lm_eval.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
-    parser.add_argument("--time", default="02:00:00", help="Slurm wall time.")
+    parser.add_argument("--time", default="03:00:00", help="Slurm wall time.")
     parser.add_argument("--gres", default="gpu:1", help="Slurm gres.")
     parser.add_argument("--cpus-per-task", type=int, default=4, help="Slurm CPUs per task.")
     parser.add_argument("--mem", default="16G", help="Slurm memory.")
