@@ -65,6 +65,18 @@ def _read_models(models_file: str) -> list[str]:
     return models
 
 
+def _filter_missing_paths(models: list[str], api_config: dict) -> list[str]:
+    """Skip models whose checkpoint path does not exist on disk."""
+    valid = []
+    for m in models:
+        path = _model_path(api_config, m)
+        if path and path.startswith("/") and not Path(path).exists():
+            print(f"  SKIP (missing checkpoint): {m}\n    path: {path}", file=sys.stderr)
+        else:
+            valid.append(m)
+    return valid
+
+
 def _write_temp_models(models: list[str]) -> str:
     f = tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False)
     f.write("\n".join(models) + "\n")
@@ -212,6 +224,7 @@ def main() -> None:
         print(f"{'='*60}")
         all_models = _read_models(models_file)
         api_config = _load_api_config()
+        all_models = _filter_missing_paths(all_models, api_config)
         temp_files: list[str] = []
 
         def submit_filtered(label: str, check_fn, run_fn) -> None:

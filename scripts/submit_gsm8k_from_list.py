@@ -63,6 +63,7 @@ export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\" \
     --tasks gsm8k \
     --num_fewshot 5 \
+    --gen_kwargs max_new_tokens=1024 \
     --batch_size {batch_size} \
     --output_path {output_dir}"
 
@@ -97,6 +98,7 @@ export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\" \
     --tasks gsm8k \
     --num_fewshot 5 \
+    --gen_kwargs max_new_tokens=1024 \
     --batch_size $TOTAL_BATCH_SIZE \
     --output_path {output_dir}"
 
