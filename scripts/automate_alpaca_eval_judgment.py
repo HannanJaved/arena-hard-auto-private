@@ -270,6 +270,9 @@ def main():
     parser.add_argument("--save-raw", action="store_true")
     parser.add_argument("--save-length-controlled", action="store_true")
     parser.add_argument("--gdn-prefill-backend", default="triton")
+    parser.add_argument("--dependency", type=str, default="",
+                        help="SLURM dependency string passed to sbatch (e.g. afterok:12345:67890). "
+                             "Skips missing-output validation since generation will finish before this job runs.")
 
     args = parser.parse_args()
 
@@ -298,7 +301,9 @@ def main():
         print("\nWARNING: Missing model outputs for:")
         for model in missing_outputs:
             print(f"  - {model}")
-        if not args.dry_run:
+        if args.dependency:
+            print("\nDependency set — judgment jobs will wait for generation to finish before running.")
+        elif not args.dry_run:
             response = input("Continue anyway? (y/N): ")
             if response.lower() != "y":
                 return
@@ -338,7 +343,11 @@ def main():
         submitted_jobs = []
         for script in job_scripts:
             try:
-                result = subprocess.run(["sbatch", script], capture_output=True, text=True, check=True)
+                sbatch_cmd = ["sbatch"]
+                if args.dependency:
+                    sbatch_cmd += ["--dependency", args.dependency]
+                sbatch_cmd.append(script)
+                result = subprocess.run(sbatch_cmd, capture_output=True, text=True, check=True)
                 job_id = result.stdout.strip().split()[-1]
                 submitted_jobs.append((script, job_id))
                 print(f"  Submitted {os.path.basename(script)} -> Job ID: {job_id}")
