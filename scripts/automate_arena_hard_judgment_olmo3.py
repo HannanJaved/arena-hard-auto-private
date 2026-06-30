@@ -427,7 +427,10 @@ def main():
     parser.add_argument('--dry-run', action='store_true', help='Generate scripts but do not submit jobs')
     parser.add_argument('--submit', action='store_true', help='Submit jobs after generating scripts')
     parser.add_argument('--validate-only', action='store_true', help='Only validate models without generating scripts')
-    
+    parser.add_argument('--dependency', type=str, default='',
+                        help='SLURM dependency string passed to sbatch (e.g. afterok:12345:67890). '
+                             'Skips missing-answer validation since generation will finish before this job runs.')
+
     args = parser.parse_args()
     
     # Create necessary directories
@@ -488,11 +491,14 @@ def main():
         print(f"\\nWARNING: The following models don't have generated answers yet:")
         for model in missing_answers:
             print(f"  - {model}")
-        print("\\nYou need to generate answers first before judging.")
-        if not args.validate_only:
-            response = input("Continue anyway? (y/N): ")
-            if response.lower() != 'y':
-                return
+        if args.dependency:
+            print("\\nDependency set — judgment jobs will wait for generation to finish before running.")
+        else:
+            print("\\nYou need to generate answers first before judging.")
+            if not args.validate_only:
+                response = input("Continue anyway? (y/N): ")
+                if response.lower() != 'y':
+                    return
     
     if args.validate_only:
         print(f"\\nValidation complete. {len(models_to_judge)} models ready for judgment.")
@@ -559,7 +565,11 @@ def main():
         submitted_jobs = []
         for script in job_scripts:
             try:
-                result = subprocess.run(['sbatch', script], capture_output=True, text=True, check=True)
+                sbatch_cmd = ['sbatch']
+                if args.dependency:
+                    sbatch_cmd += ['--dependency', args.dependency]
+                sbatch_cmd.append(script)
+                result = subprocess.run(sbatch_cmd, capture_output=True, text=True, check=True)
                 job_id = result.stdout.strip().split()[-1]
                 submitted_jobs.append((script, job_id))
                 print(f"  Submitted {os.path.basename(script)} -> Job ID: {job_id}")
