@@ -34,7 +34,8 @@ VENV_LMEVAL   = WORKSPACE / "venv-lm-eval" / "bin" / "python"
 STATIC_TASKS = ["arc_challenge", "gpqa", "gsm8k", "hellaswag", "ifeval", "piqa", "truthfulqa"]
 
 LM_EVAL_LOG_DIR     = WORKSPACE / "logs" / "LM-eval"
-ARENA_HARD_ANS_DIR  = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_answer"
+ARENA_HARD_ANS_DIR      = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_answer"
+ARENA_HARD_JUDGMENT_DIR = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_judgment"
 ALPACA_EVAL_OUT_DIR = WORKSPACE / "alpaca_eval_outputs"
 MTBENCH_RESULT_DIR  = WORKSPACE / "evaluation_results" / "judgearena-mtbench"
 ELO_RESULT_DIR      = WORKSPACE / "evaluation_results" / "openjury-elo"
@@ -54,6 +55,28 @@ def run(label: str, python: Path, script: Path, extra_args: list[str]) -> None:
     result = subprocess.run(cmd)
     if result.returncode != 0:
         print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
+
+
+def _run_capturing(label: str, python: Path, script: Path, extra_args: list[str]) -> list[str]:
+    """Run script, print its output, and return SLURM job IDs parsed from stdout."""
+    print(f"\n{'='*60}")
+    print(f"  {label}")
+    print(f"{'='*60}")
+    cmd = [str(python), str(script)] + extra_args
+    print("  CMD:", " ".join(cmd))
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.stdout:
+        print(result.stdout, end="")
+    if result.stderr:
+        print(result.stderr, end="", file=sys.stderr)
+    if result.returncode != 0:
+        print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
+    return re.findall(r"Job ID:\s*(\d+)", result.stdout)
+
+
+def _dependency_str(job_ids: list[str]) -> str:
+    """Build a SLURM afterok dependency string from a list of job IDs."""
+    return "afterok:" + ":".join(job_ids) if job_ids else ""
 
 
 def _read_models(models_file: str) -> list[str]:
@@ -131,6 +154,18 @@ def _is_arena_hard_completed(model_name: str) -> bool:
     return (ARENA_HARD_ANS_DIR / f"{model_name}.jsonl").exists()
 
 
+def _is_arena_hard_judgment_completed(model_name: str, judge_model: str, baseline: str) -> bool:
+    # judgment files land in model_judgment/{judge_model}/compared_with_{baseline}/
+    judgment_dir = ARENA_HARD_JUDGMENT_DIR / judge_model / f"compared_with_{baseline}"
+    return (judgment_dir / f"{model_name}.jsonl").exists()
+
+
+def _is_alpaca_eval_judgment_completed(model_name: str) -> bool:
+    if (ALPACA_EVAL_OUT_DIR / model_name / "leaderboard_length_controlled.csv").exists():
+        return True
+    return any(ALPACA_EVAL_OUT_DIR.glob(f"*/{model_name}/leaderboard_length_controlled.csv"))
+
+
 def _is_alpaca_eval_completed(model_name: str) -> bool:
     # Direct path first, then one level of subdirectory (e.g. BO/model_name/)
     if (ALPACA_EVAL_OUT_DIR / model_name / "model_outputs.json").exists():
@@ -190,7 +225,11 @@ def main() -> None:
     parser.add_argument("--models-file", required=True, help="Text file with one model name per line.")
     parser.add_argument("--submit",  action="store_true", help="Submit SLURM jobs (automation scripts).")
     parser.add_argument("--dry-run", action="store_true", help="Generate scripts but do not submit.")
-    parser.add_argument("--baseline", required=True, help="Baseline model for MT-Bench.")
+    parser.add_argument("--baseline", required=True, help="Baseline model for MT-Bench and arena-hard judgment.")
+    parser.add_argument(
+        "--judge-model", default="Qwen3-Next-80B-A3B-Instruct-FP8",
+        help="Judge model name used for arena-hard, alpaca-eval, and other judge-based evals (default: Qwen3-Next-80B-A3B-Instruct-FP8).",
+    )
     parser.add_argument("--rerun", action="store_true", help="Re-run MT-Bench for all (no skipping).")
     parser.add_argument(
         "--skip-completed",
@@ -237,27 +276,83 @@ def main() -> None:
             temp_files.append(tmp)
             run_fn(tmp)
 
-        # 1. Arena-Hard generation
+        # 1. Arena-Hard generation → capture job IDs for dependency chaining
+        arena_gen_pending, arena_gen_completed = _partition(all_models, _is_arena_hard_completed)
+        _print_completion_summary("Arena-Hard generation", arena_gen_completed, arena_gen_pending)
+        arena_gen_job_ids: list[str] = []
+        if arena_gen_pending:
+            tmp = _write_temp_models(arena_gen_pending)
+            temp_files.append(tmp)
+            if args.submit:
+                arena_gen_job_ids = _run_capturing(
+                    "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+                    VENV_ARENA,
+                    SCRIPTS / "automate_arena_hard_generation_olmo3.py",
+                    ["--models-file", tmp, "--submit"],
+                )
+            else:
+                run(
+                    "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+                    VENV_ARENA,
+                    SCRIPTS / "automate_arena_hard_generation_olmo3.py",
+                    ["--models-file", tmp] + auto_flag,
+                )
+        else:
+            print("  -> All models already done for Arena-Hard generation, skipping.")
+
+        # 1b. Arena-Hard judgment — only for models missing judgment, depends on new gen jobs
+        arena_judg_check = lambda m: _is_arena_hard_judgment_completed(m, args.judge_model, args.baseline)
         submit_filtered(
-            "Arena-Hard generation",
-            _is_arena_hard_completed,
+            "Arena-Hard judgment",
+            arena_judg_check,
             lambda tmp: run(
-                "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+                "Arena-Hard judgment (automate_arena_hard_judgment_olmo3)",
                 VENV_ARENA,
-                SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                ["--models-file", tmp] + auto_flag,
+                SCRIPTS / "automate_arena_hard_judgment_olmo3.py",
+                ["--models-file", tmp,
+                 "--baseline", args.baseline,
+                 "--judge-model", args.judge_model]
+                + auto_flag
+                + (["--dependency", _dependency_str(arena_gen_job_ids)] if arena_gen_job_ids else []),
             ),
         )
 
-        # 2. AlpacaEval generation
+        # 2. AlpacaEval generation → capture job IDs for dependency chaining
+        alpaca_gen_pending, alpaca_gen_completed = _partition(all_models, _is_alpaca_eval_completed)
+        _print_completion_summary("AlpacaEval generation", alpaca_gen_completed, alpaca_gen_pending)
+        alpaca_gen_job_ids: list[str] = []
+        if alpaca_gen_pending:
+            tmp = _write_temp_models(alpaca_gen_pending)
+            temp_files.append(tmp)
+            if args.submit:
+                alpaca_gen_job_ids = _run_capturing(
+                    "AlpacaEval generation (automate_alpaca_eval)",
+                    VENV_ALPACA,
+                    SCRIPTS / "automate_alpaca_eval.py",
+                    ["--models-file", tmp, "--submit"],
+                )
+            else:
+                run(
+                    "AlpacaEval generation (automate_alpaca_eval)",
+                    VENV_ALPACA,
+                    SCRIPTS / "automate_alpaca_eval.py",
+                    ["--models-file", tmp] + auto_flag,
+                )
+        else:
+            print("  -> All models already done for AlpacaEval generation, skipping.")
+
+        # 2b. AlpacaEval judgment — only for models missing judgment, depends on new gen jobs
         submit_filtered(
-            "AlpacaEval generation",
-            _is_alpaca_eval_completed,
+            "AlpacaEval judgment",
+            _is_alpaca_eval_judgment_completed,
             lambda tmp: run(
-                "AlpacaEval generation (automate_alpaca_eval)",
+                "AlpacaEval judgment (automate_alpaca_eval_judgment)",
                 VENV_ALPACA,
-                SCRIPTS / "automate_alpaca_eval.py",
-                ["--models-file", tmp] + auto_flag,
+                SCRIPTS / "automate_alpaca_eval_judgment.py",
+                ["--models-file", tmp,
+                 "--judge-model", args.judge_model]
+                + auto_flag
+                + (["--dependency", _dependency_str(alpaca_gen_job_ids)] if alpaca_gen_job_ids else []),
             ),
         )
 
@@ -303,20 +398,59 @@ def main() -> None:
             Path(f).unlink(missing_ok=True)
 
     else:
-        # 1. Arena-Hard generation
+        # 1. Arena-Hard generation → capture job IDs when submitting
+        if args.submit:
+            arena_gen_job_ids = _run_capturing(
+                "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+                VENV_ARENA,
+                SCRIPTS / "automate_arena_hard_generation_olmo3.py",
+                ["--models-file", models_file, "--submit"],
+            )
+        else:
+            arena_gen_job_ids = []
+            run(
+                "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+                VENV_ARENA,
+                SCRIPTS / "automate_arena_hard_generation_olmo3.py",
+                ["--models-file", models_file] + auto_flag,
+            )
+
+        # 1b. Arena-Hard judgment — depends on generation jobs
+        arena_judg_extra = ["--dependency", _dependency_str(arena_gen_job_ids)] if arena_gen_job_ids else []
         run(
-            "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
+            "Arena-Hard judgment (automate_arena_hard_judgment_olmo3)",
             VENV_ARENA,
-            SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-            ["--models-file", models_file] + auto_flag,
+            SCRIPTS / "automate_arena_hard_judgment_olmo3.py",
+            ["--models-file", models_file,
+             "--baseline", args.baseline,
+             "--judge-model", args.judge_model] + auto_flag + arena_judg_extra,
         )
 
-        # 2. AlpacaEval generation
+        # 2. AlpacaEval generation → capture job IDs when submitting
+        if args.submit:
+            alpaca_gen_job_ids = _run_capturing(
+                "AlpacaEval generation (automate_alpaca_eval)",
+                VENV_ALPACA,
+                SCRIPTS / "automate_alpaca_eval.py",
+                ["--models-file", models_file, "--submit"],
+            )
+        else:
+            alpaca_gen_job_ids = []
+            run(
+                "AlpacaEval generation (automate_alpaca_eval)",
+                VENV_ALPACA,
+                SCRIPTS / "automate_alpaca_eval.py",
+                ["--models-file", models_file] + auto_flag,
+            )
+
+        # 2b. AlpacaEval judgment — depends on generation jobs
+        alpaca_judg_extra = ["--dependency", _dependency_str(alpaca_gen_job_ids)] if alpaca_gen_job_ids else []
         run(
-            "AlpacaEval generation (automate_alpaca_eval)",
+            "AlpacaEval judgment (automate_alpaca_eval_judgment)",
             VENV_ALPACA,
-            SCRIPTS / "automate_alpaca_eval.py",
-            ["--models-file", models_file] + auto_flag,
+            SCRIPTS / "automate_alpaca_eval_judgment.py",
+            ["--models-file", models_file,
+             "--judge-model", args.judge_model] + auto_flag + alpaca_judg_extra,
         )
 
         # 3. MT-Bench / JudgeArena
