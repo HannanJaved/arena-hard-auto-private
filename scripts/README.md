@@ -8,11 +8,10 @@ Everything here is workspace-specific: paths are hardcoded to
 `/data/horse/ws/hama901h-BFTranslation`, models are looked up by key in
 [`arena-hard-auto/config/api_config.yaml`](../config/api_config.yaml), and jobs
 are submitted with `sbatch`. This README covers the top-level orchestrator
-(`submit_evals.py`) and the individual automation scripts it wraps. For
-narrower, older docs on specific pieces see the other `*_README.md` files in
-this directory (`ARENA_HARD_AUTOMATION_README.md`,
-`ARENA_HARD_JUDGMENT_README.md`, `ALPACA_EVAL_AUTOMATION_README.md`,
-`README_ifeval_submit.md`, `README_ifbench_submit.md`, `MISSING_MODELS_README.md`).
+(`submit_evals.py`) and the LLM-judge automation scripts it wraps
+(Arena-Hard, AlpacaEval, MT-Bench, ELO). The 7 static `lm-evaluation-harness`
+tasks (arc_challenge, gpqa, gsm8k, hellaswag, ifeval, piqa, truthfulqa) have
+their own doc: [`STATIC_EVALS_README.md`](STATIC_EVALS_README.md).
 
 Two of the wrapped scripts (`automate_mtbench.py`, `automate_elo_estimation.py`)
 live in the sibling `JudgeArena`/`OpenJury` repos rather than here. Reference
@@ -35,8 +34,15 @@ own copy):
 | `submit_evals.py` | `WORKSPACE` | [`submit_evals.py:26`](submit_evals.py#L26) |
 | `automate_arena_hard_generation_olmo3.py` | `WORKSPACE_ROOT` | [`automate_arena_hard_generation_olmo3.py:15`](automate_arena_hard_generation_olmo3.py#L15) |
 | `automate_arena_hard_judgment_olmo3.py` | `WORKSPACE_ROOT` | [`automate_arena_hard_judgment_olmo3.py:17`](automate_arena_hard_judgment_olmo3.py#L17) |
+| `automate_alpaca_eval.py` | `WORKSPACE_ROOT` | [`automate_alpaca_eval.py:15`](automate_alpaca_eval.py#L15) |
+| `automate_alpaca_eval_judgment.py` | `WORKSPACE_ROOT` | [`automate_alpaca_eval_judgment.py:15`](automate_alpaca_eval_judgment.py#L15) |
 | `vendor/automate_mtbench.py` | `WORKSPACE_ROOT` | [`vendor/automate_mtbench.py:28`](vendor/automate_mtbench.py#L28) |
 | `vendor/automate_elo_estimation.py` | `WORKSPACE_ROOT` | [`vendor/automate_elo_estimation.py:19`](vendor/automate_elo_estimation.py#L19) |
+
+The 7 static LM-eval scripts (`submit_{task}_from_list.py`) hardcode the
+workspace root differently — as several separate `DEFAULT_*` path constants
+rather than one `WORKSPACE_ROOT` — and are documented separately in
+[`STATIC_EVALS_README.md`](STATIC_EVALS_README.md#hardcoded-paths).
 
 A few paths are hardcoded *beyond* the `WORKSPACE_ROOT` substitution and need
 separate attention:
@@ -49,7 +55,14 @@ separate attention:
   - Activates `{WORKSPACE_ROOT}/ah-eval/bin/activate` ([line 259](automate_arena_hard_judgment_olmo3.py#L259))
     — note this is a **different venv** (`ah-eval`) than the one
     `submit_evals.py` otherwise uses for Arena-Hard (`arena-hard-auto/venv`).
-    Make sure `ah-eval` exists or change this line to point at your Arena-Hard venv.
+    **In this workspace `ah-eval` is Python 3.9 with only plotting packages
+    (matplotlib, numpy) — no vLLM/torch — so the SLURM job this script
+    generates will fail** at the `$PYTHON_EXEC -m vllm.entrypoints.openai.api_server`
+    step. Either install vLLM into `ah-eval`, or (simpler) edit
+    [line 259](automate_arena_hard_judgment_olmo3.py#L259)/[261](automate_arena_hard_judgment_olmo3.py#L261)
+    to activate `{WORKSPACE_ROOT}/arena-hard-auto/venv` instead, matching
+    what generation uses. Check `source .../bin/activate; python -m pip list | grep vllm`
+    in whichever venv you point this at before submitting a batch.
   - Chat template `{WORKSPACE_ROOT}/checkpoints/olmo3_chat_template.jinja`
     ([line 292](automate_arena_hard_judgment_olmo3.py#L292)) — swap for
     `checkpoints/meta-llama/tulu_template.j2` if judging Tulu models (see the
@@ -60,11 +73,17 @@ separate attention:
   `{WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python` ([line 57](vendor/automate_mtbench.py#L57))
   for the judge server, separately from `DEFAULT_PYTHON_EXEC`
   (`venv-openjury`) used for the JudgeArena driver — both need to exist.
-- All five scripts also assume sibling directories at the workspace root:
+- **`automate_alpaca_eval_judgment.py`**: `DEFAULT_PROMPT_TEMPLATE`
+  ([line 22](automate_alpaca_eval_judgment.py#L22)) points inside the
+  `alpaca_eval` pip package's installed location under `venv-alpacaeval`
+  (`.../alpaca_eval/src/alpaca_eval/evaluators_configs/alpaca_eval_clf_gpt4_turbo/alpaca_eval_clf.txt`)
+  — this path only resolves if `alpaca_eval` is pip-installed (not just
+  importable some other way) into that exact venv.
+- All of the above also assume sibling directories at the workspace root:
   `arena-hard-auto/`, `JudgeArena/` (or its vendored copy — see below),
-  `OpenJury/` (or its vendored copy), `logs/`, and the four `venv*`
-  directories listed in Prerequisites. Moving any of these relative to each
-  other breaks the defaults.
+  `OpenJury/` (or its vendored copy), `logs/`, and the venv directories
+  listed in Prerequisites. Moving any of these relative to each other breaks
+  the defaults.
 
 None of these are read from environment variables or a shared config file —
 they're plain Python string constants, so "changing the workspace path" means
@@ -91,13 +110,37 @@ editing source, not exporting a variable.
    `python`, not whatever `python` is on your `$PATH`.
 4. **SLURM access** on the `capella` partition (or pass `--partition` to
    override where supported).
+5. **`module load CUDA`** must work in your shell. Every generated SLURM
+   script calls this (an [Lmod](https://lmod.readthedocs.io/) environment-modules
+   command, standard on this cluster) to put a CUDA toolkit on `PATH` before
+   starting vLLM. If your cluster doesn't use Lmod/environment-modules, or
+   the `CUDA` modulefile is named differently, edit the `module load CUDA`
+   line in each generated-script template (or load CUDA another way before
+   `sbatch`). One script pins a specific version instead of the default —
+   `automate_arena_hard_judgment_olmo3.py` uses `module load CUDA/12.4.0`
+   ([line 264](automate_arena_hard_judgment_olmo3.py#L264)) while everything
+   else uses the unversioned `module load CUDA`; if your default `CUDA`
+   module resolves to a different version than 12.4.0 you may see
+   Arena-Hard generation and judgment build against different toolkits.
+6. **`data/arena-hard-v2.0/question.jsonl`** must exist (the Arena-Hard
+   question set) — already present in this checkout at
+   [`../data/arena-hard-v2.0/`](../data/arena-hard-v2.0/); if you're
+   bootstrapping a fresh clone of upstream `arena-hard-auto` instead, see the
+   top-level [`README.md`](../README.md#download-dataset) for how to fetch it.
+7. **`cache.sh`** ([`../../cache.sh`](../../cache.sh) relative to this file,
+   i.e. workspace-root `cache.sh`) is sourced by the MT-Bench and ELO SLURM
+   scripts (not by Arena-Hard/AlpacaEval generation) to redirect
+   `HF_HOME`/`TORCH_HOME`/`TRITON_CACHE_DIR`/etc. to
+   `{WORKSPACE_ROOT}/.cache` instead of your home directory — needed if home
+   has a small quota. Create it (or point `HF_HOME` etc. elsewhere yourself)
+   before running MT-Bench or ELO estimation.
 
 | Venv | Path | Used for |
 |---|---|---|
 | Arena-Hard | `arena-hard-auto/venv/bin/python` | Arena-Hard generation + judgment |
 | AlpacaEval | `venv-alpacaeval/bin/python` | AlpacaEval generation + judgment |
 | OpenJury | `venv-openjury/bin/python` | MT-Bench (JudgeArena) + ELO estimation (OpenJury) |
-| LM-eval | `venv-lm-eval/bin/python` | arc_challenge, gpqa, gsm8k, hellaswag, ifeval, piqa, truthfulqa |
+| LM-eval | `venv-lm-eval/bin/python` | arc_challenge, gpqa, gsm8k, hellaswag, ifeval, piqa, truthfulqa — see [`STATIC_EVALS_README.md`](STATIC_EVALS_README.md) |
 
 All scripts share a common pattern:
 - Called with no submission flag → **generate** SLURM scripts/configs only, print what *would* run.
@@ -270,9 +313,86 @@ python gen_judgment.py \
   for you; running `gen_judgment.py` standalone means you must already have a
   server up at that endpoint.
 
-See [`ARENA_HARD_JUDGMENT_README.md`](ARENA_HARD_JUDGMENT_README.md) for
-details on invalid-judgment detection/cleanup (`identify_invalid_judgments.py`)
-and progress monitoring (`monitor_arena_hard_judgments.py`).
+Two related helper scripts in this directory (undocumented elsewhere, so
+noted here):
+- `identify_invalid_judgments.py` — scans judgment files for scores outside
+  the 10 valid values (`A>B`, `A>>B`, `A=B`, `A<<B`, `A<B`, `B>A`, `B>>A`,
+  `B=A`, `B<<A`, `B<A`) and can remove/regenerate them
+  (`--baseline <name> --clean [--regenerate] [--dry-run]`).
+- `monitor_arena_hard_judgments.py` — prints running SLURM judgment jobs plus
+  a per-model table of answers-generated vs. judgments-completed counts.
+
+---
+
+## automate_alpaca_eval.py — AlpacaEval answer generation
+
+Generates model responses to the AlpacaEval instruction set. For each model,
+starts a vLLM server, then runs [`run_alpaca_eval.py`](run_alpaca_eval.py)
+against it (a thin wrapper that writes AlpacaEval-formatted
+`model_outputs.json`), then tears the server down.
+
+```bash
+cd /data/horse/ws/hama901h-BFTranslation/arena-hard-auto/scripts
+source ../../venv-alpacaeval/bin/activate
+
+# Generate + submit
+python automate_alpaca_eval.py --models-file models.txt --submit
+
+# Dry run
+python automate_alpaca_eval.py --models-file models.txt --dry-run
+```
+
+Key flags:
+- `--models` accepts explicit model keys or a single `.txt` file path;
+  `--models-file` (default `alpaca_eval_models_to_test.txt`) is the usual entry
+  point; `--all` processes every `tulu3-*` model with an `alpha` variant in
+  `api_config.yaml`.
+- `--dataset-file` / `--dataset-repo` (default `alpaca_eval_gpt4_baseline.json`
+  / `tatsu-lab/alpaca_eval`) — which instruction set to answer.
+- `--max-new-tokens` (2048), `--temperature` (0.0), `--top-p` (1.0) — generation params.
+- `--chat-template` (default `checkpoints/olmo3_chat_template.jinja`),
+  `--trust-remote-code`, `--requires-chatml` — model-serving options passed
+  through to vLLM / the harness.
+- Output: `alpaca_eval_outputs/{model}/model_outputs.json` — what
+  `submit_evals.py`'s `--skip-completed` checks for.
+
+---
+
+## automate_alpaca_eval_judgment.py — AlpacaEval judgment
+
+Generates AlpacaEval win-rate judgments against the reference outputs, using
+a local vLLM judge server plus [`run_alpaca_eval_judgment.py`](run_alpaca_eval_judgment.py)
+(wraps the `alpaca_eval` package's annotation pipeline with a custom
+logprob-based classifier config, so no external OpenAI/Anthropic key is
+needed).
+
+```bash
+cd /data/horse/ws/hama901h-BFTranslation/arena-hard-auto/scripts
+source ../../venv-alpacaeval/bin/activate
+
+python automate_alpaca_eval_judgment.py --models-file models.txt \
+    --judge-model Qwen3-Next-80B-A3B-Instruct-FP8 --submit
+```
+
+Key flags:
+- `--judge-model` (default `Qwen3-Next-80B-A3B-Instruct-FP8`) — must resolve
+  to a `model` path in `api_config.yaml`.
+- `--batch-size` (default 1) — how many models are judged per judge-server
+  SLURM job (models loop sequentially inside one job, unlike Arena-Hard's
+  separate-config-per-batch approach).
+- `--save-raw` / `--save-length-controlled` — persist raw annotator output /
+  compute the length-controlled leaderboard CSV
+  (`leaderboard_length_controlled.csv`), which is what `submit_evals.py`'s
+  `--skip-completed` checks for.
+- `--dependency afterok:<job_id>[:<job_id>...]` — wait for upstream
+  generation jobs (used internally by `submit_evals.py`).
+- Before submitting, warns (and by default prompts to confirm) about models
+  missing `model_outputs.json` — generate answers first.
+- The judge prompt/classifier config defaults to AlpacaEval's built-in
+  `alpaca_eval_clf_gpt4_turbo/alpaca_eval_clf.txt` template, read from inside
+  the `alpaca_eval` pip package installed in `venv-alpacaeval` — see
+  `DEFAULT_PROMPT_TEMPLATE` in the script if you need to point at a different
+  template file.
 
 ---
 
@@ -394,5 +514,16 @@ squeue -u $USER
 
 # 5. Once done, aggregate Arena-Hard results
 cd ..
-python show_result.py
+python show_result.py --judge-names Qwen3-Next-80B-A3B-Instruct-FP8 --output-csv
 ```
+
+`show_result.py` reads every `data/arena-hard-v2.0/model_judgment/{judge}/**/*.jsonl`
+file for the given `--judge-names`, computes bootstrapped pairwise win-rates
+per `--category` (default `hard_prompt`), prints a leaderboard table to
+stdout, and — with `--output-csv` — writes it to
+`results/{category}_leaderboard_all.csv` (columns: `Model`, `Scores (%)`,
+`CI (%)`). It only covers Arena-Hard; AlpacaEval's own leaderboard lands in
+`alpaca_eval_outputs/{model}/leaderboard_length_controlled.csv` from the
+judgment step itself, and MT-Bench/ELO results are the raw
+`results-*.json` / `summary.json` files under `evaluation_results/` (no
+separate aggregation script for those two).
