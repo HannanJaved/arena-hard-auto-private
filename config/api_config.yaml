@@ -11018,3 +11018,14 @@ qwen3-14b-sft-lr3e5-step30000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
+#### To add a new model ###
+# name_of_entry:
+#   model: path_to_model_dir
+#   endpoints:
+#   - api_base: http://localhost:port_number/v1
+#     api_key: '-'
+#   api_type: openai
+#   parallel: 32
+#   max_tokens: 4096
+#   temperature: 0.0
