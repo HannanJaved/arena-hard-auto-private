@@ -11019,6 +11019,26 @@ qwen3-14b-sft-lr3e5-step30000:
   max_tokens: 4096
   temperature: 0.0
 
+datamix-80-20-base:
+  model: /data/horse/ws/hama901h-BFTranslation/.cache/hub/models--openeurollm--datamix-9b-80-20/snapshots/66c3229e708857a0bc54070131d4b1762d4f5279
+  endpoints:
+  - api_base: http://localhost:8001/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 2048
+  temperature: 0.0
+
+datamix-80-20-sft:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/datamix-80-20-9B/SFT/datamix-9b-80-20-SFT-LR3e-5
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 2048
+  temperature: 0.0
+
 #### To add a new model ###
 # name_of_entry:
 #   model: path_to_model_dir
