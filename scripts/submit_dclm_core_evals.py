@@ -255,12 +255,47 @@ def _resolve_tasks(task_filter: str | None) -> list[DclmCoreTask]:
     return selected
 
 
+def _filter_bigbench(tasks: list[DclmCoreTask]) -> list[DclmCoreTask]:
+    return [task for task in tasks if not task.task_id.startswith("bigbench")]
+
+
+CPU_PARTITIONS = {"romeo", "barnard"}
+GPU_PARTITIONS = {"alpha", "capella"}
+DEFAULT_CPU_PARTITION = "romeo"
+
+
+def _resolve_partition(cpu_only: bool, partition: str | None) -> tuple[str | None, bool]:
+    """Returns (partition_to_pass, is_cpu). partition_to_pass is None to use the submit script's default."""
+    if partition:
+        if partition not in CPU_PARTITIONS and partition not in GPU_PARTITIONS:
+            print(
+                f"  WARNING: unrecognized partition '{partition}' "
+                f"(known GPU: {', '.join(sorted(GPU_PARTITIONS))}; known CPU: {', '.join(sorted(CPU_PARTITIONS))})",
+                file=sys.stderr,
+            )
+        is_cpu = partition in CPU_PARTITIONS
+        if cpu_only and partition in GPU_PARTITIONS:
+            print(
+                f"ERROR: --cpu-only conflicts with GPU partition '{partition}'.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        return partition, is_cpu
+
+    if cpu_only:
+        return DEFAULT_CPU_PARTITION, True
+
+    return None, False
+
+
 def _submit_task(
     task: DclmCoreTask,
     models_file: str,
     *,
     dry_run: bool,
     submit: bool,
+    partition: str | None = None,
+    is_cpu: bool = False,
 ) -> None:
     if not task.lm_eval_task:
         print(f"\n  SKIP {task.label}: {task.note}", file=sys.stderr)
@@ -276,6 +311,10 @@ def _submit_task(
         "--output-dir", _output_dir(task),
         "--time", task.time,
     ]
+    if partition:
+        extra_args += ["--partition", partition]
+    if is_cpu:
+        extra_args += ["--gres", "none"]
     if task.note:
         print(f"  NOTE ({task.task_id}): {task.note}")
     if dry_run or not submit:
@@ -306,10 +345,31 @@ def main() -> None:
             "or a successful SLURM log (END TIME without traceback/OOM in .err)."
         ),
     )
+    parser.add_argument(
+        "--cpu-only",
+        action="store_true",
+        help=f"Submit on a CPU-only partition (default '{DEFAULT_CPU_PARTITION}') instead of the default GPU partition.",
+    )
+    parser.add_argument(
+        "--partition",
+        help=(
+            "Slurm partition to submit on. "
+            f"GPU: {', '.join(sorted(GPU_PARTITIONS))}. CPU: {', '.join(sorted(CPU_PARTITIONS))}. "
+            f"Defaults to the submit script's default ('alpha'), or '{DEFAULT_CPU_PARTITION}' if --cpu-only is set."
+        ),
+    )
+    parser.add_argument(
+        "--skip-bigbench",
+        action="store_true",
+        help="Skip all Big-Bench (bigbench_*) tasks.",
+    )
     args = parser.parse_args()
 
     tasks = _resolve_tasks(args.tasks)
+    if args.skip_bigbench:
+        tasks = _filter_bigbench(tasks)
     models_file = str(args.models_file)
+    partition, is_cpu = _resolve_partition(args.cpu_only, args.partition)
 
     if args.skip_completed:
         print(f"\n{'='*60}")
@@ -339,13 +399,13 @@ def main() -> None:
 
             tmp = _write_temp_models(pending)
             temp_files.append(tmp)
-            _submit_task(task, tmp, dry_run=args.dry_run, submit=args.submit)
+            _submit_task(task, tmp, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu)
 
         for temp_path in temp_files:
             Path(temp_path).unlink(missing_ok=True)
     else:
         for task in tasks:
-            _submit_task(task, models_file, dry_run=args.dry_run, submit=args.submit)
+            _submit_task(task, models_file, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu)
 
     print(f"\n{'='*60}")
     print("DCLM-core Evaluation Jobs Submitted.")

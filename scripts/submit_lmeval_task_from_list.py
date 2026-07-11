@@ -33,7 +33,7 @@ SBATCH_HEADER = """\
 #SBATCH --error={log_dir}/%x_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres={gres}
+{gres_line}
 #SBATCH --cpus-per-task={cpus_per_task}
 #SBATCH --mem={mem}
 #SBATCH --time={time}
@@ -64,6 +64,41 @@ export CMD="lm_eval --model hf \
     --tasks {task} \
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
+    --output_path {output_dir}"
+
+python -m $CMD
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -eq 0 ]; then
+  echo "END TIME: $(date)"
+fi
+
+echo "END $SLURM_JOBID: $(date)"
+exit $EXIT_CODE
+"""
+
+SBATCH_BODY_CPU = """\
+echo "JOB NAME" $SLURM_JOB_NAME
+
+source {venv_activate}
+
+export HF_HOME="{hf_home}"
+export HF_DATASETS_CACHE="{hf_datasets_cache}"
+export PYTHONPATH="{pythonpath}"
+
+cd {lm_eval_dir}
+
+echo "JOBNAME" $SLURM_JOB_NAME
+pwd -P
+
+mkdir -p {output_dir}
+
+export CMD="lm_eval --model hf \
+    --model_args pretrained={model_path},dtype=\"{dtype}\" \
+    --tasks {task} \
+    --num_fewshot {num_fewshot} \
+    --batch_size {batch_size} \
+    --device cpu \
     --output_path {output_dir}"
 
 python -m $CMD
@@ -186,11 +221,13 @@ def build_sbatch_script(
     args: argparse.Namespace,
 ) -> str:
     exclusive_line = "#SBATCH --exclusive" if args.exclusive else ""
+    cpu_only = not args.gres or args.gres.lower() == "none"
+    gres_line = "" if cpu_only else f"#SBATCH --gres={args.gres}"
     job_name_prefix = args.job_name_prefix or f"{args.task}_{args.num_fewshot}shot_"
     header = SBATCH_HEADER.format(
         job_name=f"{job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
-        gres=args.gres,
+        gres_line=gres_line,
         cpus_per_task=args.cpus_per_task,
         mem=args.mem,
         time=args.time,
@@ -212,7 +249,9 @@ def build_sbatch_script(
         output_dir=args.output_dir,
     )
 
-    if args.gres == "gpu:1":
+    if cpu_only:
+        body = SBATCH_BODY_CPU.format(**body_kwargs)
+    elif args.gres == "gpu:1":
         body = SBATCH_BODY.format(**body_kwargs)
     else:
         body = SBATCH_BODY_MULTI_GPU.format(**body_kwargs)
