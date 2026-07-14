@@ -186,20 +186,18 @@ def _has_results_json(task: DclmCoreTask, model_path: str) -> bool:
     return any(subdir.glob("results_*.json"))
 
 
-def _is_lmeval_completed(
-    task: DclmCoreTask,
-    model_name: str,
-    api_config: dict | None = None,
-) -> bool:
-    if api_config is not None:
-        entry = api_config.get(model_name)
-        if isinstance(entry, dict):
-            model_path = entry.get("model")
-            if model_path and _has_results_json(task, model_path):
-                return True
+def _log_completion_status(task: DclmCoreTask, model_name: str) -> bool | None:
+    """Check this model+task's own Slurm logs for success/failure.
 
+    Returns True/False if at least one matching log exists, or None if there's no
+    log at all (e.g. results predate current log retention).
+    """
     prefix = f"{_job_name_prefix(task)}{_lmeval_sanitize(model_name)}_"
-    for log_file in LM_EVAL_LOG_DIR.glob(f"{prefix}*.out"):
+    log_files = list(LM_EVAL_LOG_DIR.glob(f"{prefix}*.out"))
+    if not log_files:
+        return None
+
+    for log_file in log_files:
         try:
             text = log_file.read_text(errors="replace")
             if "END TIME:" not in text:
@@ -221,6 +219,29 @@ def _is_lmeval_completed(
             return True
         except OSError:
             pass
+    return False
+
+
+def _is_lmeval_completed(
+    task: DclmCoreTask,
+    model_name: str,
+    api_config: dict | None = None,
+) -> bool:
+    # A model's own Slurm log is authoritative when present: a results_*.json living
+    # under the model's checkpoint path can be stale or (if two model names briefly
+    # pointed at the same path in api_config.yaml) belong to a *different* model's run,
+    # so it must not override a log that shows this model's own job actually failed.
+    log_status = _log_completion_status(task, model_name)
+    if log_status is not None:
+        return log_status
+
+    if api_config is not None:
+        entry = api_config.get(model_name)
+        if isinstance(entry, dict):
+            model_path = entry.get("model")
+            if model_path and _has_results_json(task, model_path):
+                return True
+
     return False
 
 
@@ -263,6 +284,22 @@ CPU_PARTITIONS = {"romeo", "barnard"}
 GPU_PARTITIONS = {"alpha", "capella"}
 DEFAULT_CPU_PARTITION = "romeo"
 
+# romeo: 128 cores/node, ~505GB/node (~3.9GB/core). barnard: 104 cores/node, ~500GB/node (~4.8GB/core).
+# 32 cores is a moderate slice of either shared node; mem scales proportionally with headroom.
+DEFAULT_CPU_CPUS_PER_TASK = 32
+DEFAULT_CPU_MEM = "128G"
+
+# CPU inference has no GPU acceleration; the per-task times above are tuned for GPU runs.
+CPU_TIME_MULTIPLIER = 8
+
+
+def _scale_time(time_str: str, multiplier: int) -> str:
+    hours, minutes, seconds = (int(part) for part in time_str.split(":"))
+    total_seconds = (hours * 3600 + minutes * 60 + seconds) * multiplier
+    hh, remainder = divmod(total_seconds, 3600)
+    mm, ss = divmod(remainder, 60)
+    return f"{hh:02d}:{mm:02d}:{ss:02d}"
+
 
 def _resolve_partition(cpu_only: bool, partition: str | None) -> tuple[str | None, bool]:
     """Returns (partition_to_pass, is_cpu). partition_to_pass is None to use the submit script's default."""
@@ -296,10 +333,27 @@ def _submit_task(
     submit: bool,
     partition: str | None = None,
     is_cpu: bool = False,
+    cpus_per_task: int | None = None,
+    mem: str | None = None,
+    time_override: str | None = None,
+    use_module_torch: bool = False,
+    trust_remote_code: bool = False,
 ) -> None:
     if not task.lm_eval_task:
         print(f"\n  SKIP {task.label}: {task.note}", file=sys.stderr)
         return
+
+    if time_override:
+        time_value = time_override
+    elif is_cpu:
+        time_value = _scale_time(task.time, CPU_TIME_MULTIPLIER)
+    else:
+        time_value = task.time
+
+    if is_cpu and cpus_per_task is None:
+        cpus_per_task = DEFAULT_CPU_CPUS_PER_TASK
+    if is_cpu and mem is None:
+        mem = DEFAULT_CPU_MEM
 
     label = f"DCLM-core: {task.label}"
     extra_args = [
@@ -309,12 +363,20 @@ def _submit_task(
         "--batch-size", str(task.batch_size),
         "--job-name-prefix", _job_name_prefix(task),
         "--output-dir", _output_dir(task),
-        "--time", task.time,
+        "--time", time_value,
     ]
     if partition:
         extra_args += ["--partition", partition]
     if is_cpu:
         extra_args += ["--gres", "none"]
+    if cpus_per_task is not None:
+        extra_args += ["--cpus-per-task", str(cpus_per_task)]
+    if mem is not None:
+        extra_args += ["--mem", mem]
+    if use_module_torch:
+        extra_args.append("--use-module-torch")
+    if trust_remote_code:
+        extra_args.append("--trust-remote-code")
     if task.note:
         print(f"  NOTE ({task.task_id}): {task.note}")
     if dry_run or not submit:
@@ -363,6 +425,38 @@ def main() -> None:
         action="store_true",
         help="Skip all Big-Bench (bigbench_*) tasks.",
     )
+    parser.add_argument(
+        "--cpus-per-task",
+        type=int,
+        help=(
+            f"Slurm CPUs per task (default: {DEFAULT_CPU_CPUS_PER_TASK} for --cpu-only/CPU-partition jobs, "
+            "else the submit script's default of 4)."
+        ),
+    )
+    parser.add_argument(
+        "--mem",
+        help=f"Slurm memory request, e.g. '64G' (default: {DEFAULT_CPU_MEM} for CPU jobs, else 16G).",
+    )
+    parser.add_argument(
+        "--time",
+        help=(
+            "Override Slurm wall time for all tasks (HH:MM:SS), instead of each task's built-in default. "
+            f"For CPU jobs without this set, each task's default time is scaled by {CPU_TIME_MULTIPLIER}x."
+        ),
+    )
+    parser.add_argument(
+        "--use-module-torch",
+        action="store_true",
+        help=(
+            "Use the cluster's module-provided PyTorch/2.3.0 (via venv-lm-eval-module) instead of the "
+            "pip-installed torch in venv-lm-eval, whose large .so files suffer catastrophic Lustre read latency."
+        ),
+    )
+    parser.add_argument(
+        "--trust-remote-code",
+        action="store_true",
+        help="Pass trust_remote_code=True in lm_eval model_args, for models with custom modeling code.",
+    )
     args = parser.parse_args()
 
     tasks = _resolve_tasks(args.tasks)
@@ -399,13 +493,21 @@ def main() -> None:
 
             tmp = _write_temp_models(pending)
             temp_files.append(tmp)
-            _submit_task(task, tmp, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu)
+            _submit_task(
+                task, tmp, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu,
+                cpus_per_task=args.cpus_per_task, mem=args.mem, time_override=args.time,
+                use_module_torch=args.use_module_torch, trust_remote_code=args.trust_remote_code,
+            )
 
         for temp_path in temp_files:
             Path(temp_path).unlink(missing_ok=True)
     else:
         for task in tasks:
-            _submit_task(task, models_file, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu)
+            _submit_task(
+                task, models_file, dry_run=args.dry_run, submit=args.submit, partition=partition, is_cpu=is_cpu,
+                cpus_per_task=args.cpus_per_task, mem=args.mem, time_override=args.time,
+                use_module_torch=args.use_module_torch, trust_remote_code=args.trust_remote_code,
+            )
 
     print(f"\n{'='*60}")
     print("DCLM-core Evaluation Jobs Submitted.")
