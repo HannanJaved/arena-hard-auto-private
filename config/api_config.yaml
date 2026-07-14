@@ -7528,6 +7528,16 @@ qwen3-4b-sft-lr3e-5:
   max_tokens: 4096
   temperature: 0.0
 
+qwen3-4b-sft-lr3e-5-AO:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR3e-5/Assistant-Only
+  endpoints:
+  - api_base: http://localhost:8002/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
 qwen3-4b-sft-lr5e-4:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/Qwen3-4B-SFT-LR5e-4
   endpoints:
@@ -11060,7 +11070,7 @@ datamix-4b-evo-search-coarse-ppl:
   temperature: 0.0
 
 datamix-1b-evo-search-coarse-kld:
-  model: /data/horse/ws/hama901h-whittle/whittle-paper/out/hf/from_supernet_datamix/kld_search_bin_0
+  model: /data/horse/ws/hama901h-whittle/whittle-paper/out/hf/from_supernet_datamix/kld_search_bin_1
   endpoints:
   - api_base: http://localhost:8004/v1
     api_key: '-'
@@ -11070,7 +11080,7 @@ datamix-1b-evo-search-coarse-kld:
   temperature: 0.0
 
 datamix-4b-evo-search-coarse-kld:
-  model: /data/horse/ws/hama901h-whittle/whittle-paper/out/hf/from_supernet_datamix/kld_search_bin_1
+  model: /data/horse/ws/hama901h-whittle/whittle-paper/out/hf/from_supernet_datamix/kld_search_bin_0
   endpoints:
   - api_base: http://localhost:8005/v1
     api_key: '-'
