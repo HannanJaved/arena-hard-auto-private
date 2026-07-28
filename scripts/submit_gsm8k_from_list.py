@@ -20,7 +20,7 @@ import yaml
 DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/config/api_config.yaml"
 DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-lm-eval/bin/activate"
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
-DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval/test_gsm8k"
+DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval/"
 DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/gsm8k"
 DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
