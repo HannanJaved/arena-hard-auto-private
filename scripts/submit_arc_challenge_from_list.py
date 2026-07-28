@@ -120,7 +120,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models-file", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="arc_challenge_", help="Prefix for Slurm job name.")
-    parser.add_argument("--batch-size", type=int, default=32, help="Batch size per GPU for lm_eval.")
+    parser.add_argument("--batch-size", type=int, default=8, help="Batch size per GPU for lm_eval.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="01:00:00", help="Slurm wall time.")
