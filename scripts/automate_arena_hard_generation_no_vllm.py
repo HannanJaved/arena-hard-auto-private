@@ -131,6 +131,7 @@ source {WORKSPACE_ROOT}/ah-eval/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
+module load release/24.10
 module load CUDA/12.4.0
 
 echo "--- Sanity Checks ---"
