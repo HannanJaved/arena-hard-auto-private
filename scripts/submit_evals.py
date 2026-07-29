@@ -172,13 +172,26 @@ def _is_lmeval_completed(task: str, model_name: str) -> bool:
 
 
 def _is_arena_hard_completed(model_name: str) -> bool:
-    return (ARENA_HARD_ANS_DIR / f"{model_name}.jsonl").exists()
+    if (ARENA_HARD_ANS_DIR / f"{model_name}.jsonl").exists():
+        return True
+    return any(ARENA_HARD_ANS_DIR.rglob(f"{model_name}.jsonl"))
 
 
 def _is_arena_hard_judgment_completed(model_name: str, judge_model: str, baseline: str) -> bool:
-    # judgment files land in model_judgment/{judge_model}/compared_with_{baseline}/
-    judgment_dir = ARENA_HARD_JUDGMENT_DIR / judge_model / f"compared_with_{baseline}"
-    return (judgment_dir / f"{model_name}.jsonl").exists()
+    # Judgment files land in model_judgment/{judge_model}/compared_with_{baseline}/{model}.jsonl,
+    # but directory placement isn't trustworthy on its own (files can be moved/renamed), so
+    # confirm the "baseline" field recorded inside the judgment file matches the requested baseline.
+    judge_dir = ARENA_HARD_JUDGMENT_DIR / judge_model
+    for path in judge_dir.rglob(f"{model_name}.jsonl"):
+        try:
+            with open(path) as fh:
+                first_line = fh.readline()
+            data = json.loads(first_line)
+        except (OSError, json.JSONDecodeError):
+            continue
+        if data.get("baseline") == baseline:
+            return True
+    return False
 
 
 def _is_alpaca_eval_judgment_completed(model_name: str) -> bool:
