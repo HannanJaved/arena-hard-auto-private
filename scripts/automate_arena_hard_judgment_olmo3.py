@@ -241,8 +241,8 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     log_dir = f"{LOGS_DIR}/{log_subdir}"
     Path(log_dir).mkdir(parents=True, exist_ok=True)
     
-    # Use SLURM_JOB_ID for unique filenames (no shell commands in SBATCH directives)
-    log_file_base = f"{job_name}_$SLURM_JOB_ID"
+    # %j is expanded by SLURM; $SLURM_JOB_ID is not in #SBATCH directives
+    log_file_base = f"{job_name}_%j"
     
     judge_port_val = judge_port or 8001
 
@@ -268,19 +268,18 @@ SERVER_LOG_FILE="{log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log"
 
 # --- SETUP ENVIRONMENT ---
 echo "Setting up the environment for Arena Hard judgment..."
-source {WORKSPACE_ROOT}/ah-eval/bin/activate
+source {WORKSPACE_ROOT}/arena-hard-auto/venv/bin/activate
 
-PYTHON_EXEC={WORKSPACE_ROOT}/ah-eval/bin/python
+PYTHON_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
-module load release/24.10
-module load CUDA/12.4.0
+module load CUDA
 
 # [DEBUG] Verify the environment and installation
 echo "--- Sanity Checks ---"
 echo "Python Executable: $PYTHON_EXEC"
 echo "vLLM Installation:"
-$PYTHON_EXEC -m pip list | grep vllm
+$PYTHON_EXEC -m pip list | grep vllm || true
 echo "---------------------"
 
 # --- DEFINE PATHS AND PORTS ---

@@ -179,7 +179,7 @@ module load CUDA
 echo "--- Sanity Checks ---"
 echo "Python Executable: $PYTHON_EXEC"
 echo "vLLM Installation:"
-$PYTHON_EXEC -m pip list | grep vllm
+$PYTHON_EXEC -m pip list | grep vllm || true
 echo "---------------------"
 
 # --- DEFINE PATHS AND PORTS ---
