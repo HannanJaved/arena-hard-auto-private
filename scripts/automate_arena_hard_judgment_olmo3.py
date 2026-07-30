@@ -274,6 +274,7 @@ PYTHON_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
 module load CUDA
+source {WORKSPACE_ROOT}/cache.sh
 
 # [DEBUG] Verify the environment and installation
 echo "--- Sanity Checks ---"
@@ -301,6 +302,7 @@ echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
+    --gdn-prefill-backend triton \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/olmo3_chat_template.jinja \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!

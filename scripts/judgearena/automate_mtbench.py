@@ -62,7 +62,9 @@ DEFAULT_JUDGE_SERVER_TP = 1
 DEFAULT_JUDGE_SERVER_MAX_MODEL_LEN = 26304
 DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 32
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 16384
-DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "FULL"
+# FULL hangs intermittently on Qwen3-Next (GDN/MoE): throughput drops to 0
+# with requests still "Running". NONE matches the CLI help text and is safer.
+DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
 
 
 @dataclass(frozen=True)
@@ -316,6 +318,8 @@ JUDGE_MODEL_PATH="{judge_model_path}"
 JUDGE_SERVED_NAME="{judge_served_name}"
 JUDGE_LOG="{log_dir}/judge_vllm_${{SLURM_JOB_ID}}.log"
 
+# --enforce-eager avoids CUDA-graph deadlocks seen with Qwen3-Next MoE/GDN
+# when cudagraph_mode=FULL (throughput → 0 tok/s while reqs stay Running).
 CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --model "$JUDGE_MODEL_PATH" \
     --port $JUDGE_PORT \
@@ -324,6 +328,7 @@ CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --max-model-len {judge_server_max_model_len} \
     --max-num-seqs {judge_server_max_num_seqs} \
     --max-num-batched-tokens {judge_server_max_num_batched_tokens} \
+    --enforce-eager \
     --compilation-config '{compilation_config_json}' \
     > "$JUDGE_LOG" 2>&1 &
 JUDGE_PID=$!
@@ -630,7 +635,7 @@ def main() -> None:
         "--judge-server-cudagraph-mode",
         type=str,
         default=DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE,
-        help="Judge server cudagraph_mode (default: NONE).",
+        help=f"Judge server cudagraph_mode (default: {DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}).",
     )
 
     parser.add_argument("--dry-run", action="store_true", help="Only generate scripts.")

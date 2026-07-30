@@ -109,8 +109,15 @@ def create_slurm_script(
     optional_flags_str = "\n".join(optional_flags)
     optional_flags_block = (optional_flags_str + "\n") if optional_flags_str else ""
 
-    model_engine_kwargs = f'{{"tensor_parallel_size": {model_tp_size}, "enforce_eager": true}}'
-    judge_engine_kwargs = f'{{"tensor_parallel_size": {judge_tp_size}, "enforce_eager": true}}'
+    # Cap judge concurrency: Qwen3-Next MoE on 1xH100 intermittently hangs at
+    # high in-flight batch counts (progress stuck, Triton MoE JIT mid-run).
+    model_engine_kwargs = (
+        f'{{"tensor_parallel_size": {model_tp_size}, "enforce_eager": true}}'
+    )
+    judge_engine_kwargs = (
+        f'{{"tensor_parallel_size": {judge_tp_size}, "enforce_eager": true, '
+        f'"max_num_seqs": 16, "max_num_batched_tokens": 8192}}'
+    )
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
