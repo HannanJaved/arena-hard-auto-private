@@ -12949,6 +12949,46 @@ dpo-qwen3-4b-sft-lr3e5-ao-lr8e6-beta0.08-step2000:
   max_tokens: 4096
   temperature: 0.0
 
+LLMPruner-bin0:
+  model: /data/horse/ws/hama901h-whittle/checkpoints/LLMPruner/bin0
+  endpoints:
+  - api_base: http://localhost:8200/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+LLMPruner-bin1:
+  model: /data/horse/ws/hama901h-whittle/checkpoints/LLMPruner/bin1
+  endpoints:
+  - api_base: http://localhost:8200/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+LLMPruner-bin2:
+  model: /data/horse/ws/hama901h-whittle/checkpoints/LLMPruner/bin2
+  endpoints:
+  - api_base: http://localhost:8200/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-whittle-bin0:
+  model: /data/horse/ws/hama901h-whittle/checkpoints/whittle-qwen3/bin0
+  endpoints:
+  - api_base: http://localhost:8201/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
 #### To add a new model ###
 # name_of_entry:
 #   model: path_to_model_dir
