@@ -175,11 +175,21 @@ echo "Judge Model: {JUDGE_MODEL}"
 echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
 
+# Prefer an explicit chat_template file from the judge checkpoint; otherwise
+# let vLLM use the tokenizer_config chat template.
+CHAT_TEMPLATE_FLAG=""
+if [ -f "$JUDGE_PATH/chat_template.jinja" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.jinja"
+elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.j2"
+fi
+echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
+
 echo "Starting judge server on GPU 0 (Port 8001)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port 8001 --tensor-parallel-size 1 \\
     --max-model-len 26304 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
+    $CHAT_TEMPLATE_FLAG \\
     > {log_dir}/{job_name}_${{UNIQUE_ID}}_vllm_judge_server.log 2>&1 &
 JUDGE_PID=$!
 

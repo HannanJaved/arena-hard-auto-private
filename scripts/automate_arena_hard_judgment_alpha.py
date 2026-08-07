@@ -11,7 +11,8 @@ This is a variant of automate_arena_hard_judgment_olmo3.py — see that file
 for the capella/H100/TP=1 version. Kept as a separate script per request so
 the original is untouched.
 
-Use for Tulu: --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/tulu_template.j2 \\
+Judge chat template is taken from the judge checkpoint dir
+(chat_template.jinja / chat_template.j2), else vLLM uses tokenizer_config.
 """
 
 import os
@@ -321,12 +322,24 @@ echo "Judge Server Log: $SERVER_LOG_FILE"
 # ===================================================================
 # Start Judge Server and Generate Judgments
 # ===================================================================
+# Prefer an explicit chat_template file from the judge checkpoint; otherwise
+# let vLLM use the tokenizer_config chat template.
+CHAT_TEMPLATE_FLAG=""
+if [ -f "$JUDGE_PATH/chat_template.jinja" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.jinja"
+elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.j2"
+fi
+echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
+
 echo "Starting judge server sharded across {tp_size} GPUs (Port {judge_port_val})..."
 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size {tp_size} \\
     --max-model-len 26304 \\
+    --max-num-seqs 512 \\
     --gpu-memory-utilization 0.90 \\
-    --chat-template {WORKSPACE_ROOT}/checkpoints/olmo3_chat_template.jinja \\
+    --gdn-prefill-backend triton \\
+    $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
 

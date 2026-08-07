@@ -196,9 +196,20 @@ default:
     base_url: "http://localhost:$JUDGE_PORT/v1"
 EOF
 
+JUDGE_PATH="{judge_model_path}"
+# Prefer an explicit chat_template file from the judge checkpoint; otherwise
+# let vLLM use the tokenizer_config chat template.
+CHAT_TEMPLATE_FLAG=""
+if [ -f "$JUDGE_PATH/chat_template.jinja" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.jinja"
+elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_PATH/chat_template.j2"
+fi
+echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
+
 echo "Starting judge server sharded across {tp_size} GPUs on port $JUDGE_PORT..."
 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
-    --model "{judge_model_path}" \
+    --model "$JUDGE_PATH" \
     --max-model-len 26304 \
     --port $JUDGE_PORT \
     --tensor-parallel-size {tp_size} \
@@ -206,6 +217,7 @@ $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
     --gpu-memory-utilization 0.90 \
     --served-model-name "{args.judge_model}" \
     {gdn_prefill_flag} \
+    $CHAT_TEMPLATE_FLAG \
     > {log_dir}/{job_name}_vllm_judge.log 2>&1 &
 JUDGE_PID=$!
 

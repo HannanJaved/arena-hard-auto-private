@@ -318,6 +318,16 @@ JUDGE_MODEL_PATH="{judge_model_path}"
 JUDGE_SERVED_NAME="{judge_served_name}"
 JUDGE_LOG="{log_dir}/judge_vllm_${{SLURM_JOB_ID}}.log"
 
+# Prefer an explicit chat_template file from the judge checkpoint; otherwise
+# let vLLM use the tokenizer_config chat template.
+CHAT_TEMPLATE_FLAG=""
+if [ -f "$JUDGE_MODEL_PATH/chat_template.jinja" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_MODEL_PATH/chat_template.jinja"
+elif [ -f "$JUDGE_MODEL_PATH/chat_template.j2" ]; then
+    CHAT_TEMPLATE_FLAG="--chat-template $JUDGE_MODEL_PATH/chat_template.j2"
+fi
+echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
+
 # --enforce-eager avoids CUDA-graph deadlocks seen with Qwen3-Next MoE/GDN
 # when cudagraph_mode=FULL (throughput → 0 tok/s while reqs stay Running).
 CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
@@ -330,6 +340,7 @@ CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --max-num-batched-tokens {judge_server_max_num_batched_tokens} \
     --enforce-eager \
     --compilation-config '{compilation_config_json}' \
+    $CHAT_TEMPLATE_FLAG \
     > "$JUDGE_LOG" 2>&1 &
 JUDGE_PID=$!
 
