@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 submit_evals_alpha.py — submit all evaluation jobs for a list of models,
 targeting the `alpha` partition (A100 40GB) instead of `capella` (H100).
@@ -15,6 +16,8 @@ the alpha partition to relieve capella queue pressure.
 Usage:
     python submit_evals_alpha.py --models-file models.txt --baseline <model> [--submit] [--dry-run]
     python submit_evals_alpha.py --models-file models.txt --baseline <model> --skip-completed [--submit]
+    python submit_evals_alpha.py --models-file models.txt --baseline <model> --evals dynamic [--submit]
+    python submit_evals_alpha.py --models-file models.txt --baseline <model> --evals static [--submit]
     python submit_evals_alpha.py --models-file models.txt --baseline <model> --tasks mtbench arena-hard [--submit]
     python submit_evals_alpha.py --models-file models.txt --baseline <model> --judge-tp-size 8 [--submit]
 
@@ -64,6 +67,9 @@ AUTOMATION_TASKS = [
     "elo",
 ]
 
+# Dynamic = ArenaHard / AlpacaEval / MT-Bench / ELO (generation + judgment / rating).
+DYNAMIC_TASKS = list(AUTOMATION_TASKS)
+
 TASK_GROUPS: dict[str, list[str]] = {
     "arena-hard": ["arena_hard_generation", "arena_hard_judgment"],
     "arena_hard": ["arena_hard_generation", "arena_hard_judgment"],
@@ -71,6 +77,13 @@ TASK_GROUPS: dict[str, list[str]] = {
     "alpaca_eval": ["alpaca_eval_generation", "alpaca_eval_judgment"],
     "lm-eval": STATIC_TASKS,
     "static": STATIC_TASKS,
+    "dynamic": DYNAMIC_TASKS,
+}
+
+EVAL_SUITES: dict[str, list[str]] = {
+    "static": STATIC_TASKS,
+    "dynamic": DYNAMIC_TASKS,
+    "both": AUTOMATION_TASKS + STATIC_TASKS,
 }
 
 ALL_TASK_IDS = set(AUTOMATION_TASKS + STATIC_TASKS + list(TASK_GROUPS.keys()))
@@ -131,14 +144,23 @@ def _read_models(models_file: str) -> list[str]:
 
 
 def _filter_missing_paths(models: list[str], api_config: dict) -> list[str]:
-    """Skip models whose checkpoint path does not exist on disk."""
+    """Skip models whose checkpoint is missing or still training (no config.json)."""
     valid = []
     for m in models:
         path = _model_path(api_config, m)
-        if path and path.startswith("/") and not Path(path).exists():
-            print(f"  SKIP (missing checkpoint): {m}\n    path: {path}", file=sys.stderr)
-        else:
-            valid.append(m)
+        if path and path.startswith("/"):
+            ckpt = Path(path)
+            if not ckpt.exists():
+                print(f"  SKIP (missing checkpoint): {m}\n    path: {path}", file=sys.stderr)
+                continue
+            # Intermediate DPO/SFT dirs exist before the final HF export; vLLM needs config.json.
+            if not (ckpt / "config.json").exists():
+                print(
+                    f"  SKIP (incomplete checkpoint, no config.json yet): {m}\n    path: {path}",
+                    file=sys.stderr,
+                )
+                continue
+        valid.append(m)
     return valid
 
 
@@ -271,9 +293,10 @@ def _partition(models: list[str], check_fn) -> tuple[list[str], list[str]]:
     return pending, completed
 
 
-def _resolve_tasks(task_filter: list[str] | None) -> set[str]:
+def _resolve_tasks(task_filter: list[str] | None, evals: str = "both") -> set[str]:
+    suite = set(EVAL_SUITES[evals])
     if not task_filter:
-        return set(AUTOMATION_TASKS + STATIC_TASKS)
+        return suite
 
     selected: set[str] = set()
     unknown: list[str] = []
@@ -298,7 +321,21 @@ def _resolve_tasks(task_filter: list[str] | None) -> set[str]:
         )
         sys.exit(2)
 
-    return selected
+    filtered = selected & suite
+    dropped = sorted(selected - suite)
+    if dropped:
+        print(
+            f"WARNING: --evals {evals} dropped tasks outside that suite: "
+            + ", ".join(dropped),
+            file=sys.stderr,
+        )
+    if not filtered:
+        print(
+            f"ERROR: no tasks left after applying --evals {evals} to --tasks.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    return filtered
 
 
 # ---------------------------------------------------------------------------
@@ -326,17 +363,30 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--evals",
+        choices=["static", "dynamic", "both"],
+        default="both",
+        help=(
+            "Which eval suite to submit (default: both). "
+            "dynamic = ArenaHard, AlpacaEval, MT-Bench, ELO; "
+            "static = LM-eval tasks "
+            f"({', '.join(STATIC_TASKS)}); "
+            "both = dynamic + static. Can be combined with --tasks to further narrow."
+        ),
+    )
+    parser.add_argument(
         "--tasks",
         nargs="+",
         metavar="TASK",
         help=(
-            "Subset of evals to run (default: all). Pass multiple tasks separated by "
-            "spaces and/or commas, e.g. --tasks mtbench arena-hard. "
+            "Subset of evals to run within --evals (default: all tasks in that suite). "
+            "Pass multiple tasks separated by spaces and/or commas, e.g. "
+            "--tasks mtbench arena-hard. "
             "Automation tasks: arena_hard_generation, arena_hard_judgment, "
             "alpaca_eval_generation, alpaca_eval_judgment, mtbench, elo. "
             "Static LM-eval tasks: "
             + ", ".join(STATIC_TASKS)
-            + ". Groups: arena-hard, alpaca-eval, lm-eval (or static)."
+            + ". Groups: arena-hard, alpaca-eval, dynamic, lm-eval (or static)."
         ),
     )
     parser.add_argument("--rerun", action="store_true", help="Re-run MT-Bench for all (no skipping).")
@@ -353,7 +403,7 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
-    selected_tasks = _resolve_tasks(args.tasks)
+    selected_tasks = _resolve_tasks(args.tasks, args.evals)
 
     models_file = str(args.models_file)
     judge_tp = str(args.judge_tp_size)
