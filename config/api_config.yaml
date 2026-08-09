@@ -132,7 +132,7 @@ Qwen3-Next-80B-A3B-Instruct-FP8:
   temperature: 0.0
 
 Gemma4-31B-it:
-  model: /data/horse/ws/hama901h-BFTranslation/.cache/hub/models--google--gemma-4-31B-it/snapshots/842da3794eaa0b77d5f08bae87a17459d91ff475
+  model: /data/horse/ws/hama901h-whittle/.cache/huggingface/hub/models--google--gemma-4-31B-it/snapshots/842da3794eaa0b77d5f08bae87a17459d91ff475
   endpoints:
   - api_base: http://localhost:8000/v1
     api_key: '-'
