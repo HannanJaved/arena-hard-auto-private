@@ -78,8 +78,8 @@ def create_slurm_script(model_name, model_path, script_path):
     
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={model_name}
-#SBATCH --error={log_dir}/{step or model_name}.err
-#SBATCH --output={log_dir}/{step or model_name}.out
+#SBATCH --error={log_dir}/{model_name}.err
+#SBATCH --output={log_dir}/{model_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
@@ -114,17 +114,17 @@ echo "Starting model server on GPU 0 (Port 8000)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$MODEL_PATH" --port 8000 --tensor-parallel-size 1 \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/llama3_template.j2 \\
-    > {log_dir}/{step or model_name}_vllm_model_server.log 2>&1 &
+    > {log_dir}/{model_name}_vllm_model_server.log 2>&1 &
 MODEL_PID=$!
 
 sleep 5
 if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
     echo "ERROR: Model server failed to start. Check vllm_model_server.log for details."
-    cat {log_dir}/{step or model_name}_vllm_model_server.log
+    cat {log_dir}/{model_name}_vllm_model_server.log
     exit 1
 fi
 echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
-tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
+tail -n 100 {log_dir}/{model_name}_vllm_model_server.log
 
 echo "Waiting 17 mins for server to load..."
 sleep 1020

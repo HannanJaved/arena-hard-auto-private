@@ -139,8 +139,8 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name=alpaca-gen-{model_name}
-#SBATCH --error={log_dir}/{step or model_name}.err
-#SBATCH --output={log_dir}/{step or model_name}.out
+#SBATCH --error={log_dir}/{model_name}.err
+#SBATCH --output={log_dir}/{model_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
@@ -175,13 +175,13 @@ CUDA_VISIBLE_DEVICES=0 $VLLM_EXEC -m vllm.entrypoints.openai.api_server \
     --served-model-name "{model_name}" \
     {chat_template_flag} \
     {trust_remote_code_flag} \
-    > {log_dir}/{step or model_name}_vllm_server.log 2>&1 &
+    > {log_dir}/{model_name}_vllm_server.log 2>&1 &
 MODEL_PID=$!
 
 sleep 5
 if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
     echo "ERROR: Model server failed to start."
-    tail -n 50 {log_dir}/{step or model_name}_vllm_server.log
+    tail -n 50 {log_dir}/{model_name}_vllm_server.log
     exit 1
 fi
 
@@ -198,14 +198,14 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
     ELAPSED=$((ELAPSED + SLEEP_INTERVAL))
     if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
         echo "ERROR: Model server process died."
-        tail -n 50 {log_dir}/{step or model_name}_vllm_server.log
+        tail -n 50 {log_dir}/{model_name}_vllm_server.log
         exit 1
     fi
 done
 
 if [ $ELAPSED -ge $MAX_WAIT ]; then
     echo "ERROR: Model server failed to become ready within $MAX_WAIT seconds"
-    tail -n 100 {log_dir}/{step or model_name}_vllm_server.log
+    tail -n 100 {log_dir}/{model_name}_vllm_server.log
     kill $MODEL_PID
     exit 1
 fi

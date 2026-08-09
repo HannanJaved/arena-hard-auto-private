@@ -548,19 +548,20 @@ def main():
     
     print(f"\\nCreating {len(model_batches)} judgment batches (batch size: {args.batch_size})")
     
-    # Generate scripts and configs for each batch
+    # Generate scripts and configs for each batch.
+    # Use model-based filenames (not batch index) so concurrent submit_evals
+    # runs cannot overwrite each other's configs mid-flight.
     job_scripts = []
     for batch_idx, model_batch in enumerate(model_batches):
         print(f"\\nProcessing batch {batch_idx + 1}/{len(model_batches)} ({len(model_batch)} models)...")
-        
-        # Create judgment config file
-        config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
+
+        batch_tag = model_batch[0] if len(model_batch) == 1 else f"batch{batch_idx + 1}_{len(model_batch)}models"
+        config_filename = f"arena_hard_judgment_{batch_tag}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
         create_judgment_config(model_batch, config_path, baseline_model, judge_model=args.judge_model)
         print(f"  Created config: {config_path}")
-        
-        # Create SLURM script
-        script_filename = f"run_arena_hard_judgment_batch_{batch_idx + 1}.sh"
+
+        script_filename = f"run_arena_hard_judgment_{batch_tag}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
         # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
 

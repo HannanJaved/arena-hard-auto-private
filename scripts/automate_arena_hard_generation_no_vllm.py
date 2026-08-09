@@ -113,8 +113,8 @@ def create_slurm_script(model_name, script_path):
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={model_name}-novllm
-#SBATCH --error={log_dir}/{step or model_name}_novllm.err
-#SBATCH --output={log_dir}/{step or model_name}_novllm.out
+#SBATCH --error={log_dir}/{model_name}_novllm.err
+#SBATCH --output={log_dir}/{model_name}_novllm.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4

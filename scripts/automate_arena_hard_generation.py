@@ -153,8 +153,8 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000):
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={model_name}
-#SBATCH --error={log_dir}/{step or model_name}.err
-#SBATCH --output={log_dir}/{step or model_name}.out
+#SBATCH --error={log_dir}/{model_name}.err
+#SBATCH --output={log_dir}/{model_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
@@ -196,17 +196,17 @@ CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$MODEL_PATH" --port $MODEL_PORT --tensor-parallel-size 1 \\
     --trust-remote-code true \\
     --chat-template {WORKSPACE_ROOT}/checkpoints/meta-llama/Llama-3.1-8B/tulu3/w_checkpoints/full_run/DPO_on_Tulu_SFT/Tulu3_SFT_Checkpoint_Full_DPO/chat_template.jinja \\
-    > {log_dir}/{step or model_name}_vllm_model_server.log 2>&1 &
+    > {log_dir}/{model_name}_vllm_model_server.log 2>&1 &
 MODEL_PID=$!
 
 sleep 5
 if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
     echo "ERROR: Model server failed to start. Check vllm_model_server.log for details."
-    cat {log_dir}/{step or model_name}_vllm_model_server.log
+    cat {log_dir}/{model_name}_vllm_model_server.log
     exit 1
 fi
 echo "Model server started with PID: $MODEL_PID. Tailing log for 10s..."
-tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
+tail -n 100 {log_dir}/{model_name}_vllm_model_server.log
 
 echo "Waiting for model server to become ready (checking health endpoint)..."
 MAX_WAIT=2400  # 40 minutes max wait time
@@ -225,7 +225,7 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
     # Check if server process is still running
     if ! kill -0 $MODEL_PID > /dev/null 2>&1; then
         echo "ERROR: Model server process died. Check logs:"
-        tail -n 50 {log_dir}/{step or model_name}_vllm_model_server.log
+        tail -n 50 {log_dir}/{model_name}_vllm_model_server.log
         exit 1
     fi
 done
@@ -233,7 +233,7 @@ done
 if [ $ELAPSED -ge $MAX_WAIT ]; then
     echo "ERROR: Model server failed to become ready within $MAX_WAIT seconds"
     echo "Last 100 lines of server log:"
-    tail -n 100 {log_dir}/{step or model_name}_vllm_model_server.log
+    tail -n 100 {log_dir}/{model_name}_vllm_model_server.log
     kill $MODEL_PID
     exit 1
 fi
