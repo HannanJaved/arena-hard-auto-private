@@ -196,13 +196,20 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
+# Free a stale listener on JUDGE_PORT (health-only checks can pass against the wrong process).
+if command -v fuser >/dev/null 2>&1; then
+    fuser -k ${{JUDGE_PORT}}/tcp >/dev/null 2>&1 || true
+    sleep 2
+fi
+
 echo "Starting Gemma4-31B-it judge server on port $JUDGE_PORT..."
+# max-model-len 32768 needs ~27.5 GiB KV; after 31B weights ~80 GiB GPUs only have ~20.5 GiB.
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
     --model "$JUDGE_PATH" \
-    --max-model-len 32768 \
+    --max-model-len 24000 \
     --port $JUDGE_PORT \
     --tensor-parallel-size 1 \
-    --max-num-seqs 256 \
+    --max-num-seqs 64 \
     --gpu-memory-utilization 0.95 \
     --served-model-name "{args.judge_model}" \
     $CHAT_TEMPLATE_FLAG \
@@ -219,9 +226,11 @@ fi
 MAX_WAIT=3000
 ELAPSED=0
 SLEEP_INTERVAL=30
+JUDGE_SERVED_NAME="{args.judge_model}"
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
-        echo "Judge server is ready after $ELAPSED seconds."
+    # Require our served model id — /health alone can match a leftover server on port 8000.
+    if curl -s http://localhost:$JUDGE_PORT/v1/models 2>/dev/null | grep -q "$JUDGE_SERVED_NAME"; then
+        echo "Judge server is ready after $ELAPSED seconds (model $JUDGE_SERVED_NAME listed)."
         break
     fi
     sleep $SLEEP_INTERVAL

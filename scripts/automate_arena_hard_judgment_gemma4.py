@@ -316,10 +316,11 @@ fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
 echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
+# max-model-len 32768 needs ~27.5 GiB KV; after 31B weights ~80 GiB GPUs only have ~20.5 GiB.
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
-    --max-model-len 32768 \\
-    --max-num-seqs 256 \\
+    --max-model-len 24000 \\
+    --max-num-seqs 64 \\
     --gpu-memory-utilization 0.95 \\
     $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
