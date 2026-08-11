@@ -162,14 +162,15 @@ def _filter_missing_paths(models: list[str], api_config: dict) -> list[str]:
     for m in models:
         path = _model_path(api_config, m)
         if path and path.startswith("/"):
-            ckpt = Path(path)
-            if not ckpt.exists():
+            alias_paths = [Path(p) for p in _model_path_aliases(path)]
+            existing_ckpt = next((ckpt for ckpt in alias_paths if ckpt.exists()), None)
+            if existing_ckpt is None:
                 print(f"  SKIP (missing checkpoint): {m}\n    path: {path}", file=sys.stderr)
                 continue
             # Intermediate DPO/SFT dirs exist before the final HF export; vLLM needs config.json.
-            if not (ckpt / "config.json").exists():
+            if not (existing_ckpt / "config.json").exists():
                 print(
-                    f"  SKIP (incomplete checkpoint, no config.json yet): {m}\n    path: {path}",
+                    f"  SKIP (incomplete checkpoint, no config.json yet): {m}\n    path: {existing_ckpt}",
                     file=sys.stderr,
                 )
                 continue
@@ -218,6 +219,22 @@ def _model_path(api_config: dict, model_name: str) -> str | None:
     if isinstance(entry, dict):
         return entry.get("model")
     return None
+
+
+def _model_path_aliases(path: str | None) -> list[str]:
+    if not path:
+        return []
+    aliases = [path]
+    for old, new in [("Qwen3-114B", "Qwen3-14B"), ("Qwen3-14B", "Qwen3-114B")]:
+        if old in path:
+            aliases.append(path.replace(old, new))
+    deduped = []
+    seen = set()
+    for item in aliases:
+        if item not in seen:
+            seen.add(item)
+            deduped.append(item)
+    return deduped
 
 
 def _print_completion_summary(label: str, completed: list[str], pending: list[str]) -> None:
@@ -289,11 +306,11 @@ def _is_mtbench_completed(model_name: str, api_config: dict) -> bool:
         return False
     # Directory names are truncated + hashed when too long, so we match on
     # the model_A field inside results-*.json instead of the directory name.
-    vllm_model = f"VLLM/{path}"
+    vllm_models = {f"VLLM/{candidate}" for candidate in _model_path_aliases(path)}
     for results_file in MTBENCH_RESULT_DIR.rglob("results-*.json"):
         try:
             data = json.loads(results_file.read_text())
-            if data.get("model_A") == vllm_model:
+            if data.get("model_A") in vllm_models:
                 return True
         except (json.JSONDecodeError, OSError):
             pass
@@ -304,11 +321,11 @@ def _is_elo_completed(model_name: str, api_config: dict) -> bool:
     path = _model_path(api_config, model_name)
     if not path or not ELO_RESULT_DIR.exists():
         return False
-    vllm_model = f"VLLM/{path}"
+    vllm_models = {f"VLLM/{candidate}" for candidate in _model_path_aliases(path)}
     for summary_file in ELO_RESULT_DIR.rglob("summary.json"):
         try:
             data = json.loads(summary_file.read_text())
-            if data.get("model") == vllm_model:
+            if data.get("model") in vllm_models:
                 return True
         except (json.JSONDecodeError, OSError):
             pass
