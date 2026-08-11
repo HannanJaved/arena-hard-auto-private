@@ -164,8 +164,28 @@ def _filter_missing_paths(models: list[str], api_config: dict) -> list[str]:
     return valid
 
 
-def _write_temp_models(models: list[str]) -> str:
-    f = tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False)
+def _safe_name(text: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_.-]+", "_", text).strip("._-")[:120] or "models"
+
+
+def _temp_models_prefix(models: list[str], eval_name: str) -> str:
+    eval_token = _safe_name(eval_name.lower().replace(" ", "_"))
+    if not models:
+        model_token = "empty"
+    elif len(models) == 1:
+        model_token = _safe_name(models[0])
+    else:
+        model_token = f"{_safe_name(models[0])}_plus{len(models) - 1}"
+    return f"{eval_token}__{model_token}__"
+
+
+def _write_temp_models(models: list[str], eval_name: str) -> str:
+    f = tempfile.NamedTemporaryFile(
+        mode="w",
+        prefix=_temp_models_prefix(models, eval_name),
+        suffix=".txt",
+        delete=False,
+    )
     f.write("\n".join(models) + "\n")
     f.close()
     return f.name
@@ -434,7 +454,7 @@ def main() -> None:
             if not pending:
                 print(f"  -> All models already done for {label}, skipping.")
                 return
-            tmp = _write_temp_models(pending)
+            tmp = _write_temp_models(pending, label)
             temp_files.append(tmp)
             run_fn(tmp)
 
@@ -444,7 +464,7 @@ def main() -> None:
             arena_gen_pending, arena_gen_completed = _partition(all_models, _is_arena_hard_completed)
             _print_completion_summary("Arena-Hard generation", arena_gen_completed, arena_gen_pending)
             if arena_gen_pending:
-                tmp = _write_temp_models(arena_gen_pending)
+                tmp = _write_temp_models(arena_gen_pending, "Arena-Hard generation")
                 temp_files.append(tmp)
                 if args.submit:
                     arena_gen_job_ids = _run_capturing(
@@ -488,7 +508,7 @@ def main() -> None:
             alpaca_gen_pending, alpaca_gen_completed = _partition(all_models, _is_alpaca_eval_completed)
             _print_completion_summary("AlpacaEval generation", alpaca_gen_completed, alpaca_gen_pending)
             if alpaca_gen_pending:
-                tmp = _write_temp_models(alpaca_gen_pending)
+                tmp = _write_temp_models(alpaca_gen_pending, "AlpacaEval generation")
                 temp_files.append(tmp)
                 if args.submit:
                     alpaca_gen_job_ids = _run_capturing(
