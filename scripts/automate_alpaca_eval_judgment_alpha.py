@@ -37,6 +37,11 @@ DEFAULT_PROMPT_TEMPLATE = (
 #   TP=2 -> ~42GB/GPU (does not fit in 40GB)
 #   TP=4 -> ~21GB/GPU (fits, leaves ~19GB/GPU for KV cache/activations)
 DEFAULT_TP_SIZE = 4
+DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 16
+DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
+DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+DEFAULT_JUDGE_READY_MAX_WAIT = 5400
 
 
 def load_api_config():
@@ -166,12 +171,12 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
-#SBATCH --error={log_dir}/{job_name}.err
-#SBATCH --output={log_dir}/{job_name}.out
+#SBATCH --error={log_dir}/{job_name}_%j.err
+#SBATCH --output={log_dir}/{job_name}_%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=128G
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
 #SBATCH --time=05:00:00
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
@@ -207,15 +212,26 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
-echo "Starting judge server sharded across {tp_size} GPUs on port $JUDGE_PORT..."
+JUDGE_SERVED_NAME="{args.judge_model}"
+
+# Free a stale listener on JUDGE_PORT (/health alone can match the wrong process).
+if command -v fuser >/dev/null 2>&1; then
+    fuser -k ${{JUDGE_PORT}}/tcp >/dev/null 2>&1 || true
+    sleep 2
+fi
+
+echo "Starting judge server sharded across {tp_size} GPUs on port $JUDGE_PORT (served-name $JUDGE_SERVED_NAME)..."
 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
     --model "$JUDGE_PATH" \
     --max-model-len 26304 \
     --port $JUDGE_PORT \
     --tensor-parallel-size {tp_size} \
-    --max-num-seqs 512 \
+    --max-num-seqs {DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS} \
+    --max-num-batched-tokens {DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS} \
     --gpu-memory-utilization 0.90 \
-    --served-model-name "{args.judge_model}" \
+    --served-model-name "$JUDGE_SERVED_NAME" \
+    --enforce-eager \
+    --compilation-config '{{"cudagraph_mode": "{DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}"}}' \
     {gdn_prefill_flag} \
     $CHAT_TEMPLATE_FLAG \
     > {log_dir}/{job_name}_vllm_judge.log 2>&1 &
@@ -228,12 +244,12 @@ if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
     exit 1
 fi
 
-MAX_WAIT=5400  # 90 min: observed ~55-60 min just to load the 76GB judge checkpoint's 8 shards on this Lustre filesystem
+MAX_WAIT={DEFAULT_JUDGE_READY_MAX_WAIT}
 ELAPSED=0
 SLEEP_INTERVAL=30
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
-        echo "Judge server is ready after $ELAPSED seconds."
+    if curl -s http://localhost:$JUDGE_PORT/v1/models 2>/dev/null | grep -q "$JUDGE_SERVED_NAME"; then
+        echo "Judge server is ready after $ELAPSED seconds (model $JUDGE_SERVED_NAME listed)."
         break
     fi
     sleep $SLEEP_INTERVAL
@@ -254,7 +270,7 @@ fi
 
 sleep 10
 
-echo "Verifying judge can actually serve requests (vLLM /health can return ready before torch.compile/CUDA-graph warmup finishes, which takes longer for a TP={tp_size}-sharded 80B judge)..."
+echo "Verifying judge can actually serve requests (warmup probe)..."
 PROBE_READY=0
 PROBE_MAX_WAIT=1800
 PROBE_ELAPSED=0
@@ -277,7 +293,7 @@ while [ $PROBE_ELAPSED -lt $PROBE_MAX_WAIT ]; do
     PROBE_ELAPSED=$((PROBE_ELAPSED + PROBE_INTERVAL))
 done
 if [ "$PROBE_READY" != "1" ]; then
-    echo "ERROR: Judge never became ready to serve requests within ${{PROBE_MAX_WAIT}}s of passing /health"
+    echo "ERROR: Judge never became ready to serve requests within ${{PROBE_MAX_WAIT}}s of /v1/models listing"
     kill $JUDGE_PID
     exit 1
 fi
@@ -378,8 +394,6 @@ def main():
         print(f"ERROR: Judge model '{args.judge_model}' not found in api_config.yaml")
         return
 
-    judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
-
     config_path = f"{CONFIGS_DIR}/alpaca_eval_judge_{args.judge_model}.yaml"
     create_judge_config(config_path, args.judge_model, args.prompt_template)
 
@@ -390,10 +404,11 @@ def main():
 
     job_scripts = []
     for batch_idx, model_batch in enumerate(model_batches):
+        judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
         script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_alpha_batch_{batch_idx + 1}.sh"
         create_slurm_script(model_batch, script_path, config_path, args, judge_model_path, judge_port)
         job_scripts.append(script_path)
-        print(f"Created script: {script_path}")
+        print(f"Created script: {script_path} (judge port {judge_port})")
 
     print(f"\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
 

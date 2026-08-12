@@ -22,6 +22,8 @@ DEFAULT_JUDGE_MODEL = "Qwen3-Next-80B-A3B-Instruct-FP8"
 DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
 DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
+DEFAULT_JUDGE_READY_MAX_WAIT = 4200
 DEFAULT_PROMPT_TEMPLATE = (
     f"{WORKSPACE_ROOT}/alpaca_eval/src/alpaca_eval/evaluators_configs/"
     "alpaca_eval_clf_gpt4_turbo/alpaca_eval_clf.txt"
@@ -158,9 +160,9 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --output={log_dir}/{job_name}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=16G
-#SBATCH --time=02:00:00
+#SBATCH --time=03:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 
@@ -225,7 +227,7 @@ if ! kill -0 $JUDGE_PID > /dev/null 2>&1; then
     exit 1
 fi
 
-MAX_WAIT=3000
+MAX_WAIT={DEFAULT_JUDGE_READY_MAX_WAIT}
 ELAPSED=0
 SLEEP_INTERVAL=30
 while [ $ELAPSED -lt $MAX_WAIT ]; do
@@ -340,8 +342,6 @@ def main():
         print(f"ERROR: Judge model '{args.judge_model}' not found in api_config.yaml")
         return
 
-    judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
-
     config_path = f"{CONFIGS_DIR}/alpaca_eval_judge_{args.judge_model}.yaml"
     create_judge_config(config_path, args.judge_model, args.prompt_template)
 
@@ -352,10 +352,12 @@ def main():
 
     job_scripts = []
     for batch_idx, model_batch in enumerate(model_batches):
+        # Unique port per batch (8001, 8002, ...) to avoid stale :8000 conflicts.
+        judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
         script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_batch_{batch_idx + 1}.sh"
         create_slurm_script(model_batch, script_path, config_path, args, judge_model_path, judge_port)
         job_scripts.append(script_path)
-        print(f"Created script: {script_path}")
+        print(f"Created script: {script_path} (judge port {judge_port})")
 
     print(f"\nGenerated {len(job_scripts)} judgment job scripts in {SCRIPTS_DIR}")
 

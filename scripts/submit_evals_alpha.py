@@ -387,8 +387,8 @@ def main() -> None:
     parser.add_argument("--baseline", required=True,
                         help="Baseline model: a legacy alias (instruct, base, ...) or any api_config.yaml model key.")
     parser.add_argument(
-        "--judge-model", default="Qwen3-Next-80B-A3B-Instruct-FP8",
-        help="Judge model name used for arena-hard and alpaca-eval judgment (default: Qwen3-Next-80B-A3B-Instruct-FP8).",
+        "--judge-model", default="Qwen3-Next-80B-A3B-Instruct-FP8-quokka",
+        help="Judge model name used for arena-hard and alpaca-eval judgment (default: Qwen3-Next-80B-A3B-Instruct-FP8-quokka).",
     )
     parser.add_argument(
         "--judge-tp-size", type=int, default=4,

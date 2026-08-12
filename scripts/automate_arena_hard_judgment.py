@@ -44,6 +44,8 @@ DEFAULT_BASELINE = "instruct"
 DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
 DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
+DEFAULT_JUDGE_READY_MAX_WAIT = 4200
 
 def load_api_config():
     """Load the API configuration file."""
@@ -253,7 +255,33 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     # Slurm expands %j to the job ID in #SBATCH directives; $SLURM_JOB_ID is literal there.
     log_file_base = f"{job_name}_%j"
     
-    judge_port_val = judge_port or 8001
+    judge_port_val = judge_port or DEFAULT_JUDGE_SERVER_PORT_BASE
+
+    # Job-local endpoint file so gen_judgment hits the same port as the vLLM server
+    # (global api_config.yaml hardcodes :8000 for the Qwen3-Next judge).
+    endpoint_path = f"{CONFIGS_DIR}/endpoint_{job_name}_port{judge_port_val}.yaml"
+    Path(CONFIGS_DIR).mkdir(parents=True, exist_ok=True)
+    with open(endpoint_path, "w") as ef:
+        yaml.dump(
+            {
+                judge_model: {
+                    "model": judge_path,
+                    "endpoints": [
+                        {
+                            "api_base": f"http://localhost:{judge_port_val}/v1",
+                            "api_key": "-",
+                            "model_name": judge_model,
+                        }
+                    ],
+                    "api_type": "openai",
+                    "parallel": 32,
+                    "max_tokens": 4096,
+                    "temperature": 0.0,
+                }
+            },
+            ef,
+            default_flow_style=False,
+        )
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
@@ -261,9 +289,9 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --output={log_dir}/{log_file_base}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=6        
-#SBATCH --mem=32G                
-#SBATCH --time=02:00:00          
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=03:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 
@@ -297,12 +325,14 @@ echo "---------------------"
 JUDGE_PATH="{judge_path}"
 API_CONFIG_FILE="{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
 JUDGMENT_CONFIG_FILE="{config_file_path}"
+ENDPOINT_FILE="{endpoint_path}"
 JUDGE_PORT={judge_port_val}
 
 echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
 echo "Judge Model: {judge_model}"
 echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
+echo "Endpoint File: $ENDPOINT_FILE (port $JUDGE_PORT)"
 echo "Judge Server Log: $SERVER_LOG_FILE"
 
 # ===================================================================
@@ -351,7 +381,7 @@ echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 "$SERVER_LOG_FILE"
 
 echo "Waiting for judge server to become ready (checking /v1/models)..."
-MAX_WAIT=3600  # 60 minutes max wait time
+MAX_WAIT={DEFAULT_JUDGE_READY_MAX_WAIT}
 ELAPSED=0
 SLEEP_INTERVAL=30
 
@@ -387,7 +417,7 @@ cd {ARENA_HARD_AUTO_DIR}
 echo "Running gen_judgment.py with config: $JUDGMENT_CONFIG_FILE"
 $PYTHON_EXEC {ARENA_HARD_AUTO_DIR}/gen_judgment.py \\
     --setting-file "$JUDGMENT_CONFIG_FILE" \\
-    --endpoint-file "{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
+    --endpoint-file "$ENDPOINT_FILE"
 
 echo "Judgment generation complete. Killing judge server (PID: $JUDGE_PID)..."
 kill $JUDGE_PID
@@ -588,13 +618,15 @@ def main():
         script_filename = f"run_arena_hard_judgment_{safe_model_id}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
 
-        # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
+        # Unique port per batch (8001, 8002, ...) so concurrent node reuse can't
+        # collide on the shared api_config :8000 default.
         if args.judge_model:
-            judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
             model_name = args.judge_model
             model_path = extract_judge_path_from_api_config(api_config, args.judge_model)
         else:
-            judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
+            model_name = JUDGE_MODEL
+            model_path = JUDGE_PATH
+        judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
 
         create_judgment_slurm_script(
             model_batch,
@@ -606,7 +638,7 @@ def main():
             judge_port=judge_port,
             api_config=api_config,
         )
-        print(f"  Created script: {script_path}")
+        print(f"  Created script: {script_path} (judge port {judge_port})")
 
         job_scripts.append(script_path)
         

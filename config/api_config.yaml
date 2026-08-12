@@ -121,12 +121,51 @@ llama3.1-8b-TULU-DPO:
   max_tokens: 4096
   temperature: 0.0
 
+# Default Capella judge key: weights on WEKA (/data/cat) for faster IOPS.
+# Keep model_name stable so judgment dirs / --served-model-name stay unchanged.
+# Alpha should use Qwen3-Next-80B-A3B-Instruct-FP8-quokka (cat is Capella-only).
 Qwen3-Next-80B-A3B-Instruct-FP8:
-  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen3-Next-80B-A3B-Instruct-FP8
+  model: /data/cat/ws/hama901h-judge-checkpoint/Qwen3-Next-80B-A3B-Instruct-FP8
   endpoints:
   - api_base: http://localhost:8000/v1
     api_key: '-'
     # Must match vLLM --served-model-name (not the weight path).
+    model_name: Qwen3-Next-80B-A3B-Instruct-FP8
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+# Explicit Capella WEKA alias (same weights as default above)
+Qwen3-Next-80B-A3B-Instruct-FP8-cat:
+  model: /data/cat/ws/hama901h-judge-checkpoint/Qwen3-Next-80B-A3B-Instruct-FP8
+  endpoints:
+  - api_base: http://localhost:8000/v1
+    api_key: '-'
+    model_name: Qwen3-Next-80B-A3B-Instruct-FP8
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+# Alpha Quobyte (/data/quokka) copy for faster judge weight IOPS
+Qwen3-Next-80B-A3B-Instruct-FP8-quokka:
+  model: /data/quokka/ws/14/hama901h-judge-checkpoint/Qwen3-Next-80B-A3B-Instruct-FP8
+  endpoints:
+  - api_base: http://localhost:8000/v1
+    api_key: '-'
+    model_name: Qwen3-Next-80B-A3B-Instruct-FP8
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+# Original horse (Lustre) copy — fallback if cat/quokka unavailable
+Qwen3-Next-80B-A3B-Instruct-FP8-horse:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen3-Next-80B-A3B-Instruct-FP8
+  endpoints:
+  - api_base: http://localhost:8000/v1
+    api_key: '-'
     model_name: Qwen3-Next-80B-A3B-Instruct-FP8
   api_type: openai
   parallel: 32
