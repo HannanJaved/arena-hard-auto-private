@@ -19,6 +19,9 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_alpaca_eval_judgment_configs"
 OUTPUTS_DIR = f"{WORKSPACE_ROOT}/alpaca_eval_outputs"
 RUN_SCRIPT = f"{WORKSPACE_ROOT}/arena-hard-auto/scripts/run_alpaca_eval_judgment.py"
 DEFAULT_JUDGE_MODEL = "Qwen3-Next-80B-A3B-Instruct-FP8"
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
+DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
+DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
 DEFAULT_PROMPT_TEMPLATE = (
     f"{WORKSPACE_ROOT}/alpaca_eval/src/alpaca_eval/evaluators_configs/"
     "alpaca_eval_clf_gpt4_turbo/alpaca_eval_clf.txt"
@@ -190,15 +193,26 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
-echo "Starting judge server on port $JUDGE_PORT..."
+JUDGE_SERVED_NAME="{args.judge_model}"
+
+# Free a stale listener on JUDGE_PORT (/health alone can match the wrong process).
+if command -v fuser >/dev/null 2>&1; then
+    fuser -k ${{JUDGE_PORT}}/tcp >/dev/null 2>&1 || true
+    sleep 2
+fi
+
+echo "Starting judge server on port $JUDGE_PORT (served-name $JUDGE_SERVED_NAME)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \
     --model "$JUDGE_PATH" \
     --max-model-len 26304 \
     --port $JUDGE_PORT \
     --tensor-parallel-size 1 \
-    --max-num-seqs 512 \
+    --max-num-seqs {DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS} \
+    --max-num-batched-tokens {DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS} \
     --gpu-memory-utilization 0.95 \
-    --served-model-name "{args.judge_model}" \
+    --served-model-name "$JUDGE_SERVED_NAME" \
+    --enforce-eager \
+    --compilation-config '{{"cudagraph_mode": "{DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}"}}' \
     {gdn_prefill_flag} \
     $CHAT_TEMPLATE_FLAG \
     > {log_dir}/{job_name}_vllm_judge.log 2>&1 &
@@ -215,8 +229,8 @@ MAX_WAIT=3000
 ELAPSED=0
 SLEEP_INTERVAL=30
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
-        echo "Judge server is ready after $ELAPSED seconds."
+    if curl -s http://localhost:$JUDGE_PORT/v1/models 2>/dev/null | grep -q "$JUDGE_SERVED_NAME"; then
+        echo "Judge server is ready after $ELAPSED seconds (model $JUDGE_SERVED_NAME listed)."
         break
     fi
     sleep $SLEEP_INTERVAL

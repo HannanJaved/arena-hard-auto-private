@@ -40,6 +40,11 @@ BASELINE_CONFIGS = {
 # Default baseline
 DEFAULT_BASELINE = "instruct"
 
+# Qwen3-Next judge server (capella, TP=1): lower concurrency avoids GDN/MoE deadlocks.
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
+DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
+DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+
 def load_api_config():
     """Load the API configuration file."""
     config_path = f"{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
@@ -313,13 +318,25 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
-echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
+JUDGE_SERVED_NAME="{judge_model}"
+
+# Free a stale listener on JUDGE_PORT (/health alone can match the wrong process).
+if command -v fuser >/dev/null 2>&1; then
+    fuser -k ${{JUDGE_PORT}}/tcp >/dev/null 2>&1 || true
+    sleep 2
+fi
+
+echo "Starting judge server on GPU 0 (Port {judge_port_val}, served-name $JUDGE_SERVED_NAME)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
+    --served-model-name "$JUDGE_SERVED_NAME" \\
     --max-model-len 26304 \\
-    --max-num-seqs 512 \\
+    --max-num-seqs {DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS} \\
+    --max-num-batched-tokens {DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS} \\
     --gpu-memory-utilization 0.95 \\
     --gdn-prefill-backend triton \\
+    --enforce-eager \\
+    --compilation-config '{{"cudagraph_mode": "{DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}"}}' \\
     $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
@@ -333,14 +350,14 @@ fi
 echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 "$SERVER_LOG_FILE"
 
-echo "Waiting for judge server to become ready (checking health endpoint)..."
+echo "Waiting for judge server to become ready (checking /v1/models)..."
 MAX_WAIT=3600  # 60 minutes max wait time
 ELAPSED=0
 SLEEP_INTERVAL=30
 
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
-        echo "Judge server is ready after $ELAPSED seconds!"
+    if curl -s http://localhost:$JUDGE_PORT/v1/models 2>/dev/null | grep -q "$JUDGE_SERVED_NAME"; then
+        echo "Judge server is ready after $ELAPSED seconds (model $JUDGE_SERVED_NAME listed)!"
         break
     fi
     echo "Server not ready yet... waiting (elapsed: ${{ELAPSED}}s / max: ${{MAX_WAIT}}s)"
