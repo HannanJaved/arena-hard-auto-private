@@ -291,6 +291,8 @@ def main() -> None:
     selected_tasks = _resolve_tasks(args.tasks)
     models_file = str(args.models_file)
     auto_flag = ["--submit"] if args.submit else (["--dry-run"] if args.dry_run else [])
+    mtbench_flag = ["--rerun-all"] if args.rerun else ["--skip-existing"]
+    elo_flag = ["--rerun-all"] if args.rerun else ["--skip-existing"]
 
     def submit_one(label: str, python: Path, script: Path, models_path: str, extra: list[str]) -> None:
         run(label, python, script, ["--models-file", models_path] + extra + auto_flag)
@@ -340,7 +342,6 @@ def main() -> None:
             )
 
         if "mtbench" in selected_tasks:
-            mtbench_flag = ["--rerun-all"] if args.rerun else ["--skip-existing"]
             submit_filtered(
                 "MT-Bench (Gemma4)",
                 lambda m: _is_mtbench_completed(m, api_config, args.judge_model),
@@ -362,7 +363,7 @@ def main() -> None:
                     VENV_OPENJURY,
                     ELO_SCRIPT,
                     tmp,
-                    ["--judge", args.judge_model],
+                    ["--judge", args.judge_model] + elo_flag,
                 ),
             )
 
@@ -389,7 +390,6 @@ def main() -> None:
             )
 
         if "mtbench" in selected_tasks:
-            mtbench_flag = ["--rerun-all"] if args.rerun else ["--skip-existing"]
             submit_one(
                 "MT-Bench (automate_mtbench_gemma4)",
                 VENV_OPENJURY,
@@ -404,7 +404,7 @@ def main() -> None:
                 VENV_OPENJURY,
                 ELO_SCRIPT,
                 models_file,
-                ["--judge", args.judge_model],
+                ["--judge", args.judge_model] + elo_flag,
             )
 
     print(f"\n{'=' * 60}")
