@@ -126,6 +126,8 @@ Qwen3-Next-80B-A3B-Instruct-FP8:
   endpoints:
   - api_base: http://localhost:8000/v1
     api_key: '-'
+    # Must match vLLM --served-model-name (not the weight path).
+    model_name: Qwen3-Next-80B-A3B-Instruct-FP8
   api_type: openai
   parallel: 32
   max_tokens: 4096
@@ -136,6 +138,7 @@ Gemma4-31B-it:
   endpoints:
   - api_base: http://localhost:8000/v1
     api_key: '-'
+    model_name: Gemma4-31B-it
   api_type: openai
   parallel: 32
   max_tokens: 4096

@@ -250,8 +250,8 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     log_dir = f"{LOGS_DIR}/{log_subdir}"
     Path(log_dir).mkdir(parents=True, exist_ok=True)
     
-    # Use SLURM_JOB_ID for unique filenames (no shell commands in SBATCH directives)
-    log_file_base = f"{job_name}_$SLURM_JOB_ID"
+    # Slurm expands %j to the job ID in #SBATCH directives; $SLURM_JOB_ID is literal there.
+    log_file_base = f"{job_name}_%j"
     
     judge_port_val = judge_port or 8001
 
