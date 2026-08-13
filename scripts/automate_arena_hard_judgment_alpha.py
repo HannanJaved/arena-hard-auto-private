@@ -226,6 +226,20 @@ def extract_judge_path_from_api_config(api_config, model_name):
             return entry['model']
     return JUDGE_PATH  # Fallback to default judge path
 
+
+def resolve_judge_logical_name(api_config, judge_key):
+    """Canonical judge id for served-name / result dirs (FS aliases like -quokka/-cat/-horse)."""
+    entry = (api_config or {}).get(judge_key) or {}
+    endpoints = entry.get("endpoints") if isinstance(entry, dict) else None
+    if isinstance(endpoints, list):
+        for ep in endpoints:
+            if isinstance(ep, dict) and ep.get("model_name"):
+                return ep["model_name"]
+    for suffix in ("-quokka", "-cat", "-horse"):
+        if judge_key.endswith(suffix):
+            return judge_key[: -len(suffix)]
+    return judge_key
+
 def create_judgment_config(models_to_judge, output_path, baseline_model, judge_model=JUDGE_MODEL):
     """Create an arena-hard config file for judging specific models."""
     config = {
@@ -659,7 +673,11 @@ def main():
         # Create judgment config file
         config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
-        create_judgment_config(model_batch, config_path, baseline_model, judge_model=args.judge_model)
+        # Weight path from FS alias key (-quokka/-cat/...); results use canonical model_name.
+        judge_key = args.judge_model or JUDGE_MODEL
+        judge_logical = resolve_judge_logical_name(api_config, judge_key)
+        model_path = extract_judge_path_from_api_config(api_config, judge_key)
+        create_judgment_config(model_batch, config_path, baseline_model, judge_model=judge_logical)
         print(f"  Created config: {config_path}")
 
         # Create SLURM script
@@ -667,12 +685,6 @@ def main():
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
         # Unique port per batch (8001, 8002, ...) so concurrent node reuse
         # can't collide on the shared api_config :8000 default.
-        if args.judge_model:
-            model_name = args.judge_model
-            model_path = extract_judge_path_from_api_config(api_config, args.judge_model)
-        else:
-            model_name = JUDGE_MODEL
-            model_path = JUDGE_PATH
         judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
 
         create_judgment_slurm_script(
@@ -681,12 +693,12 @@ def main():
                 config_path,
                 args.baseline,
                 baseline_model,
-                judge_model=model_name,
+                judge_model=judge_logical,
                 judge_path=model_path,
                 judge_port=judge_port,
                 tp_size=args.tensor_parallel_size,
             )
-        print(f"  Created script: {script_path} (judge port {judge_port})")
+        print(f"  Created script: {script_path} (judge port {judge_port}, weights={model_path}, logical={judge_logical})")
 
         job_scripts.append(script_path)
 

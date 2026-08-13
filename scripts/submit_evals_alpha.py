@@ -274,6 +274,20 @@ def _is_arena_hard_judgment_completed(model_name: str, judge_model: str, baselin
     return False
 
 
+def _resolve_judge_logical_name(api_config: dict, judge_key: str) -> str:
+    """Map FS aliases (-quokka/-cat/-horse) to the canonical judge id used for result dirs."""
+    entry = (api_config or {}).get(judge_key) or {}
+    endpoints = entry.get("endpoints") if isinstance(entry, dict) else None
+    if isinstance(endpoints, list):
+        for ep in endpoints:
+            if isinstance(ep, dict) and ep.get("model_name"):
+                return ep["model_name"]
+    for suffix in ("-quokka", "-cat", "-horse"):
+        if judge_key.endswith(suffix):
+            return judge_key[: -len(suffix)]
+    return judge_key
+
+
 def _is_alpaca_eval_judgment_completed(model_name: str) -> bool:
     if (ALPACA_EVAL_OUT_DIR / model_name / "leaderboard_length_controlled.csv").exists():
         return True
@@ -444,6 +458,8 @@ def main() -> None:
 
     models_file = str(args.models_file)
     judge_tp = str(args.judge_tp_size)
+    api_config_for_judge = _load_api_config()
+    judge_logical = _resolve_judge_logical_name(api_config_for_judge, args.judge_model)
 
     # For the automation scripts (arena-hard, alpaca-eval, mtbench, elo):
     #   --submit  → pass --submit
@@ -502,7 +518,7 @@ def main() -> None:
 
         # 1b. Arena-Hard judgment — only for models missing judgment, depends on new gen jobs
         if "arena_hard_judgment" in selected_tasks:
-            arena_judg_check = lambda m: _is_arena_hard_judgment_completed(m, args.judge_model, args.baseline)
+            arena_judg_check = lambda m: _is_arena_hard_judgment_completed(m, judge_logical, args.baseline)
             submit_filtered(
                 "Arena-Hard judgment",
                 arena_judg_check,

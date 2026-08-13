@@ -27,6 +27,21 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_alpaca_eval_judgment_configs_alpha"
 OUTPUTS_DIR = f"{WORKSPACE_ROOT}/alpaca_eval_outputs"
 RUN_SCRIPT = f"{WORKSPACE_ROOT}/arena-hard-auto/scripts/run_alpaca_eval_judgment.py"
 DEFAULT_JUDGE_MODEL = "Qwen3-Next-80B-A3B-Instruct-FP8"
+
+
+def safe_batch_id(value, max_len=180):
+    """Filesystem-safe id; hash-suffix when the name is too long."""
+    import hashlib
+    import re
+
+    safe_value = re.sub(r"[^A-Za-z0-9_.-]", "_", value)
+    if len(safe_value) <= max_len:
+        return safe_value
+    digest = hashlib.sha1(safe_value.encode("utf-8")).hexdigest()[:12]
+    head = safe_value[: max(0, max_len - 13)]
+    return f"{head}-{digest}"
+
+
 DEFAULT_PROMPT_TEMPLATE = (
     f"{WORKSPACE_ROOT}/alpaca_eval/src/alpaca_eval/evaluators_configs/"
     "alpaca_eval_clf_gpt4_turbo/alpaca_eval_clf.txt"
@@ -128,6 +143,20 @@ def resolve_model_path(model_config):
     return None
 
 
+def resolve_judge_logical_name(api_config, judge_key):
+    """Canonical judge id for served-name / annotator configs (FS aliases like -quokka)."""
+    entry = (api_config or {}).get(judge_key) or {}
+    endpoints = entry.get("endpoints") if isinstance(entry, dict) else None
+    if isinstance(endpoints, list):
+        for ep in endpoints:
+            if isinstance(ep, dict) and ep.get("model_name"):
+                return ep["model_name"]
+    for suffix in ("-quokka", "-cat", "-horse"):
+        if judge_key.endswith(suffix):
+            return judge_key[: -len(suffix)]
+    return judge_key
+
+
 def create_judge_config(output_path, judge_model_name, prompt_template):
     config = {
         "alpaca_eval_vllm_judge": {
@@ -156,7 +185,7 @@ def create_judge_config(output_path, judge_model_name, prompt_template):
         yaml.dump(config, f, default_flow_style=False)
 
 
-def create_slurm_script(models_to_judge, script_path, config_path, args, judge_model_path, judge_port):
+def create_slurm_script(models_to_judge, script_path, config_path, args, judge_model_path, judge_port, judge_served_name):
     job_name = "alpaca-judge-alpha-" + (models_to_judge[0] if len(models_to_judge) == 1 else f"batch-{len(models_to_judge)}")
 
     log_dir = f"{LOGS_DIR}/judgments"
@@ -212,7 +241,7 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
-JUDGE_SERVED_NAME="{args.judge_model}"
+JUDGE_SERVED_NAME="{judge_served_name}"
 
 # Free a stale listener on JUDGE_PORT (/health alone can match the wrong process).
 if command -v fuser >/dev/null 2>&1; then
@@ -278,7 +307,7 @@ PROBE_INTERVAL=20
 while [ $PROBE_ELAPSED -lt $PROBE_MAX_WAIT ]; do
     HTTP_CODE=$(curl -s -o /dev/null -w "%{{http_code}}" -X POST "http://localhost:$JUDGE_PORT/v1/chat/completions" \
         -H "Content-Type: application/json" \
-        -d '{{"model": "{args.judge_model}", "messages": [{{"role": "user", "content": "hi"}}], "max_tokens": 1}}')
+        -d '{{"model": "{judge_served_name}", "messages": [{{"role": "user", "content": "hi"}}], "max_tokens": 1}}')
     if [ "$HTTP_CODE" = "200" ]; then
         echo "Judge is ready to serve requests (probe succeeded after ${{PROBE_ELAPSED}}s)."
         PROBE_READY=1
@@ -394,8 +423,10 @@ def main():
         print(f"ERROR: Judge model '{args.judge_model}' not found in api_config.yaml")
         return
 
-    config_path = f"{CONFIGS_DIR}/alpaca_eval_judge_{args.judge_model}.yaml"
-    create_judge_config(config_path, args.judge_model, args.prompt_template)
+    # FS alias (-quokka) selects weight path; logical name keeps annotator / served-name stable.
+    judge_logical = resolve_judge_logical_name(api_config, args.judge_model)
+    config_path = f"{CONFIGS_DIR}/alpaca_eval_judge_{judge_logical}.yaml"
+    create_judge_config(config_path, judge_logical, args.prompt_template)
 
     model_batches = [
         models_to_judge[i : i + args.batch_size]
@@ -405,8 +436,11 @@ def main():
     job_scripts = []
     for batch_idx, model_batch in enumerate(model_batches):
         judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
-        script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_alpha_batch_{batch_idx + 1}.sh"
-        create_slurm_script(model_batch, script_path, config_path, args, judge_model_path, judge_port)
+        model_id = model_batch[0] if len(model_batch) == 1 else "__".join(model_batch)
+        script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_alpha_{safe_batch_id(model_id)}.sh"
+        create_slurm_script(
+            model_batch, script_path, config_path, args, judge_model_path, judge_port, judge_logical
+        )
         job_scripts.append(script_path)
         print(f"Created script: {script_path} (judge port {judge_port})")
 

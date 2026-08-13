@@ -247,15 +247,42 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     
     judge_port_val = judge_port or 8001
 
+    # Job-local endpoint so gen_judgment uses this job's port + served name
+    # (global api_config hardcodes :8000 and without --served-model-name vLLM
+    # registers the weight path, causing 404s).
+    endpoint_path = f"{CONFIGS_DIR}/endpoint_{job_name}_port{judge_port_val}.yaml"
+    Path(CONFIGS_DIR).mkdir(parents=True, exist_ok=True)
+    with open(endpoint_path, "w") as ef:
+        yaml.dump(
+            {
+                judge_model: {
+                    "model": judge_path,
+                    "endpoints": [
+                        {
+                            "api_base": f"http://localhost:{judge_port_val}/v1",
+                            "api_key": "-",
+                            "model_name": judge_model,
+                        }
+                    ],
+                    "api_type": "openai",
+                    "parallel": 32,
+                    "max_tokens": 4096,
+                    "temperature": 0.0,
+                }
+            },
+            ef,
+            default_flow_style=False,
+        )
+
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
 #SBATCH --error={log_dir}/{log_file_base}.err
 #SBATCH --output={log_dir}/{log_file_base}.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=8        
-#SBATCH --mem=64G                
-#SBATCH --time=04:00:00          
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=03:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 
@@ -275,6 +302,7 @@ PYTHON_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 echo "Using Python executable at: $PYTHON_EXEC"
 
 module load CUDA
+export PATH={WORKSPACE_ROOT}/arena-hard-auto/venv/bin:$PATH
 source {WORKSPACE_ROOT}/cache.sh
 
 # [DEBUG] Verify the environment and installation
@@ -288,12 +316,15 @@ echo "---------------------"
 JUDGE_PATH="{judge_path}"
 API_CONFIG_FILE="{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
 JUDGMENT_CONFIG_FILE="{config_file_path}"
+ENDPOINT_FILE="{endpoint_path}"
 JUDGE_PORT={judge_port_val}
+JUDGE_SERVED_NAME="{judge_model}"
 
 echo "### JUDGING MODELS: {', '.join(models_to_judge)} ###"
 echo "Judge Model: {judge_model}"
 echo "Baseline Model: {baseline_model}"
 echo "Config File: $JUDGMENT_CONFIG_FILE"
+echo "Endpoint File: $ENDPOINT_FILE (port $JUDGE_PORT)"
 echo "Judge Server Log: $SERVER_LOG_FILE"
 
 # ===================================================================
@@ -309,13 +340,22 @@ elif [ -f "$JUDGE_PATH/chat_template.j2" ]; then
 fi
 echo "Judge chat template: ${{CHAT_TEMPLATE_FLAG:-tokenizer_config (auto)}}"
 
-echo "Starting judge server on GPU 0 (Port {judge_port_val})..."
+if command -v fuser >/dev/null 2>&1; then
+    fuser -k ${{JUDGE_PORT}}/tcp >/dev/null 2>&1 || true
+    sleep 2
+fi
+
+echo "Starting judge server on GPU 0 (Port {judge_port_val}, served-name $JUDGE_SERVED_NAME)..."
 CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --model "$JUDGE_PATH" --port $JUDGE_PORT --tensor-parallel-size 1 \\
+    --served-model-name "$JUDGE_SERVED_NAME" \\
     --max-model-len 26304 \\
-    --max-num-seqs 512 \\
+    --max-num-seqs 8 \\
+    --max-num-batched-tokens 8192 \\
     --gpu-memory-utilization 0.95 \\
     --gdn-prefill-backend triton \\
+    --enforce-eager \\
+    --compilation-config '{{"cudagraph_mode": "NONE"}}' \\
     $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
@@ -329,14 +369,14 @@ fi
 echo "Judge server started with PID: $JUDGE_PID. Tailing log for 10s..."
 tail -n 100 "$SERVER_LOG_FILE"
 
-echo "Waiting for judge server to become ready (checking health endpoint)..."
-MAX_WAIT=2400  # 40 minutes max wait time
+echo "Waiting for judge server to become ready (checking /v1/models)..."
+MAX_WAIT=4200
 ELAPSED=0
 SLEEP_INTERVAL=30
 
 while [ $ELAPSED -lt $MAX_WAIT ]; do
-    if curl -s http://localhost:$JUDGE_PORT/health > /dev/null 2>&1; then
-        echo "Judge server is ready after $ELAPSED seconds!"
+    if curl -s http://localhost:$JUDGE_PORT/v1/models 2>/dev/null | grep -q "$JUDGE_SERVED_NAME"; then
+        echo "Judge server is ready after $ELAPSED seconds (model $JUDGE_SERVED_NAME listed)!"
         break
     fi
     echo "Server not ready yet... waiting (elapsed: ${{ELAPSED}}s / max: ${{MAX_WAIT}}s)"
@@ -366,7 +406,7 @@ cd {ARENA_HARD_AUTO_DIR}
 echo "Running gen_judgment.py with config: $JUDGMENT_CONFIG_FILE"
 $PYTHON_EXEC {ARENA_HARD_AUTO_DIR}/gen_judgment.py \\
     --setting-file "$JUDGMENT_CONFIG_FILE" \\
-    --endpoint-file "{ARENA_HARD_AUTO_DIR}/config/api_config.yaml"
+    --endpoint-file "$ENDPOINT_FILE"
 
 echo "Judgment generation complete. Killing judge server (PID: $JUDGE_PID)..."
 kill $JUDGE_PID
@@ -563,14 +603,14 @@ def main():
 
         script_filename = f"run_arena_hard_judgment_{batch_tag}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
-        # Determine judge port from api_config (prefer judge model entry, fallback to first api_base or 8001)
-
         if args.judge_model:
-            judge_port = get_port_for_model(api_config, model_name=args.judge_model, default=8001)
             model_name = args.judge_model
             model_path = extract_judge_path_from_api_config(api_config, args.judge_model)
         else:
-            judge_port = get_port_for_model(api_config, model_name=JUDGE_MODEL, default=8001)
+            model_name = JUDGE_MODEL
+            model_path = JUDGE_PATH
+        # Unique port per batch — do not reuse api_config :8000 for every job.
+        judge_port = 8001 + batch_idx
 
         create_judgment_slurm_script(
                 model_batch, 
@@ -582,7 +622,7 @@ def main():
                 judge_path=model_path, 
                 judge_port=judge_port
             )
-        print(f"  Created script: {script_path}")
+        print(f"  Created script: {script_path} (judge port {judge_port})")
         
         job_scripts.append(script_path)
         

@@ -19,6 +19,19 @@ CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_alpaca_eval_judgment_configs"
 OUTPUTS_DIR = f"{WORKSPACE_ROOT}/alpaca_eval_outputs"
 RUN_SCRIPT = f"{WORKSPACE_ROOT}/arena-hard-auto/scripts/run_alpaca_eval_judgment.py"
 DEFAULT_JUDGE_MODEL = "Qwen3-Next-80B-A3B-Instruct-FP8"
+
+
+def safe_batch_id(value, max_len=180):
+    """Filesystem-safe id; hash-suffix when the name is too long."""
+    import hashlib
+    import re
+
+    safe_value = re.sub(r"[^A-Za-z0-9_.-]", "_", value)
+    if len(safe_value) <= max_len:
+        return safe_value
+    digest = hashlib.sha1(safe_value.encode("utf-8")).hexdigest()[:12]
+    head = safe_value[: max(0, max_len - 13)]
+    return f"{head}-{digest}"
 DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
 DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
@@ -354,7 +367,8 @@ def main():
     for batch_idx, model_batch in enumerate(model_batches):
         # Unique port per batch (8001, 8002, ...) to avoid stale :8000 conflicts.
         judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
-        script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_batch_{batch_idx + 1}.sh"
+        model_id = model_batch[0] if len(model_batch) == 1 else "__".join(model_batch)
+        script_path = f"{SCRIPTS_DIR}/run_alpaca_eval_judgment_{safe_batch_id(model_id)}.sh"
         create_slurm_script(model_batch, script_path, config_path, args, judge_model_path, judge_port)
         job_scripts.append(script_path)
         print(f"Created script: {script_path} (judge port {judge_port})")

@@ -203,6 +203,20 @@ def extract_judge_path_from_api_config(api_config, model_name):
             return entry['model']
     return JUDGE_PATH  # Fallback to default judge path
 
+
+def resolve_judge_logical_name(api_config, judge_key):
+    """Canonical judge id for served-name / result dirs (FS aliases like -cat/-quokka)."""
+    entry = (api_config or {}).get(judge_key) or {}
+    endpoints = entry.get("endpoints") if isinstance(entry, dict) else None
+    if isinstance(endpoints, list):
+        for ep in endpoints:
+            if isinstance(ep, dict) and ep.get("model_name"):
+                return ep["model_name"]
+    for suffix in ("-quokka", "-cat", "-horse"):
+        if judge_key.endswith(suffix):
+            return judge_key[: -len(suffix)]
+    return judge_key
+
 def create_judgment_config(models_to_judge, output_path, baseline_name, judge_model=JUDGE_MODEL, api_config=None):
     """Create an arena-hard config file for judging specific models."""
     baseline_model = resolve_baseline_model(baseline_name, api_config or {})
@@ -524,6 +538,10 @@ def main():
     parser.add_argument('--dry-run', action='store_true', help='Generate scripts but do not submit jobs')
     parser.add_argument('--submit', action='store_true', help='Submit jobs after generating scripts')
     parser.add_argument('--validate-only', action='store_true', help='Only validate models without generating scripts')
+    parser.add_argument(
+        '--dependency', type=str, default='',
+        help='SLURM dependency string passed to sbatch (e.g. afterok:12345:67890).',
+    )
     
     args = parser.parse_args()
     
@@ -566,7 +584,9 @@ def main():
         for model in missing_answers:
             print(f"  - {model}")
         print("\\nYou need to generate answers first before judging.")
-        if not args.validate_only:
+        if args.dependency:
+            print("Dependency set — judgment jobs will wait for generation to finish before running.")
+        elif not args.validate_only and not args.dry_run:
             response = input("Continue anyway? (y/N): ")
             if response.lower() != 'y':
                 return
@@ -603,42 +623,37 @@ def main():
         # Include baseline in filenames to avoid overwriting across runs
         combined_id = f"baseline_{baseline_model_name}__{model_id}"
         safe_model_id = safe_batch_id(combined_id)
+        config_path = f"{CONFIGS_DIR}/arena_hard_judgment_{safe_model_id}.yaml"
+        script_path = f"{SCRIPTS_DIR}/run_arena_hard_judgment_{safe_model_id}.sh"
 
-        config_filename = f"arena_hard_judgment_{safe_model_id}.yaml"
-        config_path = f"{CONFIGS_DIR}/{config_filename}"
+        # Unique port per batch (8001, 8002, ...) so concurrent node reuse can't
+        # collide on the shared api_config :8000 default.
+        # Weight path from FS alias key (-cat/...); results use canonical model_name.
+        judge_key = args.judge_model or JUDGE_MODEL
+        judge_logical = resolve_judge_logical_name(api_config, judge_key)
+        model_path = extract_judge_path_from_api_config(api_config, judge_key)
+        judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
+
         create_judgment_config(
             model_batch,
             config_path,
             args.baseline,
-            judge_model=args.judge_model,
+            judge_model=judge_logical,
             api_config=api_config,
         )
         print(f"  Created config: {config_path}")
-
-        script_filename = f"run_arena_hard_judgment_{safe_model_id}.sh"
-        script_path = f"{SCRIPTS_DIR}/{script_filename}"
-
-        # Unique port per batch (8001, 8002, ...) so concurrent node reuse can't
-        # collide on the shared api_config :8000 default.
-        if args.judge_model:
-            model_name = args.judge_model
-            model_path = extract_judge_path_from_api_config(api_config, args.judge_model)
-        else:
-            model_name = JUDGE_MODEL
-            model_path = JUDGE_PATH
-        judge_port = DEFAULT_JUDGE_SERVER_PORT_BASE + batch_idx
 
         create_judgment_slurm_script(
             model_batch,
             script_path,
             config_path,
             args.baseline,
-            judge_model=model_name,
+            judge_model=judge_logical,
             judge_path=model_path,
             judge_port=judge_port,
             api_config=api_config,
         )
-        print(f"  Created script: {script_path} (judge port {judge_port})")
+        print(f"  Created script: {script_path} (judge port {judge_port}, weights={model_path}, logical={judge_logical})")
 
         job_scripts.append(script_path)
         
@@ -655,7 +670,11 @@ def main():
         submitted_jobs = []
         for script in job_scripts:
             try:
-                result = subprocess.run(['sbatch', script], capture_output=True, text=True, check=True)
+                sbatch_cmd = ['sbatch']
+                if args.dependency:
+                    sbatch_cmd += ['--dependency', args.dependency]
+                sbatch_cmd.append(script)
+                result = subprocess.run(sbatch_cmd, capture_output=True, text=True, check=True)
                 job_id = result.stdout.strip().split()[-1]
                 submitted_jobs.append((script, job_id))
                 print(f"  Submitted {os.path.basename(script)} -> Job ID: {job_id}")
