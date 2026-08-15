@@ -282,7 +282,7 @@ def _filter_bigbench(tasks: list[DclmCoreTask]) -> list[DclmCoreTask]:
 
 CPU_PARTITIONS = {"romeo", "barnard"}
 GPU_PARTITIONS = {"alpha", "capella"}
-DEFAULT_CPU_PARTITION = "romeo"
+DEFAULT_CPU_PARTITION = "barnard"
 
 # romeo: 128 cores/node, ~505GB/node (~3.9GB/core). barnard: 104 cores/node, ~500GB/node (~4.8GB/core).
 # 32 cores is a moderate slice of either shared node; mem scales proportionally with headroom.

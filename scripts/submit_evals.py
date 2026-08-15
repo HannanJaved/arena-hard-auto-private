@@ -41,7 +41,7 @@ STATIC_TASKS = ["arc_challenge", "gpqa", "gsm8k", "hellaswag", "ifeval", "piqa",
 
 CPU_PARTITIONS = {"romeo", "barnard"}
 GPU_PARTITIONS = {"alpha", "capella"}
-DEFAULT_CPU_PARTITION = "romeo"
+DEFAULT_CPU_PARTITION = "barnard"
 DEFAULT_GPU_PARTITION = "capella"
 DEFAULT_CPU_CPUS_PER_TASK = 32
 DEFAULT_CPU_MEM = "128G"

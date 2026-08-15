@@ -248,7 +248,7 @@ def _resolve_tasks(task_filter: str | None) -> list[CoreTask]:
 
 CPU_PARTITIONS = {"romeo", "barnard"}
 GPU_PARTITIONS = {"alpha", "capella"}
-DEFAULT_CPU_PARTITION = "romeo"
+DEFAULT_CPU_PARTITION = "barnard"
 DEFAULT_GPU_PARTITION = "capella"
 
 # romeo: 128 cores/node, ~505GB/node (~3.9GB/core). barnard: 104 cores/node, ~500GB/node (~4.8GB/core).
