@@ -125,28 +125,6 @@ def run(label: str, python: Path, script: Path, extra_args: list[str]) -> None:
         print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
 
 
-def _run_capturing(label: str, python: Path, script: Path, extra_args: list[str]) -> list[str]:
-    """Run script, print its output, and return SLURM job IDs parsed from stdout."""
-    print(f"\n{'='*60}")
-    print(f"  {label}")
-    print(f"{'='*60}")
-    cmd = [str(python), str(script)] + extra_args
-    print("  CMD:", " ".join(cmd))
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.stdout:
-        print(result.stdout, end="")
-    if result.stderr:
-        print(result.stderr, end="", file=sys.stderr)
-    if result.returncode != 0:
-        print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
-    return re.findall(r"Job ID:\s*(\d+)", result.stdout)
-
-
-def _dependency_str(job_ids: list[str]) -> str:
-    """Build a SLURM afterok dependency string from a list of job IDs."""
-    return "afterok:" + ":".join(job_ids) if job_ids else ""
-
-
 def _run_capturing_with_models(
     label: str, python: Path, script: Path, extra_args: list[str],
     script_prefix: str, script_suffix: str = ".sh",
