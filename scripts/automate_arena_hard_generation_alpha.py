@@ -167,6 +167,7 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000):
 #SBATCH --time=04:00:00
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:1
+#SBATCH --account=p_neurasearch
 
 # Exit on any error
 set -e

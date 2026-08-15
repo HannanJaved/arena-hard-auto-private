@@ -112,8 +112,20 @@ def run(label: str, python: Path, script: Path, extra_args: list[str]) -> None:
         print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
 
 
-def _run_capturing(label: str, python: Path, script: Path, extra_args: list[str]) -> list[str]:
-    """Run script, print its output, and return SLURM job IDs parsed from stdout."""
+def _run_capturing_with_models(
+    label: str, python: Path, script: Path, extra_args: list[str],
+    script_prefix: str, script_suffix: str = ".sh",
+) -> dict[str, str]:
+    """Run a generation-automation script and return {model_name: job_id}.
+
+    Parsed from lines like ``Submitted run_arena_hard_<model>.sh -> Job ID: <id>``
+    that automate_arena_hard_generation_alpha.py / automate_alpaca_eval_alpha.py print
+    per model. This lets the judgment step depend on each model's OWN
+    generation job individually, rather than the whole batch depending on
+    every generation job submitted this run (which means one failed
+    generation permanently blocks every other model's judgment via
+    DependencyNeverSatisfied).
+    """
     print(f"\n{'='*60}")
     print(f"  {label}")
     print(f"{'='*60}")
@@ -126,12 +138,12 @@ def _run_capturing(label: str, python: Path, script: Path, extra_args: list[str]
         print(result.stderr, end="", file=sys.stderr)
     if result.returncode != 0:
         print(f"  WARNING: {label} exited with code {result.returncode}", file=sys.stderr)
-    return re.findall(r"Job ID:\s*(\d+)", result.stdout)
-
-
-def _dependency_str(job_ids: list[str]) -> str:
-    """Build a SLURM afterok dependency string from a list of job IDs."""
-    return "afterok:" + ":".join(job_ids) if job_ids else ""
+    mapping: dict[str, str] = {}
+    for basename, job_id in re.findall(r"Submitted (\S+) -> Job ID:\s*(\d+)", result.stdout):
+        if basename.startswith(script_prefix) and basename.endswith(script_suffix):
+            model = basename[len(script_prefix):-len(script_suffix)]
+            mapping[model] = job_id
+    return mapping
 
 
 def _read_models(models_file: str) -> list[str]:
@@ -491,8 +503,22 @@ def main() -> None:
             temp_files.append(tmp)
             run_fn(tmp)
 
-        # 1. Arena-Hard generation → capture job IDs for dependency chaining
-        arena_gen_job_ids: list[str] = []
+        def submit_filtered_per_model(label: str, check_fn, job_id_map: dict[str, str], run_fn_single) -> None:
+            """Like submit_filtered, but submits one job per model with that
+            model's OWN upstream generation job ID as its dependency (instead
+            of one combined batch dependency on every generation job)."""
+            pending, completed = _partition(all_models, check_fn)
+            _print_completion_summary(label, completed, pending)
+            if not pending:
+                print(f"  -> All models already done for {label}, skipping.")
+                return
+            for model in pending:
+                tmp = _write_temp_models([model], f"{label}:{model}")
+                temp_files.append(tmp)
+                run_fn_single(tmp, job_id_map.get(model))
+
+        # 1. Arena-Hard generation → capture per-model job IDs for dependency chaining
+        arena_gen_job_id_by_model: dict[str, str] = {}
         if "arena_hard_generation" in selected_tasks:
             arena_gen_pending, arena_gen_completed = _partition(all_models, _is_arena_hard_completed)
             _print_completion_summary("Arena-Hard generation", arena_gen_completed, arena_gen_pending)
@@ -500,11 +526,12 @@ def main() -> None:
                 tmp = _write_temp_models(arena_gen_pending, "Arena-Hard generation")
                 temp_files.append(tmp)
                 if args.submit:
-                    arena_gen_job_ids = _run_capturing(
+                    arena_gen_job_id_by_model = _run_capturing_with_models(
                         "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_alpha.py",
                         ["--models-file", tmp, "--submit"],
+                        script_prefix="run_arena_hard_",
                     )
                 else:
                     run(
@@ -516,13 +543,15 @@ def main() -> None:
             else:
                 print("  -> All models already done for Arena-Hard generation, skipping.")
 
-        # 1b. Arena-Hard judgment — only for models missing judgment, depends on new gen jobs
+        # 1b. Arena-Hard judgment — only for models missing judgment, each depends
+        # only on its OWN generation job (if that model was (re)generated this run)
         if "arena_hard_judgment" in selected_tasks:
             arena_judg_check = lambda m: _is_arena_hard_judgment_completed(m, judge_logical, args.baseline)
-            submit_filtered(
+            submit_filtered_per_model(
                 "Arena-Hard judgment",
                 arena_judg_check,
-                lambda tmp: run(
+                arena_gen_job_id_by_model,
+                lambda tmp, dep_job_id: run(
                     "Arena-Hard judgment (automate_arena_hard_judgment_alpha)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_judgment_alpha.py",
@@ -531,12 +560,12 @@ def main() -> None:
                      "--judge-model", args.judge_model,
                      "--tensor-parallel-size", judge_tp]
                     + auto_flag
-                    + (["--dependency", _dependency_str(arena_gen_job_ids)] if arena_gen_job_ids else []),
+                    + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
             )
 
-        # 2. AlpacaEval generation → capture job IDs for dependency chaining
-        alpaca_gen_job_ids: list[str] = []
+        # 2. AlpacaEval generation → capture per-model job IDs for dependency chaining
+        alpaca_gen_job_id_by_model: dict[str, str] = {}
         if "alpaca_eval_generation" in selected_tasks:
             alpaca_gen_pending, alpaca_gen_completed = _partition(all_models, _is_alpaca_eval_completed)
             _print_completion_summary("AlpacaEval generation", alpaca_gen_completed, alpaca_gen_pending)
@@ -544,11 +573,12 @@ def main() -> None:
                 tmp = _write_temp_models(alpaca_gen_pending, "AlpacaEval generation")
                 temp_files.append(tmp)
                 if args.submit:
-                    alpaca_gen_job_ids = _run_capturing(
+                    alpaca_gen_job_id_by_model = _run_capturing_with_models(
                         "AlpacaEval generation (automate_alpaca_eval_alpha)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval_alpha.py",
                         ["--models-file", tmp, "--submit"],
+                        script_prefix="run_alpaca_eval_generation_",
                     )
                 else:
                     run(
@@ -560,12 +590,14 @@ def main() -> None:
             else:
                 print("  -> All models already done for AlpacaEval generation, skipping.")
 
-        # 2b. AlpacaEval judgment — only for models missing judgment, depends on new gen jobs
+        # 2b. AlpacaEval judgment — only for models missing judgment, each depends
+        # only on its OWN generation job (if that model was (re)generated this run)
         if "alpaca_eval_judgment" in selected_tasks:
-            submit_filtered(
+            submit_filtered_per_model(
                 "AlpacaEval judgment",
                 _is_alpaca_eval_judgment_completed,
-                lambda tmp: run(
+                alpaca_gen_job_id_by_model,
+                lambda tmp, dep_job_id: run(
                     "AlpacaEval judgment (automate_alpaca_eval_judgment_alpha)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_judgment_alpha.py",
@@ -573,7 +605,7 @@ def main() -> None:
                      "--judge-model", args.judge_model,
                      "--tensor-parallel-size", judge_tp]
                     + auto_flag
-                    + (["--dependency", _dependency_str(alpaca_gen_job_ids)] if alpaca_gen_job_ids else []),
+                    + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
             )
 
@@ -624,15 +656,16 @@ def main() -> None:
             Path(f).unlink(missing_ok=True)
 
     else:
-        # 1. Arena-Hard generation → capture job IDs when submitting
-        arena_gen_job_ids: list[str] = []
+        # 1. Arena-Hard generation → capture per-model job IDs when submitting
+        arena_gen_job_id_by_model: dict[str, str] = {}
         if "arena_hard_generation" in selected_tasks:
             if args.submit:
-                arena_gen_job_ids = _run_capturing(
+                arena_gen_job_id_by_model = _run_capturing_with_models(
                     "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_alpha.py",
                     ["--models-file", models_file, "--submit"],
+                    script_prefix="run_arena_hard_",
                 )
             else:
                 run(
@@ -642,28 +675,35 @@ def main() -> None:
                     ["--models-file", models_file] + auto_flag,
                 )
 
-        # 1b. Arena-Hard judgment — depends on generation jobs
+        # 1b. Arena-Hard judgment — one job per model, each depending only on
+        # that model's own generation job (not the whole batch's)
         if "arena_hard_judgment" in selected_tasks:
-            arena_judg_extra = ["--dependency", _dependency_str(arena_gen_job_ids)] if arena_gen_job_ids else []
-            run(
-                "Arena-Hard judgment (automate_arena_hard_judgment_alpha)",
-                VENV_ARENA,
-                SCRIPTS / "automate_arena_hard_judgment_alpha.py",
-                ["--models-file", models_file,
-                 "--baseline", args.baseline,
-                 "--judge-model", args.judge_model,
-                 "--tensor-parallel-size", judge_tp] + auto_flag + arena_judg_extra,
-            )
+            judgment_models = _read_models(models_file)
+            for model in judgment_models:
+                tmp = _write_temp_models([model], f"Arena-Hard judgment:{model}")
+                dep_job_id = arena_gen_job_id_by_model.get(model)
+                arena_judg_extra = ["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []
+                run(
+                    "Arena-Hard judgment (automate_arena_hard_judgment_alpha)",
+                    VENV_ARENA,
+                    SCRIPTS / "automate_arena_hard_judgment_alpha.py",
+                    ["--models-file", tmp,
+                     "--baseline", args.baseline,
+                     "--judge-model", args.judge_model,
+                     "--tensor-parallel-size", judge_tp] + auto_flag + arena_judg_extra,
+                )
+                Path(tmp).unlink(missing_ok=True)
 
-        # 2. AlpacaEval generation → capture job IDs when submitting
-        alpaca_gen_job_ids: list[str] = []
+        # 2. AlpacaEval generation → capture per-model job IDs when submitting
+        alpaca_gen_job_id_by_model: dict[str, str] = {}
         if "alpaca_eval_generation" in selected_tasks:
             if args.submit:
-                alpaca_gen_job_ids = _run_capturing(
+                alpaca_gen_job_id_by_model = _run_capturing_with_models(
                     "AlpacaEval generation (automate_alpaca_eval_alpha)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_alpha.py",
                     ["--models-file", models_file, "--submit"],
+                    script_prefix="run_alpaca_eval_generation_",
                 )
             else:
                 run(
@@ -673,17 +713,23 @@ def main() -> None:
                     ["--models-file", models_file] + auto_flag,
                 )
 
-        # 2b. AlpacaEval judgment — depends on generation jobs
+        # 2b. AlpacaEval judgment — one job per model, each depending only on
+        # that model's own generation job (not the whole batch's)
         if "alpaca_eval_judgment" in selected_tasks:
-            alpaca_judg_extra = ["--dependency", _dependency_str(alpaca_gen_job_ids)] if alpaca_gen_job_ids else []
-            run(
-                "AlpacaEval judgment (automate_alpaca_eval_judgment_alpha)",
-                VENV_ALPACA,
-                SCRIPTS / "automate_alpaca_eval_judgment_alpha.py",
-                ["--models-file", models_file,
-                 "--judge-model", args.judge_model,
-                 "--tensor-parallel-size", judge_tp] + auto_flag + alpaca_judg_extra,
-            )
+            judgment_models = _read_models(models_file)
+            for model in judgment_models:
+                tmp = _write_temp_models([model], f"AlpacaEval judgment:{model}")
+                dep_job_id = alpaca_gen_job_id_by_model.get(model)
+                alpaca_judg_extra = ["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []
+                run(
+                    "AlpacaEval judgment (automate_alpaca_eval_judgment_alpha)",
+                    VENV_ALPACA,
+                    SCRIPTS / "automate_alpaca_eval_judgment_alpha.py",
+                    ["--models-file", tmp,
+                     "--judge-model", args.judge_model,
+                     "--tensor-parallel-size", judge_tp] + auto_flag + alpaca_judg_extra,
+                )
+                Path(tmp).unlink(missing_ok=True)
 
         # 3. MT-Bench / JudgeArena
         if "mtbench" in selected_tasks:

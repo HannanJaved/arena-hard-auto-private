@@ -209,6 +209,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --time=05:00:00
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
+#SBATCH --account=p_neurasearch
 
 set -e
 
