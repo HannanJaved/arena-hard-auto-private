@@ -304,10 +304,11 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=16G
-#SBATCH --time=03:00:00
+#SBATCH --mem=48G
+#SBATCH --time=07:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
+#SBATCH --account=p_neurasearch
 
 # Exit on any error
 set -e

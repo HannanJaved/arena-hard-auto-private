@@ -148,6 +148,7 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
 #SBATCH --time=01:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
+#SBATCH --account=p_neurasearch
 
 set -e
 
