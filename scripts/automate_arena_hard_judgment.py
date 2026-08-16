@@ -310,7 +310,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=48G
-#SBATCH --time=07:00:00
+#SBATCH --time=03:00:00
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --account=p_neurasearch
@@ -438,7 +438,7 @@ $PYTHON_EXEC {ARENA_HARD_AUTO_DIR}/gen_judgment.py \\
     --endpoint-file "$ENDPOINT_FILE"
 
 echo "Judgment generation complete. Killing judge server (PID: $JUDGE_PID)..."
-kill $JUDGE_PID
+kill $JUDGE_PID 2>/dev/null || true
 sleep 10
 
 echo "Judgment job completed successfully for models: {', '.join(models_to_judge)}"
