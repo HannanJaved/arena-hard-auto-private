@@ -41,13 +41,13 @@ BASELINE_CONFIGS = {
 DEFAULT_BASELINE = "instruct"
 
 # Qwen3-Next judge server (capella, TP=1): lower concurrency avoids GDN/MoE deadlocks.
-# Was 8 (dropped from 512 on 2026-08-12 after a deadlock), then 16, now 32 as of
-# 2026-08-16 (untested at this value) alongside dropping --enforce-eager to let vLLM
-# use CUDA graphs, since throughput was pinned at ~115-120 tok/s regardless of
-# concurrency/model with GPU KV-cache usage stuck under 16% - a sign of fixed
-# per-step eager-mode overhead rather than a compute/memory bound. Test on a single
-# job before trusting this for the full sweep; watch for renewed deadlocks/hangs.
-DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 32
+# Was 8 (dropped from 512 on 2026-08-12 after a deadlock), then 16, then 32 (tested
+# clean on job 3915363 on 2026-08-16 alongside dropping --enforce-eager: completed in
+# 16min vs 3.5-4.5+hrs before, peak GPU KV-cache usage 72.5%). Now 40 (untested at
+# this value) - peak usage at 32 implied a ceiling around ~44 concurrent for this
+# workload, so 40 keeps some margin. Test on a single job before trusting this for
+# the full sweep; watch for renewed deadlocks/hangs.
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 40
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
 DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
 DEFAULT_JUDGE_READY_MAX_WAIT = 4200
