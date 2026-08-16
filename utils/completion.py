@@ -295,13 +295,14 @@ def chat_completion_openai(model, messages, temperature, max_tokens, api_dict=No
         client = openai.OpenAI(
             base_url=api_dict["api_base"],
             api_key=api_dict["api_key"],
+            timeout=1200,
         )
     else:
-        client = openai.OpenAI()
-        
+        client = openai.OpenAI(timeout=1200)
+
     if api_dict and "model_name" in api_dict:
         model = api_dict["model_name"]
-    
+
     output = API_ERROR_OUTPUT
     for _ in range(API_MAX_RETRY):
         try:
@@ -318,13 +319,18 @@ def chat_completion_openai(model, messages, temperature, max_tokens, api_dict=No
         except openai.RateLimitError as e:
             print(type(e), e)
             time.sleep(API_RETRY_SLEEP)
+        except (openai.APITimeoutError, openai.APIConnectionError) as e:
+            # Local vLLM judge server queues requests under load (max-num-seqs cap);
+            # a slow-but-alive server should not crash the whole judgment run.
+            print(type(e), e)
+            time.sleep(API_RETRY_SLEEP)
         except openai.BadRequestError as e:
             print(messages)
             print(type(e), e)
         except KeyError:
             print(type(e), e)
             break
-    
+
     return output
 
 

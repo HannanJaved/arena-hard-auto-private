@@ -41,9 +41,14 @@ BASELINE_CONFIGS = {
 DEFAULT_BASELINE = "instruct"
 
 # Qwen3-Next judge server (capella, TP=1): lower concurrency avoids GDN/MoE deadlocks.
-DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 8
+# Was 8 (dropped from 512 on 2026-08-12 after a deadlock), then 16, now 32 as of
+# 2026-08-16 (untested at this value) alongside dropping --enforce-eager to let vLLM
+# use CUDA graphs, since throughput was pinned at ~115-120 tok/s regardless of
+# concurrency/model with GPU KV-cache usage stuck under 16% - a sign of fixed
+# per-step eager-mode overhead rather than a compute/memory bound. Test on a single
+# job before trusting this for the full sweep; watch for renewed deadlocks/hangs.
+DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 32
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
-DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
 DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
 DEFAULT_JUDGE_READY_MAX_WAIT = 4200
 
@@ -380,8 +385,6 @@ CUDA_VISIBLE_DEVICES=0 $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --max-num-batched-tokens {DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS} \\
     --gpu-memory-utilization 0.95 \\
     --gdn-prefill-backend triton \\
-    --enforce-eager \\
-    --compilation-config '{{"cudagraph_mode": "{DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}"}}' \\
     $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
