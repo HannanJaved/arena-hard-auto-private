@@ -104,6 +104,8 @@ ALL_TASK_IDS = set(AUTOMATION_TASKS + STATIC_TASKS + list(TASK_GROUPS.keys()))
 LM_EVAL_LOG_DIR     = WORKSPACE / "logs" / "LM-eval"
 ARENA_HARD_ANS_DIR      = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_answer"
 ARENA_HARD_JUDGMENT_DIR = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_judgment"
+# Arena-Hard v2.0 has 750 questions; a judgment jsonl is complete only at this size.
+ARENA_HARD_EXPECTED_JUDGMENTS = 750
 ALPACA_EVAL_OUT_DIR = WORKSPACE / "alpaca_eval_outputs"
 MTBENCH_RESULT_DIR  = WORKSPACE / "evaluation_results" / "judgearena-mtbench"
 ELO_RESULT_DIR      = WORKSPACE / "evaluation_results" / "openjury-elo"
@@ -282,12 +284,25 @@ def _is_arena_hard_completed(model_name: str) -> bool:
     return any(ARENA_HARD_ANS_DIR.rglob(f"{model_name}.jsonl"))
 
 
+def _count_jsonl_lines(path: Path) -> int:
+    try:
+        with open(path, "rb") as fh:
+            return sum(1 for _ in fh)
+    except OSError:
+        return 0
+
+
 def _is_arena_hard_judgment_completed(model_name: str, judge_model: str, baseline: str) -> bool:
-    # Judgment files land in model_judgment/{judge_model}/compared_with_{baseline}/{model}.jsonl,
-    # but directory placement isn't trustworthy on its own (files can be moved/renamed), so
-    # confirm the "baseline" field recorded inside the judgment file matches the requested baseline.
+    # Judgment files land under model_judgment/{judge}/…/compared_with_{baseline}/{model}.jsonl
+    # (including ICLR/ subdirs). File presence alone is not enough — incomplete runs leave
+    # truncated jsonl files, so require a full Arena-Hard v2.0 set (750 lines) and a matching
+    # baseline field in the first record.
     judge_dir = ARENA_HARD_JUDGMENT_DIR / judge_model
+    if not judge_dir.exists():
+        return False
     for path in judge_dir.rglob(f"{model_name}.jsonl"):
+        if _count_jsonl_lines(path) < ARENA_HARD_EXPECTED_JUDGMENTS:
+            continue
         try:
             with open(path) as fh:
                 first_line = fh.readline()
@@ -543,7 +558,9 @@ def main() -> None:
         action="store_true",
         help=(
             "Check output files / logs before each task and skip models that are already done. "
-            "Arena-hard: checks model_answer/{model}.jsonl. "
+            "Arena-hard generation: checks model_answer/{model}.jsonl. "
+            "Arena-hard judgment: requires ≥750 lines under "
+            "model_judgment/{judge}/**/{model}.jsonl (incl. ICLR/) with matching baseline. "
             "Alpaca-eval: checks alpaca_eval_outputs/{model}/model_outputs.json. "
             "MT-Bench: scans evaluation_results/judgearena-mtbench/**/results-*.json for model_A match. "
             "ELO: scans evaluation_results/openjury-elo/**/summary.json for model match. "

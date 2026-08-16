@@ -18,6 +18,76 @@ from utils.completion import (
 from utils.judge_utils import JUDGE_SETTINGS
 
 
+def _judgment_baseline_matches(path, baseline_name):
+    """Return True if the first jsonl record's baseline matches baseline_name."""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            first = fh.readline()
+        if not first.strip():
+            return True
+        return json.loads(first).get("baseline") == baseline_name
+    except (OSError, json.JSONDecodeError):
+        return False
+
+
+def resolve_judgment_output_file(judge_dir, model, baseline_name):
+    """Prefer an existing judgment jsonl (ICLR/compared_with_* first); else write under ICLR.
+
+    Incomplete files under ICLR/compared_with_{baseline}/{model}.jsonl are reused so
+    gen_judgment appends in place instead of creating a sibling at the judge root.
+    """
+    default_path = os.path.join(
+        judge_dir, "ICLR", f"compared_with_{baseline_name}", f"{model}.jsonl"
+    )
+    candidates = []
+    if os.path.isdir(judge_dir):
+        target_name = f"{model}.jsonl"
+        for root, _dirs, files in os.walk(judge_dir):
+            if target_name not in files:
+                continue
+            path = os.path.join(root, target_name)
+            if not _judgment_baseline_matches(path, baseline_name):
+                continue
+            rel = os.path.relpath(path, judge_dir)
+            # Prefer ICLR/compared_with_{baseline}, then compared_with_{baseline}, then others.
+            if rel.startswith(os.path.join("ICLR", f"compared_with_{baseline_name}")):
+                rank = 0
+            elif rel.startswith(f"compared_with_{baseline_name}"):
+                rank = 1
+            elif os.path.dirname(rel) == "":
+                rank = 3  # flat under judge dir
+            else:
+                rank = 2
+            candidates.append((rank, path))
+    if candidates:
+        candidates.sort(key=lambda item: item[0])
+        return candidates[0][1]
+    return default_path
+
+
+def load_existing_judgments_for_files(output_files):
+    """Load uid→record maps for each model's resolved judgment file."""
+    existing = {}
+    for model, path in output_files.items():
+        if not os.path.isfile(path):
+            continue
+        by_uid = {}
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                uid = row.get("uid")
+                if uid is not None:
+                    by_uid[uid] = row
+        existing[model] = by_uid
+    return existing
+
+
 def get_score(judgment, patterns):
     import re
     for pattern in patterns:
@@ -144,7 +214,7 @@ if __name__ == "__main__":
         ref_answers = None
     
     output_files = {}
-    output_dir = f"data/{configs['bench_name']}/model_judgment/{configs['judge_model']}"
+    judge_dir = f"data/{configs['bench_name']}/model_judgment/{configs['judge_model']}"
     # Resolve baseline from config (string or per-category dict)
     baseline_config = configs.get("baseline")
 
@@ -153,16 +223,24 @@ if __name__ == "__main__":
             return baseline_config.get(category)
         return baseline_config
 
+    # Use a stable baseline label for output paths (string baseline, or first dict value).
+    if isinstance(baseline_config, dict):
+        baseline_label = next(iter(baseline_config.values()), None)
+    else:
+        baseline_label = baseline_config
+    if not baseline_label:
+        raise ValueError("Baseline must be set in the judgment setting file.")
+
     for model in models:
-        output_files[model] = os.path.join(
-            output_dir,
-            f"{model}.jsonl",
+        output_files[model] = resolve_judgment_output_file(
+            judge_dir, model, baseline_label
         )
+        print(f"Judgment output for {model}: {output_files[model]}")
 
     for output_file in output_files.values():
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-    existing_judgments = load_model_answers(output_dir)
+    existing_judgments = load_existing_judgments_for_files(output_files)
 
     endpoint_settings = endpoint_list[configs["judge_model"]]
 

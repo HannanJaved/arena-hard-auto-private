@@ -442,14 +442,26 @@ echo "Judgment job completed successfully for models: {', '.join(models_to_judge
 
 # Display summary of generated judgments
 echo "--- Judgment Summary ---"
-JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/compared_with_{baseline_name}"
+JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/ICLR/compared_with_{baseline_name}"
+LEGACY_JUDGMENT_DIR="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}/compared_with_{baseline_name}"
+JUDGE_ROOT="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/{judge_model}"
 mkdir -p "$JUDGMENT_DIR"
-# Move generated judgment files to JUDGMENT_DIR
+# gen_judgment.py writes/appends under ICLR/compared_with_* when possible.
+# Move any leftover flat files (legacy path) into the ICLR destination without clobbering.
 for model in {' '.join(models_to_judge)}; do
-    src_file="{ARENA_HARD_AUTO_DIR}/data/arena-hard-v2.0/model_judgment/$model.jsonl"
-    if [ -f "$src_file" ]; then
-        mv "$src_file" "$JUDGMENT_DIR/"
-    fi
+    dest_file="$JUDGMENT_DIR/$model.jsonl"
+    for src_file in \\
+        "$JUDGE_ROOT/$model.jsonl" \\
+        "$LEGACY_JUDGMENT_DIR/$model.jsonl"
+    do
+        if [ -f "$src_file" ] && [ "$(realpath "$src_file")" != "$(realpath -m "$dest_file")" ]; then
+            if [ -f "$dest_file" ]; then
+                echo "WARNING: leftover $src_file exists alongside $dest_file; leaving both in place"
+            else
+                mv "$src_file" "$dest_file"
+            fi
+        fi
+    done
 done
 if [ -d "$JUDGMENT_DIR" ]; then
     echo "Generated judgment files:"
