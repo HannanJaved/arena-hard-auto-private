@@ -620,6 +620,7 @@ def main() -> None:
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", tmp, "--baseline-model", args.baseline,
+                     "--judge", args.judge_model,
                      "--judge-server-tp", judge_tp] + mtbench_flag,
                 ),
             )
@@ -633,7 +634,8 @@ def main() -> None:
                     "ELO estimation (automate_elo_estimation_alpha)",
                     VENV_OPENJURY,
                     WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation_alpha.py",
-                    ["--models-file", tmp, "--judge-tp-size", judge_tp] + auto_flag,
+                    ["--models-file", tmp, "--judge", args.judge_model,
+                     "--judge-tp-size", judge_tp] + auto_flag,
                 ),
             )
 
@@ -739,6 +741,7 @@ def main() -> None:
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", models_file, "--baseline-model", args.baseline,
+                     "--judge", args.judge_model,
                      "--judge-server-tp", judge_tp, "--rerun-all"] + auto_flag,
                 )
             else:
@@ -747,6 +750,7 @@ def main() -> None:
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", models_file, "--baseline-model", args.baseline,
+                     "--judge", args.judge_model,
                      "--judge-server-tp", judge_tp, "--skip-existing"] + auto_flag,
                 )
 
@@ -756,7 +760,8 @@ def main() -> None:
                 "ELO estimation (automate_elo_estimation_alpha)",
                 VENV_OPENJURY,
                 WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation_alpha.py",
-                ["--models-file", models_file, "--judge-tp-size", judge_tp] + auto_flag,
+                ["--models-file", models_file, "--judge", args.judge_model,
+                 "--judge-tp-size", judge_tp] + auto_flag,
             )
 
         # 5. Static evals

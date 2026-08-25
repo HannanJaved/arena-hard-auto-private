@@ -38,6 +38,7 @@ SBATCH_HEADER = """\
 #SBATCH --mem={mem}
 #SBATCH --time={time}
 #SBATCH --partition={partition}
+#SBATCH --account=p_neurasearch
 {exclusive}
 
 """
@@ -60,7 +61,7 @@ pwd -P
 mkdir -p {output_dir}
 
 export CMD="lm_eval --model hf \
-    --model_args pretrained={model_path},dtype=\"{dtype}\" \
+    --model_args pretrained={model_path},dtype=\"{dtype}\",attn_implementation={attn_implementation} \
     --tasks hellaswag \
     --num_fewshot 10 \
     --batch_size {batch_size} \
@@ -91,13 +92,17 @@ pwd -P
 mkdir -p {output_dir}
 
 NPROC_PER_NODE=$(nvidia-smi -L | wc -l)
-TOTAL_BATCH_SIZE=$((NPROC_PER_NODE*{batch_size}))
+if [ "{batch_size}" = "auto" ]; then
+    BATCH_SIZE_ARG="auto"
+else
+    BATCH_SIZE_ARG=$((NPROC_PER_NODE*{batch_size}))
+fi
 
 export CMD="lm_eval --model hf \
-    --model_args pretrained={model_path},dtype=\"{dtype}\" \
+    --model_args pretrained={model_path},dtype=\"{dtype}\",attn_implementation={attn_implementation} \
     --tasks hellaswag \
     --num_fewshot 10 \
-    --batch_size $TOTAL_BATCH_SIZE \
+    --batch_size $BATCH_SIZE_ARG \
     --output_path {output_dir}"
 
 SRUN_ARGS=" \
@@ -120,13 +125,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models-file", required=True, help="Path to text file with model names.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", default="hellaswag_", help="Prefix for Slurm job name.")
-    parser.add_argument("--batch-size", type=int, default=16, help="Batch size per GPU for lm_eval.")
+    parser.add_argument("--batch-size", default="auto", help="Batch size per GPU for lm_eval (int, or 'auto'/'auto:N').")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
+    parser.add_argument("--attn-implementation", default="sdpa", help="attn_implementation passed to lm_eval model_args. 'sdpa' needs no extra package; use 'flash_attention_2' only once flash-attn is installed in venv-lm-eval.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
     parser.add_argument("--time", default="03:00:00", help="Slurm wall time.")
     parser.add_argument("--gres", default="gpu:1", help="Slurm gres.")
     parser.add_argument("--cpus-per-task", type=int, default=4, help="Slurm CPUs per task.")
-    parser.add_argument("--mem", default="16G", help="Slurm memory.")
+    parser.add_argument("--mem", default="32G", help="Slurm memory.")
     parser.add_argument("--exclusive", action="store_true", help="Request exclusive node.")
     parser.add_argument("--no-exclusive", dest="exclusive", action="store_false")
     parser.set_defaults(exclusive=False)
@@ -196,6 +202,7 @@ def build_sbatch_script(
             lm_eval_dir=args.lm_eval_dir,
             model_path=model_path,
             dtype=args.dtype,
+            attn_implementation=args.attn_implementation,
             batch_size=args.batch_size,
             output_dir=args.output_dir,
         )
@@ -208,6 +215,7 @@ def build_sbatch_script(
             lm_eval_dir=args.lm_eval_dir,
             model_path=model_path,
             dtype=args.dtype,
+            attn_implementation=args.attn_implementation,
             batch_size=args.batch_size,
             output_dir=args.output_dir,
         )
