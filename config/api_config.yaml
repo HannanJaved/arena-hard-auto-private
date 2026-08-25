@@ -8081,6 +8081,37 @@ qwen3-4b-dpo-bo19:
   max_tokens: 4096
   temperature: 0.0
 
+###### BO-Comp for Qwen3-4B: best BO trials re-run from assistant_only_loss SFT ######
+qwen3-4b-dpo-bo07-ao:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-BO-Comp/trial007_Beta0.0126_LR1.22e-05-Qwen3-4B-SFT-LR3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8200/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo14-ao:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-BO-Comp/trial014_Beta0.0163_LR2.46e-05-Qwen3-4B-SFT-LR3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8201/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+qwen3-4b-dpo-bo16-ao:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-BO-Comp/trial016_Beta0.0563_LR4.76e-05-Qwen3-4B-SFT-LR3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8202/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
 ###### BO for Qwen3-0.6B ######
 qwen3-0.6b-dpo-bo00:
   model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-0.6B-Base/SFT-sweep/Qwen3-0.6B-DPO-BO-trial000-b0.9701-lr3.05e-05
