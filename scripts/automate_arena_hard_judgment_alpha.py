@@ -16,6 +16,7 @@ Judge chat template is taken from the judge checkpoint dir
 """
 
 import os
+import uuid
 import yaml
 import argparse
 import subprocess
@@ -666,13 +667,20 @@ def main():
 
     print(f"\\nCreating {len(model_batches)} judgment batches (batch size: {args.batch_size})")
 
+    # Unique per invocation: submit_evals_alpha.py calls this script once per
+    # model, so a plain batch_idx-based filename collides across concurrent
+    # invocations (all compute batch_idx=0) and lets a later invocation's
+    # config silently clobber an earlier, already-submitted job's config
+    # before it runs -- the earlier job then judges the wrong model(s).
+    run_token = uuid.uuid4().hex[:8]
+
     # Generate scripts and configs for each batch
     job_scripts = []
     for batch_idx, model_batch in enumerate(model_batches):
         print(f"\\nProcessing batch {batch_idx + 1}/{len(model_batches)} ({len(model_batch)} models)...")
 
         # Create judgment config file
-        config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}.yaml"
+        config_filename = f"arena_hard_judgment_batch_{batch_idx + 1}_{run_token}.yaml"
         config_path = f"{CONFIGS_DIR}/{config_filename}"
         # Weight path from FS alias key (-quokka/-cat/...); results use canonical model_name.
         judge_key = args.judge_model or JUDGE_MODEL
@@ -682,7 +690,7 @@ def main():
         print(f"  Created config: {config_path}")
 
         # Create SLURM script
-        script_filename = f"run_arena_hard_judgment_alpha_batch_{batch_idx + 1}.sh"
+        script_filename = f"run_arena_hard_judgment_alpha_batch_{batch_idx + 1}_{run_token}.sh"
         script_path = f"{SCRIPTS_DIR}/{script_filename}"
         # Unique port per batch (8001, 8002, ...) so concurrent node reuse
         # can't collide on the shared api_config :8000 default.
