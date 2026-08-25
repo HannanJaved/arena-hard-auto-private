@@ -159,6 +159,7 @@ source {WORKSPACE_ROOT}/venv-alpacaeval/bin/activate
 PYTHON_EXEC={WORKSPACE_ROOT}/venv-alpacaeval/bin/python
 VLLM_EXEC={WORKSPACE_ROOT}/arena-hard-auto/venv/bin/python
 module load CUDA
+source {WORKSPACE_ROOT}/cache.sh
 
 MODEL_PORT={model_port}
 OPENAI_CONFIG_FILE={config_file}
@@ -266,7 +267,12 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--batch-size", type=int, default=None)
-    parser.add_argument("--num-procs", type=int, default=None)
+    parser.add_argument(
+        "--num-procs", type=int, default=32,
+        help="Concurrent completions requests against the vLLM server (alpaca_eval's "
+             "OPENAI_MAX_CONCURRENCY otherwise defaults to 5, which leaves the server "
+             "mostly idle). Default: 32.",
+    )
     parser.add_argument("--requires-chatml", action="store_true")
     parser.add_argument("--max-instances", type=int, default=None)
     parser.add_argument("--chat-template", default=DEFAULT_CHAT_TEMPLATE)

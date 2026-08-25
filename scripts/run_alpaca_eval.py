@@ -56,7 +56,11 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--batch-size", type=int, default=None)
-    parser.add_argument("--num-procs", type=int, default=None)
+    parser.add_argument(
+        "--num-procs", type=int, default=32,
+        help="Concurrent completions requests (alpaca_eval's OPENAI_MAX_CONCURRENCY "
+             "otherwise defaults to 5). Default: 32.",
+    )
     parser.add_argument("--requires-chatml", action="store_true")
     parser.add_argument("--chatml-wrap", action="store_true", default=True)
     parser.add_argument("--max-instances", type=int, default=None)
