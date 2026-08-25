@@ -177,6 +177,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --mem=16G
 #SBATCH --time=03:00:00
 #SBATCH --partition=capella
+#SBATCH --exclude=c80,c81
 #SBATCH --gres=gpu:1
 #SBATCH --account=p_neurasearch
 

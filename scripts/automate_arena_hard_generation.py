@@ -161,6 +161,7 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000):
 #SBATCH --mem=32G                
 #SBATCH --time=04:00:00          
 #SBATCH --partition=capella
+#SBATCH --exclude=c80,c81
 #SBATCH --gres=gpu:1
 
 # Exit on any error
