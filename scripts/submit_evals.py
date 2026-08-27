@@ -43,8 +43,10 @@ CPU_PARTITIONS = {"romeo", "barnard"}
 GPU_PARTITIONS = {"alpha", "capella"}
 DEFAULT_CPU_PARTITION = "barnard"
 DEFAULT_GPU_PARTITION = "capella"
-DEFAULT_CPU_CPUS_PER_TASK = 32
-DEFAULT_CPU_MEM = "128G"
+# Barnard nodes: 104 cores/node (2 threads/core -> 208 logical CPUs), 500,000 MB/node.
+# Default to a quarter of a node so a job doesn't have to wait for a mostly-free node to start.
+DEFAULT_CPU_CPUS_PER_TASK = 52
+DEFAULT_CPU_MEM = "100G"
 CPU_TIME_MULTIPLIER = 10
 
 
@@ -426,6 +428,8 @@ def _static_submit_args(
     cpus_per_task: int | None,
     mem: str | None,
     time_override: str | None,
+    batch_size: str | None,
+    use_module_torch: bool,
     dry_run: bool,
 ) -> tuple[Path, list[str]]:
     """Build (script, args) for one static LM-eval task."""
@@ -438,11 +442,15 @@ def _static_submit_args(
         time_value = time_override or _scale_time(spec.time, CPU_TIME_MULTIPLIER)
         cpus = cpus_per_task if cpus_per_task is not None else DEFAULT_CPU_CPUS_PER_TASK
         memory = mem if mem is not None else DEFAULT_CPU_MEM
+        # "auto" makes lm_eval probe for the largest batch size that fits in the
+        # job's memory instead of guessing a fixed number (safest way to make use
+        # of --cpus-per-task/--mem without risking an OOM partway through).
+        batch = batch_size if batch_size is not None else "auto"
         args = [
             "--models-file", models_file,
             "--task", spec.lm_eval_task,
             "--num-fewshot", str(spec.num_fewshot),
-            "--batch-size", str(spec.batch_size),
+            "--batch-size", batch,
             "--job-name-prefix", f"{spec.key}_",
             "--output-dir", str(WORKSPACE / "evaluation_results" / spec.output_subdir),
             "--partition", partition or DEFAULT_CPU_PARTITION,
@@ -451,6 +459,8 @@ def _static_submit_args(
             "--mem", memory,
             "--time", time_value,
         ] + dry
+        if use_module_torch:
+            args.append("--use-module-torch")
         return SCRIPTS / "submit_lmeval_task_from_list.py", args
 
     args = ["--models-file", models_file] + dry
@@ -603,9 +613,35 @@ def main() -> None:
             f"For CPU jobs without this set, each task's default time is scaled by {CPU_TIME_MULTIPLIER}x."
         ),
     )
+    parser.add_argument(
+        "--batch-size",
+        help=(
+            "Batch size for static LM-eval tasks (CPU jobs only; GPU jobs use each "
+            "from_list script's own default). Accepts an int or lm_eval's 'auto' / "
+            "'auto:N' to probe for the largest batch that fits in --mem. "
+            "Default: 'auto' for CPU jobs."
+        ),
+    )
+    parser.add_argument(
+        "--use-module-torch",
+        action="store_true",
+        help=(
+            "CPU jobs only: use the cluster's module-provided PyTorch (venv-lm-eval-module) "
+            "instead of the pip-installed torch in venv-lm-eval. Avoids ~100s of import "
+            "latency per job from reading venv-lm-eval's large .so files off Lustre. "
+            "See submit_lmeval_task_from_list.py --use-module-torch for details."
+        ),
+    )
     args = parser.parse_args()
     selected_tasks = _resolve_tasks(args.tasks, args.evals)
     partition, is_cpu = _resolve_partition(args.cpu_only, args.partition)
+
+    if not is_cpu and (args.batch_size is not None or args.use_module_torch):
+        print(
+            "WARNING: --batch-size/--use-module-torch only apply to --cpu-only static jobs; "
+            "ignored for GPU tasks.",
+            file=sys.stderr,
+        )
 
     if is_cpu:
         dynamic_selected = sorted(t for t in selected_tasks if t in AUTOMATION_TASKS)
@@ -640,6 +676,8 @@ def main() -> None:
             cpus_per_task=args.cpus_per_task,
             mem=args.mem,
             time_override=args.time,
+            batch_size=args.batch_size,
+            use_module_torch=args.use_module_torch,
             dry_run=static_dry_run,
         )
         run(f"Static eval: {task}", VENV_LMEVAL, script, extra)

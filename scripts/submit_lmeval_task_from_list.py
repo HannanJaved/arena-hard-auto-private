@@ -213,7 +213,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num-fewshot", type=int, required=True, help="Number of few-shot examples.")
     parser.add_argument("--api-config", default=DEFAULT_API_CONFIG, help="Path to api_config.yaml.")
     parser.add_argument("--job-name-prefix", help="Prefix for Slurm job name (default: <task>_<num_fewshot>shot_).")
-    parser.add_argument("--batch-size", type=int, default=32, help="Batch size per GPU for lm_eval.")
+    parser.add_argument(
+        "--batch-size", type=str, default="32",
+        help="Batch size per GPU/CPU job for lm_eval. Accepts an int, or 'auto' / "
+             "'auto:N' to have lm_eval probe for the largest batch that fits in memory.",
+    )
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument(
         "--trust-remote-code", action="store_true",
@@ -378,6 +382,12 @@ def build_sbatch_script(
     elif args.gres == "gpu:1":
         body = SBATCH_BODY.format(**body_kwargs)
     else:
+        if not args.batch_size.isdigit():
+            raise ValueError(
+                f"--batch-size {args.batch_size!r} is not a plain integer; "
+                "the multi-GPU path multiplies it by NPROC_PER_NODE in shell arithmetic "
+                "and can't take 'auto'."
+            )
         body = SBATCH_BODY_MULTI_GPU.format(**body_kwargs)
 
     return f"{header}{body}"
