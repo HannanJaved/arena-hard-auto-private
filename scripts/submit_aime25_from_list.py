@@ -63,6 +63,7 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model hf \\
     --model_args pretrained={model_path},dtype=\\"{dtype}\\" \\
     --tasks aime25 \\
+    --apply_chat_template \\
     --batch_size {batch_size} \\
     --output_path {output_dir}"
 
@@ -105,6 +106,7 @@ TOTAL_BATCH_SIZE=$((NPROC_PER_NODE*{batch_size}))
 export CMD="lm_eval --model hf \\
     --model_args pretrained={model_path},dtype=\\"{dtype}\\" \\
     --tasks aime25 \\
+    --apply_chat_template \\
     --batch_size $TOTAL_BATCH_SIZE \\
     --output_path {output_dir}"
 

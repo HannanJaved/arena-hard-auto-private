@@ -87,6 +87,7 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
+    --apply_chat_template \
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --output_path {output_dir}"
@@ -132,6 +133,7 @@ export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
+    --apply_chat_template \
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --device cpu \
@@ -179,6 +181,7 @@ export PYTHONUNBUFFERED=1
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
+    --apply_chat_template \
     --num_fewshot {num_fewshot} \
     --batch_size $TOTAL_BATCH_SIZE \
     --output_path {output_dir}"

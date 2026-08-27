@@ -60,6 +60,12 @@ class StaticTaskSpec:
     batch_size: int
     time: str
     output_subdir: str
+    # Per-task override for CPU_TIME_MULTIPLIER. The flat 10x default was calibrated
+    # for the loglikelihood tasks (cheap forward passes); ifeval is the one
+    # generate_until task in this list (up to 1280 new tokens/example) and chaining
+    # a generous 4h GPU estimate with a blanket 10x produced an untested 40h ceiling.
+    # Use a smaller multiplier until we have real CPU wall-clock numbers to tune from.
+    cpu_time_multiplier: int | None = None
 
 
 # Defaults mirror submit_{task}_from_list.py single-GPU settings.
@@ -68,7 +74,7 @@ STATIC_TASK_SPECS: dict[str, StaticTaskSpec] = {
     "gpqa": StaticTaskSpec("gpqa", "gpqa_diamond_zeroshot", 0, 16, "01:00:00", "gpqa"),
     "gsm8k": StaticTaskSpec("gsm8k", "gsm8k", 5, 64, "03:00:00", "gsm8k"),
     "hellaswag": StaticTaskSpec("hellaswag", "hellaswag", 10, 16, "03:00:00", "hellaswag"),
-    "ifeval": StaticTaskSpec("ifeval", "ifeval", 0, 16, "04:00:00", "ifeval"),
+    "ifeval": StaticTaskSpec("ifeval", "ifeval", 0, 16, "04:00:00", "ifeval", cpu_time_multiplier=2),
     "piqa": StaticTaskSpec("piqa", "piqa", 0, 32, "01:00:00", "piqa"),
     "truthfulqa": StaticTaskSpec("truthfulqa", "truthfulqa_mc2", 0, 32, "01:00:00", "truthfulqa"),
 }
@@ -430,29 +436,52 @@ def _static_submit_args(
     time_override: str | None,
     batch_size: str | None,
     use_module_torch: bool,
+    output_root: str | None,
     dry_run: bool,
 ) -> tuple[Path, list[str]]:
     """Build (script, args) for one static LM-eval task."""
     dry = ["--dry-run"] if dry_run else []
+    # Every from_list script's own default output dir is WORKSPACE/evaluation_results/<task>;
+    # --output-root lets a whole submit_evals.py run land under a different root instead
+    # (e.g. to keep a comparison re-run from mixing into the production result dirs).
+    out_root = Path(output_root) if output_root is not None else WORKSPACE / "evaluation_results"
+    out_dir = out_root / task
 
     if is_cpu:
         # Dedicated from_list scripts are GPU-oriented (CUDA module / nvidia-smi).
         # Route CPU jobs through submit_lmeval_task_from_list.py which supports --device cpu.
         spec = STATIC_TASK_SPECS[task]
-        time_value = time_override or _scale_time(spec.time, CPU_TIME_MULTIPLIER)
+        multiplier = spec.cpu_time_multiplier if spec.cpu_time_multiplier is not None else CPU_TIME_MULTIPLIER
+        time_value = time_override or _scale_time(spec.time, multiplier)
         cpus = cpus_per_task if cpus_per_task is not None else DEFAULT_CPU_CPUS_PER_TASK
         memory = mem if mem is not None else DEFAULT_CPU_MEM
-        # "auto" makes lm_eval probe for the largest batch size that fits in the
-        # job's memory instead of guessing a fixed number (safest way to make use
-        # of --cpus-per-task/--mem without risking an OOM partway through).
-        batch = batch_size if batch_size is not None else "auto"
+        # NOTE: do NOT default this to "auto" for generate_until tasks (ifeval).
+        # lm_eval's _detect_batch_size() probes with a synthetic batch sized at
+        # the *model's full max_length* (e.g. 32768 for Qwen3), not the task's
+        # actual prompt length, when called with no request examples (which is
+        # how generate_until calls it). On GPU a bad guess dies fast with a clean
+        # CUDA OOM; on CPU there's no equivalent fast failure, so it can spend
+        # hours (or longer) running/thrashing on an absurd (batch=64, seq=32768)
+        # forward pass instead of backing off. Confirmed in practice: every
+        # ifeval CPU job submitted with batch_size=auto got stuck at 0% for
+        # 20+ hours. Use the per-task fixed default unless the caller explicitly
+        # opts into something else via --batch-size.
+        batch = batch_size if batch_size is not None else str(spec.batch_size)
+        if batch.startswith("auto") and task in ("ifeval", "gsm8k"):
+            print(
+                f"WARNING: --batch-size auto is known to hang {task} on CPU (both are "
+                "generate_until tasks; the auto-detector probes using the model's full "
+                "max_length, e.g. 32768, not the task's actual prompt length) -- see the "
+                "comment in _static_submit_args. Proceeding because you asked for it explicitly.",
+                file=sys.stderr,
+            )
         args = [
             "--models-file", models_file,
             "--task", spec.lm_eval_task,
             "--num-fewshot", str(spec.num_fewshot),
             "--batch-size", batch,
             "--job-name-prefix", f"{spec.key}_",
-            "--output-dir", str(WORKSPACE / "evaluation_results" / spec.output_subdir),
+            "--output-dir", str(out_dir),
             "--partition", partition or DEFAULT_CPU_PARTITION,
             "--gres", "none",
             "--cpus-per-task", str(cpus),
@@ -472,6 +501,8 @@ def _static_submit_args(
         args += ["--mem", mem]
     if time_override is not None:
         args += ["--time", time_override]
+    if output_root is not None:
+        args += ["--output-dir", str(out_dir)]
     return SCRIPTS / f"submit_{task}_from_list.py", args
 
 
@@ -632,6 +663,16 @@ def main() -> None:
             "See submit_lmeval_task_from_list.py --use-module-torch for details."
         ),
     )
+    parser.add_argument(
+        "--output-root",
+        help=(
+            "Root directory for static LM-eval results instead of "
+            f"'{WORKSPACE / 'evaluation_results'}'. Each task still gets its own "
+            "'<root>/<task>/' subdirectory. Useful for keeping a comparison re-run "
+            "(e.g. testing --apply_chat_template) from mixing into the production "
+            "result directories."
+        ),
+    )
     args = parser.parse_args()
     selected_tasks = _resolve_tasks(args.tasks, args.evals)
     partition, is_cpu = _resolve_partition(args.cpu_only, args.partition)
@@ -678,6 +719,7 @@ def main() -> None:
             time_override=args.time,
             batch_size=args.batch_size,
             use_module_torch=args.use_module_torch,
+            output_root=args.output_root,
             dry_run=static_dry_run,
         )
         run(f"Static eval: {task}", VENV_LMEVAL, script, extra)

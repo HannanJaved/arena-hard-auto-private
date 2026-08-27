@@ -465,6 +465,16 @@ def main() -> None:
             "LM-eval tasks: checks logs/LM-eval/{task}_{model}_*.out for 'END TIME:'."
         ),
     )
+    parser.add_argument(
+        "--output-root",
+        help=(
+            "Root directory for static LM-eval results instead of each "
+            "submit_{task}_from_list.py script's own default "
+            f"('{WORKSPACE / 'evaluation_results'}/<task>'). Each task still gets "
+            "its own '<root>/<task>/' subdirectory. Useful for keeping a comparison "
+            "re-run from mixing into the production result directories."
+        ),
+    )
     args = parser.parse_args()
     selected_tasks = _resolve_tasks(args.tasks, args.evals)
 
@@ -643,14 +653,15 @@ def main() -> None:
         for task in STATIC_TASKS:
             if task not in selected_tasks:
                 continue
+            task_flag = static_flag + (["--output-dir", str(Path(args.output_root) / task)] if args.output_root else [])
             submit_filtered(
                 task,
                 lambda m, t=task: _is_lmeval_completed(t, m),
-                lambda tmp, t=task: run(
+                lambda tmp, t=task, tf=task_flag: run(
                     f"Static eval: {t}",
                     VENV_LMEVAL,
                     SCRIPTS / f"submit_{t}_from_list.py",
-                    ["--models-file", tmp] + static_flag,
+                    ["--models-file", tmp] + tf,
                 ),
             )
 
@@ -768,11 +779,12 @@ def main() -> None:
         for task in STATIC_TASKS:
             if task not in selected_tasks:
                 continue
+            task_flag = static_flag + (["--output-dir", str(Path(args.output_root) / task)] if args.output_root else [])
             run(
                 f"Static eval: {task}",
                 VENV_LMEVAL,
                 SCRIPTS / f"submit_{task}_from_list.py",
-                ["--models-file", models_file] + static_flag,
+                ["--models-file", models_file] + task_flag,
             )
 
     print(f"\n{'='*60}")
