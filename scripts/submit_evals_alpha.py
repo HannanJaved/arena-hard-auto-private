@@ -349,6 +349,20 @@ def _is_elo_completed(model_name: str, api_config: dict) -> bool:
 # Partition helpers
 # ---------------------------------------------------------------------------
 
+def _static_output_dir(task: str, output_root: str | None) -> Path:
+    """Where a static task's results should land.
+
+    IFEval is a chat/instruction-following eval and is always scored through the
+    model's chat template (every other static task here is no-template for
+    comparability with prior/external numbers) -- so it always lands in the
+    dedicated chat-template result tree, regardless of --output-root, rather than
+    risking chat-template and no-template scores mixing in one directory.
+    """
+    if task == "ifeval":
+        return WORKSPACE / "evaluation_results_chat_template" / "ifeval"
+    return Path(output_root) / task if output_root else None
+
+
 def _partition(models: list[str], check_fn) -> tuple[list[str], list[str]]:
     pending, completed = [], []
     for m in models:
@@ -653,7 +667,8 @@ def main() -> None:
         for task in STATIC_TASKS:
             if task not in selected_tasks:
                 continue
-            task_flag = static_flag + (["--output-dir", str(Path(args.output_root) / task)] if args.output_root else [])
+            out_dir = _static_output_dir(task, args.output_root)
+            task_flag = static_flag + (["--output-dir", str(out_dir)] if out_dir else [])
             submit_filtered(
                 task,
                 lambda m, t=task: _is_lmeval_completed(t, m),
@@ -779,7 +794,8 @@ def main() -> None:
         for task in STATIC_TASKS:
             if task not in selected_tasks:
                 continue
-            task_flag = static_flag + (["--output-dir", str(Path(args.output_root) / task)] if args.output_root else [])
+            out_dir = _static_output_dir(task, args.output_root)
+            task_flag = static_flag + (["--output-dir", str(out_dir)] if out_dir else [])
             run(
                 f"Static eval: {task}",
                 VENV_LMEVAL,

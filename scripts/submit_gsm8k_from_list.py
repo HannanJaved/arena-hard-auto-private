@@ -67,7 +67,6 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model vllm \
     --model_args pretrained={model_path},dtype=\"{dtype}\",gpu_memory_utilization=0.9 \
     --tasks gsm8k \
-    --apply_chat_template \
     --num_fewshot 5 \
     --gen_kwargs max_new_tokens=1024 \
     --batch_size {batch_size} \
@@ -105,7 +104,6 @@ NPROC_PER_NODE=$(nvidia-smi -L | wc -l)
 export CMD="lm_eval --model vllm \
     --model_args pretrained={model_path},dtype=\"{dtype}\",gpu_memory_utilization=0.9,tensor_parallel_size=$NPROC_PER_NODE \
     --tasks gsm8k \
-    --apply_chat_template \
     --num_fewshot 5 \
     --gen_kwargs max_new_tokens=1024 \
     --batch_size {batch_size} \

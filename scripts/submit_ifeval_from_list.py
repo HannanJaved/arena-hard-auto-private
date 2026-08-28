@@ -25,7 +25,12 @@ DEFAULT_API_CONFIG = "/data/horse/ws/hama901h-BFTranslation/arena-hard-auto/conf
 DEFAULT_VENV_ACTIVATE = "/data/horse/ws/hama901h-BFTranslation/venv-vllm/bin/activate"
 DEFAULT_LM_EVAL_DIR = "/data/horse/ws/hama901h-BFTranslation/lm-evaluation-harness"
 DEFAULT_LOG_DIR = "/data/horse/ws/hama901h-BFTranslation/logs/LM-eval"
-DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results/ifeval"
+# IFEval is scored through the chat template (it's an instruction-following eval
+# meant to run in the assistant format), unlike the other static benchmarks, which
+# are scored no-template for comparability with prior/external numbers -- so it
+# gets its own result tree rather than sharing evaluation_results/ifeval, which
+# holds historical no-template runs.
+DEFAULT_OUTPUT_DIR = "/data/horse/ws/hama901h-BFTranslation/evaluation_results_chat_template/ifeval"
 DEFAULT_HF_HOME = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_HF_DATASETS_CACHE = "/data/horse/ws/hama901h-BFTranslation/.cache"
 DEFAULT_PYTHONPATH = "/data/horse/ws/hama901h-BFTranslation/venv-vllm/lib/python3.11/site-packages"

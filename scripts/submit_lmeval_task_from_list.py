@@ -87,7 +87,7 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    --apply_chat_template \
+    {chat_template_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --output_path {output_dir}"
@@ -133,7 +133,7 @@ export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    --apply_chat_template \
+    {chat_template_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --device cpu \
@@ -181,7 +181,7 @@ export PYTHONUNBUFFERED=1
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    --apply_chat_template \
+    {chat_template_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size $TOTAL_BATCH_SIZE \
     --output_path {output_dir}"
@@ -361,6 +361,10 @@ def build_sbatch_script(
         module_prelude = "" if cpu_only else "module load CUDA"
 
     model_args_extra = ",trust_remote_code=True" if args.trust_remote_code else ""
+    # ifeval is a chat/instruction-following eval and is always scored through the
+    # chat template; every other static task is scored no-template for comparability
+    # with prior/external numbers (see submit_evals.py's _static_submit_args).
+    chat_template_flag = "--apply_chat_template " if args.task == "ifeval" else ""
 
     body_kwargs = dict(
         venv_activate=venv_activate,
@@ -373,6 +377,7 @@ def build_sbatch_script(
         dtype=args.dtype,
         model_args_extra=model_args_extra,
         task=args.task,
+        chat_template_flag=chat_template_flag,
         num_fewshot=args.num_fewshot,
         batch_size=args.batch_size,
         output_dir=args.output_dir,
@@ -429,7 +434,12 @@ def main() -> int:
         _check_module_typing_extensions(pythonpath)
 
     if not args.output_dir:
-        args.output_dir = f"{DEFAULT_OUTPUT_ROOT}/{args.task}"
+        if args.task == "ifeval":
+            # Chat-template results, not the no-template default -- see the
+            # chat_template_flag comment in build_sbatch_script.
+            args.output_dir = f"{DEFAULT_OUTPUT_ROOT}_chat_template/{args.task}"
+        else:
+            args.output_dir = f"{DEFAULT_OUTPUT_ROOT}/{args.task}"
     if not args.job_name_prefix:
         args.job_name_prefix = f"{args.task}_{args.num_fewshot}shot_"
 

@@ -64,7 +64,6 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\",attn_implementation={attn_implementation} \
     --tasks hellaswag \
-    --apply_chat_template \
     --num_fewshot 10 \
     --batch_size {batch_size} \
     --output_path {output_dir}"
@@ -103,7 +102,6 @@ fi
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\",attn_implementation={attn_implementation} \
     --tasks hellaswag \
-    --apply_chat_template \
     --num_fewshot 10 \
     --batch_size $BATCH_SIZE_ARG \
     --output_path {output_dir}"

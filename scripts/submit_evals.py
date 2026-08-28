@@ -446,6 +446,13 @@ def _static_submit_args(
     # (e.g. to keep a comparison re-run from mixing into the production result dirs).
     out_root = Path(output_root) if output_root is not None else WORKSPACE / "evaluation_results"
     out_dir = out_root / task
+    if task == "ifeval":
+        # IFEval is a chat/instruction-following eval and is always scored through the
+        # model's chat template (every other static task here is no-template for
+        # comparability with prior/external numbers) -- so it always lands in the
+        # dedicated chat-template result tree, regardless of --output-root, rather
+        # than risking chat-template and no-template scores mixing in one directory.
+        out_dir = WORKSPACE / "evaluation_results_chat_template" / "ifeval"
 
     if is_cpu:
         # Dedicated from_list scripts are GPU-oriented (CUDA module / nvidia-smi).
@@ -501,7 +508,7 @@ def _static_submit_args(
         args += ["--mem", mem]
     if time_override is not None:
         args += ["--time", time_override]
-    if output_root is not None:
+    if output_root is not None or task == "ifeval":
         args += ["--output-dir", str(out_dir)]
     return SCRIPTS / f"submit_{task}_from_list.py", args
 
