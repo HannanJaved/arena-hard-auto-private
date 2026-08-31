@@ -88,7 +88,6 @@ EVAL_SUITES: dict[str, list[str]] = {
 
 ALL_TASK_IDS = set(AUTOMATION_TASKS + STATIC_TASKS + list(TASK_GROUPS.keys()))
 
-LM_EVAL_LOG_DIR     = WORKSPACE / "logs" / "LM-eval"
 ARENA_HARD_ANS_DIR      = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_answer"
 ARENA_HARD_JUDGMENT_DIR = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_judgment"
 ALPACA_EVAL_OUT_DIR = WORKSPACE / "alpaca_eval_outputs"
@@ -248,18 +247,37 @@ def _print_completion_summary(label: str, completed: list[str], pending: list[st
 # Per-task completion checks
 # ---------------------------------------------------------------------------
 
-def _lmeval_sanitize(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_.-]+", "_", name)[:128]
+def _flatten_path(path: str) -> str:
+    return path.replace("/", "__")
 
 
-def _is_lmeval_completed(task: str, model_name: str) -> bool:
-    prefix = f"{task}_{_lmeval_sanitize(model_name)}_"
-    for log_file in LM_EVAL_LOG_DIR.glob(f"{prefix}*.out"):
-        try:
-            if "END TIME:" in log_file.read_text(errors="replace"):
-                return True
-        except OSError:
-            pass
+def _lmeval_output_dir(task: str, output_root: str | None) -> Path:
+    """Where a static task's results actually land -- like _static_output_dir()
+    below, but always resolving to a concrete path (never None) so the
+    completion check has somewhere to look even when --output-root wasn't
+    passed and the underlying submit_{task}_from_list.py falls back to its
+    own default."""
+    if task == "ifeval":
+        return WORKSPACE / "evaluation_results_chat_template" / "ifeval"
+    out_root = Path(output_root) if output_root else WORKSPACE / "evaluation_results"
+    return out_root / task
+
+
+def _is_lmeval_completed(task: str, model_name: str, api_config: dict, output_root: str | None) -> bool:
+    """A task counts as done only if its results_*.json actually exists -- a SLURM
+    log showing "END TIME:" is NOT enough (a job can exit cleanly after crashing
+    inside the eval harness, or after a run predating the current output-dir
+    convention, without ever writing results). Checking the log alone previously
+    made --skip-completed silently drop IFEval for models that had a stale
+    "completed" log but no results anywhere -- see the incident this fixes."""
+    path = _model_path(api_config, model_name)
+    if not path:
+        return False
+    out_dir = _lmeval_output_dir(task, output_root)
+    for candidate in _model_path_aliases(path):
+        result_dir = out_dir / _flatten_path(candidate)
+        if any(result_dir.glob("results_*.json")):
+            return True
     return False
 
 
@@ -671,7 +689,7 @@ def main() -> None:
             task_flag = static_flag + (["--output-dir", str(out_dir)] if out_dir else [])
             submit_filtered(
                 task,
-                lambda m, t=task: _is_lmeval_completed(t, m),
+                lambda m, t=task: _is_lmeval_completed(t, m, api_config, args.output_root),
                 lambda tmp, t=task, tf=task_flag: run(
                     f"Static eval: {t}",
                     VENV_LMEVAL,
