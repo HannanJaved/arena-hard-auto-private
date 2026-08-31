@@ -90,6 +90,7 @@ ALL_TASK_IDS = set(AUTOMATION_TASKS + STATIC_TASKS + list(TASK_GROUPS.keys()))
 
 ARENA_HARD_ANS_DIR      = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_answer"
 ARENA_HARD_JUDGMENT_DIR = WORKSPACE / "arena-hard-auto" / "data" / "arena-hard-v2.0" / "model_judgment"
+ARENA_HARD_EXPECTED_JUDGMENTS = 750
 ALPACA_EVAL_OUT_DIR = WORKSPACE / "alpaca_eval_outputs"
 MTBENCH_RESULT_DIR  = WORKSPACE / "evaluation_results" / "judgearena-mtbench"
 ELO_RESULT_DIR      = WORKSPACE / "evaluation_results" / "openjury-elo"
@@ -287,12 +288,27 @@ def _is_arena_hard_completed(model_name: str) -> bool:
     return any(ARENA_HARD_ANS_DIR.rglob(f"{model_name}.jsonl"))
 
 
+def _count_jsonl_lines(path: Path) -> int:
+    try:
+        with open(path, "rb") as fh:
+            return sum(1 for _ in fh)
+    except OSError:
+        return 0
+
+
 def _is_arena_hard_judgment_completed(model_name: str, judge_model: str, baseline: str) -> bool:
     # Judgment files land in model_judgment/{judge_model}/compared_with_{baseline}/{model}.jsonl,
     # but directory placement isn't trustworthy on its own (files can be moved/renamed), so
     # confirm the "baseline" field recorded inside the judgment file matches the requested baseline.
+    # File presence (or even a matching first line) alone is NOT enough -- a killed/incomplete
+    # run leaves a truncated jsonl, so require a full Arena-Hard v2.0 set (750 lines) too. Missing
+    # this check previously made --skip-completed mark judgment runs with as few as 1 line "done".
     judge_dir = ARENA_HARD_JUDGMENT_DIR / judge_model
+    if not judge_dir.exists():
+        return False
     for path in judge_dir.rglob(f"{model_name}.jsonl"):
+        if _count_jsonl_lines(path) < ARENA_HARD_EXPECTED_JUDGMENTS:
+            continue
         try:
             with open(path) as fh:
                 first_line = fh.readline()

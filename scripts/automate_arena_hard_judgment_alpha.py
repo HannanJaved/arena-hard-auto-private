@@ -62,7 +62,12 @@ DEFAULT_TP_SIZE = 4
 DEFAULT_JUDGE_SERVER_PORT_BASE = 8001
 DEFAULT_JUDGE_SERVER_MAX_NUM_SEQS = 16
 DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS = 8192
-DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE = "NONE"
+# --enforce-eager / cudagraph_mode=NONE dropped 2026-08-31: automate_arena_hard_judgment.py
+# (capella, TP=1) proved dropping --enforce-eager for this same judge model gives a ~15x
+# speedup (16min vs 3.5-4.5+hrs, job 3915363 on 2026-08-16). UNTESTED at this script's TP=4 --
+# that fix's own history includes GDN/MoE deadlocks at high concurrency even at TP=1, and
+# CUDA-graph capture across a 4-way NCCL tensor-parallel group is more fragile than TP=1.
+# Test on a single job before trusting this for a full sweep; watch for hangs/deadlocks.
 # Keep a long readiness window: TP=4 + Lustre weight load often exceeds 60 min.
 DEFAULT_JUDGE_READY_MAX_WAIT = 5400
 
@@ -398,8 +403,6 @@ $PYTHON_EXEC -m vllm.entrypoints.openai.api_server \\
     --max-num-batched-tokens {DEFAULT_JUDGE_SERVER_MAX_NUM_BATCHED_TOKENS} \\
     --gpu-memory-utilization 0.90 \\
     --gdn-prefill-backend triton \\
-    --enforce-eager \\
-    --compilation-config '{{"cudagraph_mode": "{DEFAULT_JUDGE_SERVER_CUDAGRAPH_MODE}"}}' \\
     $CHAT_TEMPLATE_FLAG \\
     > "$SERVER_LOG_FILE" 2>&1 &
 JUDGE_PID=$!
