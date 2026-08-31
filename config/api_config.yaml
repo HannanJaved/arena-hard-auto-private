@@ -19116,3 +19116,3286 @@ dpo-qwen3-14b-sft-lr3e5-ao-lr8e7-beta0.04-step2000:
   parallel: 32
   max_tokens: 4096
   temperature: 0.0
+
+########## Llama-3.x SFT-Lr3e-5-AO (final + intermediate) ##########
+
+llama3.2-1b-sft-lr3e5-ao:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8203/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step3000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-3000
+  endpoints:
+  - api_base: http://localhost:8204/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step6000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-6000
+  endpoints:
+  - api_base: http://localhost:8205/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step9000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-9000
+  endpoints:
+  - api_base: http://localhost:8206/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step12000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-12000
+  endpoints:
+  - api_base: http://localhost:8207/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step15000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-15000
+  endpoints:
+  - api_base: http://localhost:8208/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step18000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-18000
+  endpoints:
+  - api_base: http://localhost:8209/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step21000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-21000
+  endpoints:
+  - api_base: http://localhost:8210/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step24000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-24000
+  endpoints:
+  - api_base: http://localhost:8211/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step27000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-27000
+  endpoints:
+  - api_base: http://localhost:8212/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-1b-sft-lr3e5-ao-step30000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/checkpoint-30000
+  endpoints:
+  - api_base: http://localhost:8213/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+llama3.2-3b-sft-lr3e5-ao:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8214/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step3000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-3000
+  endpoints:
+  - api_base: http://localhost:8215/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step6000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-6000
+  endpoints:
+  - api_base: http://localhost:8216/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step9000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-9000
+  endpoints:
+  - api_base: http://localhost:8217/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step12000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-12000
+  endpoints:
+  - api_base: http://localhost:8218/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step15000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-15000
+  endpoints:
+  - api_base: http://localhost:8219/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step18000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-18000
+  endpoints:
+  - api_base: http://localhost:8220/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step21000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-21000
+  endpoints:
+  - api_base: http://localhost:8221/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step24000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-24000
+  endpoints:
+  - api_base: http://localhost:8222/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step27000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-27000
+  endpoints:
+  - api_base: http://localhost:8223/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.2-3b-sft-lr3e5-ao-step30000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/checkpoint-30000
+  endpoints:
+  - api_base: http://localhost:8224/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+llama3.1-8b-sft-lr3e5-ao-step3000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-3000
+  endpoints:
+  - api_base: http://localhost:8225/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step6000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-6000
+  endpoints:
+  - api_base: http://localhost:8226/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step9000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-9000
+  endpoints:
+  - api_base: http://localhost:8227/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step12000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-12000
+  endpoints:
+  - api_base: http://localhost:8228/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step15000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-15000
+  endpoints:
+  - api_base: http://localhost:8229/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step18000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-18000
+  endpoints:
+  - api_base: http://localhost:8230/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+llama3.1-8b-sft-lr3e5-ao-step21000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/checkpoint-21000
+  endpoints:
+  - api_base: http://localhost:8231/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+########## Llama-3.x DPO-Lr{LR}_Beta{Beta} on SFT-Lr3e-5-AO (final + intermediate) ##########
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8232/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8233/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8234/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8235/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8236/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8237/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8238/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8239/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8240/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8241/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8242/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8243/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8244/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8245/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8246/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8247/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8248/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8249/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8250/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8251/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8252/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8253/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8254/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8255/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8256/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8257/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8258/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8259/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8260/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8261/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8262/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8263/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8264/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8265/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8266/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8267/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8268/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8269/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8270/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8271/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8272/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8273/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8274/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8275/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8276/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8277/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8278/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8279/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8280/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8281/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8282/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8283/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8284/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8285/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr2e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8286/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8287/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8288/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8289/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8290/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8291/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8292/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8293/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8294/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8295/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8296/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8297/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8298/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8299/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8300/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8301/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8302/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8303/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8304/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8305/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8306/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8307/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8308/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8309/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8310/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8311/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8312/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8313/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8314/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8315/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8316/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8317/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8318/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8319/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8320/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8321/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8322/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8323/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8324/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8325/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8326/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8327/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8328/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8329/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8330/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8331/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8332/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8333/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8334/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8335/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8336/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8337/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8338/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8339/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8340/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8341/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8342/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8343/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8344/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8345/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8346/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8347/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8348/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8349/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8350/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8351/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr2e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8352/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8353/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8354/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8355/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8356/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8357/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8358/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8359/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8360/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8361/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8362/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8363/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8364/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8365/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8366/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8367/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8368/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8369/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8370/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8371/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8372/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8373/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8374/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8375/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8376/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8377/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8378/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8379/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8380/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8381/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8382/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8383/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8384/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr4e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8385/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+########## Llama-3.x DPO runs still training as of 2026-08-31 (SLURM PENDING) ##########
+########## paths predicted from configs in finetuning/llama/*/DPO/*.yaml; not yet on disk ##########
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8386/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8387/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8388/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8389/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8390/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8391/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8392/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8393/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8394/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8395/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8396/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8397/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8398/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8399/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8400/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8401/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8402/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8403/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8404/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8405/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8406/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8407/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8408/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8409/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8410/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8411/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8412/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8413/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8414/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8415/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8416/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8417/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr1e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8418/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8419/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8420/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8421/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8422/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8423/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8424/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8425/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8426/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8427/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8428/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8429/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8430/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8431/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8432/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8433/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8434/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8435/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8436/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8437/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8438/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8439/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8440/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8441/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8442/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8443/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8444/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8445/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8446/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8447/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8448/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8449/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8450/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr2e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR2e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8451/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8452/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8453/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8454/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8455/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8456/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8457/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8458/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8459/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8460/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8461/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.01-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8462/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8463/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8464/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8465/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8466/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8467/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8468/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8469/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8470/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8471/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8472/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.02-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8473/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8474/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8475/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8476/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8477/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8478/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8479/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8480/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8481/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8482/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8483/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.1-8b-sft-lr3e5-ao-lr4e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.1-8B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.1-8B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8484/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8485/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8486/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8487/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8488/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8489/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8490/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8491/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8492/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8493/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8494/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr1e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8495/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8496/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8497/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8498/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8499/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8500/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8501/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8502/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8503/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8504/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8505/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-1b-sft-lr3e5-ao-lr4e6-beta0.04-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-1B/SFT-Lr3e-5-AO/DPO-LR4e-6_Beta0.04-Llama-3.2-1B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8506/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8507/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8508/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8509/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8510/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8511/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8512/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8513/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8514/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8515/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8516/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.01-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.01-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8517/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO
+  endpoints:
+  - api_base: http://localhost:8518/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:8519/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:8520/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:8521/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:8522/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step1000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:8523/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step1200:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1200
+  endpoints:
+  - api_base: http://localhost:8524/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step1400:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1400
+  endpoints:
+  - api_base: http://localhost:8525/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step1600:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1600
+  endpoints:
+  - api_base: http://localhost:8526/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step1800:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-1800
+  endpoints:
+  - api_base: http://localhost:8527/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-llama3.2-3b-sft-lr3e5-ao-lr1e6-beta0.02-step2000:
+  model: /data/cat/ws/hama901h-judge-checkpoint/checkpoints/Llama-3.2-3B/SFT-Lr3e-5-AO/DPO-LR1e-6_Beta0.02-Llama-3.2-3B-SFT-Lr3e-5-AO/checkpoint-2000
+  endpoints:
+  - api_base: http://localhost:8528/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
