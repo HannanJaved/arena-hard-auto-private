@@ -283,9 +283,14 @@ def _is_lmeval_completed(task: str, model_name: str, api_config: dict, output_ro
 
 
 def _is_arena_hard_completed(model_name: str) -> bool:
-    if (ARENA_HARD_ANS_DIR / f"{model_name}.jsonl").exists():
-        return True
-    return any(ARENA_HARD_ANS_DIR.rglob(f"{model_name}.jsonl"))
+    # gen_answer.py appends one line per question (open(..., "a")) via a
+    # ThreadPoolExecutor -- a killed/incomplete generation run leaves a jsonl
+    # that EXISTS but is short of the full 750-question set. File presence
+    # alone isn't enough; same class of bug already fixed for judgment.
+    for path in (ARENA_HARD_ANS_DIR / f"{model_name}.jsonl", *ARENA_HARD_ANS_DIR.rglob(f"{model_name}.jsonl")):
+        if path.exists() and _count_jsonl_lines(path) >= ARENA_HARD_EXPECTED_JUDGMENTS:
+            return True
+    return False
 
 
 def _count_jsonl_lines(path: Path) -> int:
