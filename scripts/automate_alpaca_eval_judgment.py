@@ -156,6 +156,8 @@ def create_judge_config(output_path, judge_model_name, prompt_template):
 
 
 def create_slurm_script(models_to_judge, script_path, config_path, args, judge_model_path, judge_port):
+    # Time cut from 3h to 45min on 2026-09-04: Qwen3-14B (largest tested model)
+    # alpaca-judge-dpo runs maxed at 18min across 34 post-fix runs.
     job_name = "alpaca-judge-" + (models_to_judge[0] if len(models_to_judge) == 1 else f"batch-{len(models_to_judge)}")
 
     log_dir = f"{LOGS_DIR}/judgments"
@@ -175,11 +177,11 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=16G
-#SBATCH --time=03:00:00
+#SBATCH --time=00:45:00
 #SBATCH --partition=capella
-#SBATCH --exclude=c80,c81
+#SBATCH --exclude=c52
 #SBATCH --gres=gpu:1
-#SBATCH --account=p_neurasearch
+#SBATCH --account={args.account}
 
 set -e
 
@@ -316,6 +318,8 @@ def main():
     parser.add_argument("--dependency", type=str, default="",
                         help="SLURM dependency string passed to sbatch (e.g. afterok:12345:67890). "
                              "Skips missing-output validation since generation will finish before this job runs.")
+    parser.add_argument("--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+                        help="SLURM account to charge jobs to (default: p_neurasearch).")
 
     args = parser.parse_args()
 

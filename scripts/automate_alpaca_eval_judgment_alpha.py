@@ -209,7 +209,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --time=05:00:00
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
-#SBATCH --account=p_neurasearch
+#SBATCH --account={args.account}
 
 set -e
 
@@ -383,6 +383,8 @@ def main():
     parser.add_argument("--dependency", type=str, default="",
                         help="SLURM dependency string passed to sbatch (e.g. afterok:12345:67890). "
                              "Skips missing-output validation since generation will finish before this job runs.")
+    parser.add_argument("--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+                        help="SLURM account to charge jobs to (default: p_neurasearch).")
 
     args = parser.parse_args()
 

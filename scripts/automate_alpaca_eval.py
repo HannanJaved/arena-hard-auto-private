@@ -124,6 +124,9 @@ def resolve_model_path(model_config):
 
 
 def create_slurm_script(model_name, model_path, script_path, args, model_port):
+    # Time cut from 1h to 30min on 2026-09-04: Qwen3-14B (largest tested model)
+    # alpaca-gen-dpo runs maxed at ~10min, though sample was thin (n=3) - kept
+    # more margin than better-sampled tasks for that reason.
     rank, alpha, step = extract_model_details(model_name)
     log_subdir = f"{rank}/{alpha}" if rank and alpha else "misc"
     log_dir = f"{LOGS_DIR}/{log_subdir}"
@@ -145,11 +148,11 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --time=01:00:00
+#SBATCH --time=00:30:00
 #SBATCH --partition=capella
-#SBATCH --exclude=c80,c81
+#SBATCH --exclude=c52
 #SBATCH --gres=gpu:1
-#SBATCH --account=p_neurasearch
+#SBATCH --account={args.account}
 
 set -e
 
@@ -277,6 +280,8 @@ def main():
     parser.add_argument("--max-instances", type=int, default=None)
     parser.add_argument("--chat-template", default=DEFAULT_CHAT_TEMPLATE)
     parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument("--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+                        help="SLURM account to charge jobs to (default: p_neurasearch).")
 
     args = parser.parse_args()
 

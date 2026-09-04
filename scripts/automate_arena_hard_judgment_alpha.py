@@ -266,7 +266,7 @@ def create_judgment_config(models_to_judge, output_path, baseline_model, judge_m
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_label, baseline_model, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, tp_size=DEFAULT_TP_SIZE):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_label, baseline_model, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, tp_size=DEFAULT_TP_SIZE, account="p_neurasearch"):
     """Create a SLURM script for judging a batch of models on the alpha (A100) partition."""
     # Create a meaningful job name from the first and last model
     if len(models_to_judge) == 1:
@@ -331,7 +331,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --time=08:00:00
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
-#SBATCH --account=p_neurasearch
+#SBATCH --account={account}
 
 # Exit on any error
 set -e
@@ -578,6 +578,8 @@ def main():
     parser.add_argument('--dependency', type=str, default='',
                         help='SLURM dependency string passed to sbatch (e.g. afterok:12345:67890). '
                              'Skips missing-answer validation since generation will finish before this job runs.')
+    parser.add_argument('--account', choices=['p_neurasearch', 'p_scads_nas'], default='p_neurasearch',
+                       help='SLURM account to charge jobs to (default: p_neurasearch).')
 
     args = parser.parse_args()
 
@@ -709,6 +711,7 @@ def main():
                 judge_path=model_path,
                 judge_port=judge_port,
                 tp_size=args.tensor_parallel_size,
+                account=args.account,
             )
         print(f"  Created script: {script_path} (judge port {judge_port}, weights={model_path}, logical={judge_logical})")
 

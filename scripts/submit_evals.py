@@ -69,14 +69,19 @@ class StaticTaskSpec:
 
 
 # Defaults mirror submit_{task}_from_list.py single-GPU settings.
+# Times cut 2026-09-04 from historical waste: sacct showed max observed wall-clock on
+# Qwen3-14B (largest tested model) at 5-25% of these limits (e.g. gsm8k 9m/3h, hellaswag
+# 45m/3h, ifeval 16m/4h, arc_challenge/gpqa/piqa/truthfulqa all <=13m/1h). New values keep
+# ~2-3x headroom over the observed max; gpqa/piqa/truthfulqa get a 20min floor since actual
+# usage was only 1-3min (job startup/vLLM load overhead dominates at that scale).
 STATIC_TASK_SPECS: dict[str, StaticTaskSpec] = {
-    "arc_challenge": StaticTaskSpec("arc_challenge", "arc_challenge", 25, 8, "01:00:00", "arc_challenge"),
-    "gpqa": StaticTaskSpec("gpqa", "gpqa_diamond_zeroshot", 0, 16, "01:00:00", "gpqa"),
-    "gsm8k": StaticTaskSpec("gsm8k", "gsm8k", 5, 64, "03:00:00", "gsm8k"),
-    "hellaswag": StaticTaskSpec("hellaswag", "hellaswag", 10, 16, "03:00:00", "hellaswag"),
-    "ifeval": StaticTaskSpec("ifeval", "ifeval", 0, 16, "04:00:00", "ifeval", cpu_time_multiplier=2),
-    "piqa": StaticTaskSpec("piqa", "piqa", 0, 32, "01:00:00", "piqa"),
-    "truthfulqa": StaticTaskSpec("truthfulqa", "truthfulqa_mc2", 0, 32, "01:00:00", "truthfulqa"),
+    "arc_challenge": StaticTaskSpec("arc_challenge", "arc_challenge", 25, 8, "00:30:00", "arc_challenge"),
+    "gpqa": StaticTaskSpec("gpqa", "gpqa_diamond_zeroshot", 0, 16, "00:20:00", "gpqa"),
+    "gsm8k": StaticTaskSpec("gsm8k", "gsm8k", 5, 64, "00:30:00", "gsm8k"),
+    "hellaswag": StaticTaskSpec("hellaswag", "hellaswag", 10, 16, "01:00:00", "hellaswag"),
+    "ifeval": StaticTaskSpec("ifeval", "ifeval", 0, 16, "00:45:00", "ifeval", cpu_time_multiplier=2),
+    "piqa": StaticTaskSpec("piqa", "piqa", 0, 32, "00:20:00", "piqa"),
+    "truthfulqa": StaticTaskSpec("truthfulqa", "truthfulqa_mc2", 0, 32, "00:20:00", "truthfulqa"),
 }
 
 AUTOMATION_TASKS = [
@@ -458,6 +463,7 @@ def _static_submit_args(
     use_module_torch: bool,
     output_root: str | None,
     dry_run: bool,
+    account: str,
 ) -> tuple[Path, list[str]]:
     """Build (script, args) for one static LM-eval task."""
     dry = ["--dry-run"] if dry_run else []
@@ -519,7 +525,7 @@ def _static_submit_args(
             args.append("--use-module-torch")
         return SCRIPTS / "submit_lmeval_task_from_list.py", args
 
-    args = ["--models-file", models_file] + dry
+    args = ["--models-file", models_file, "--account", account] + dry
     if partition:
         args += ["--partition", partition]
     if cpus_per_task is not None:
@@ -592,6 +598,10 @@ def main() -> None:
     parser.add_argument(
         "--judge-model", default="Qwen3-Next-80B-A3B-Instruct-FP8",
         help="Judge model name used for arena-hard, alpaca-eval, and other judge-based evals (default: Qwen3-Next-80B-A3B-Instruct-FP8).",
+    )
+    parser.add_argument(
+        "--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+        help="SLURM account to charge all submitted jobs to (default: p_neurasearch).",
     )
     parser.add_argument(
         "--evals",
@@ -748,6 +758,7 @@ def main() -> None:
             use_module_torch=args.use_module_torch,
             output_root=args.output_root,
             dry_run=static_dry_run,
+            account=args.account,
         )
         run(f"Static eval: {task}", VENV_LMEVAL, script, extra)
 
@@ -797,7 +808,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                        ["--models-file", tmp, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--submit"],
                         script_prefix="run_arena_hard_",
                     )
                 else:
@@ -805,7 +816,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                        ["--models-file", tmp] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account] + auto_flag,
                     )
             else:
                 print("  -> All models already done for Arena-Hard generation, skipping.")
@@ -824,7 +835,8 @@ def main() -> None:
                     SCRIPTS / "automate_arena_hard_judgment.py",
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
-                     "--judge-model", args.judge_model]
+                     "--judge-model", args.judge_model,
+                     "--account", args.account]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -843,7 +855,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval.py",
-                        ["--models-file", tmp, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--submit"],
                         script_prefix="run_alpaca_eval_generation_",
                     )
                 else:
@@ -851,7 +863,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval.py",
-                        ["--models-file", tmp] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account] + auto_flag,
                     )
             else:
                 print("  -> All models already done for AlpacaEval generation, skipping.")
@@ -868,7 +880,8 @@ def main() -> None:
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_judgment.py",
                     ["--models-file", tmp,
-                     "--judge-model", args.judge_model]
+                     "--judge-model", args.judge_model,
+                     "--account", args.account]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -884,7 +897,7 @@ def main() -> None:
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", tmp, "--baseline-model", args.baseline] + mtbench_flag,
+                    ["--models-file", tmp, "--baseline-model", args.baseline, "--account", args.account] + mtbench_flag,
                 ),
             )
 
@@ -897,7 +910,7 @@ def main() -> None:
                     "ELO estimation (automate_elo_estimation)",
                     VENV_OPENJURY,
                     WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation.py",
-                    ["--models-file", tmp] + auto_flag,
+                    ["--models-file", tmp, "--account", args.account] + auto_flag,
                 ),
             )
 
@@ -923,7 +936,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                    ["--models-file", models_file, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--submit"],
                     script_prefix="run_arena_hard_",
                 )
             else:
@@ -931,7 +944,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                    ["--models-file", models_file] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account] + auto_flag,
                 )
 
         # 1b. Arena-Hard judgment — one job per model, each depending only on
@@ -948,7 +961,8 @@ def main() -> None:
                     SCRIPTS / "automate_arena_hard_judgment.py",
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
-                     "--judge-model", args.judge_model] + auto_flag + arena_judg_extra,
+                     "--judge-model", args.judge_model,
+                     "--account", args.account] + auto_flag + arena_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -960,7 +974,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval.py",
-                    ["--models-file", models_file, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--submit"],
                     script_prefix="run_alpaca_eval_generation_",
                 )
             else:
@@ -968,7 +982,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval.py",
-                    ["--models-file", models_file] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account] + auto_flag,
                 )
 
         # 2b. AlpacaEval judgment — one job per model, each depending only on
@@ -984,7 +998,8 @@ def main() -> None:
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_judgment.py",
                     ["--models-file", tmp,
-                     "--judge-model", args.judge_model] + auto_flag + alpaca_judg_extra,
+                     "--judge-model", args.judge_model,
+                     "--account", args.account] + auto_flag + alpaca_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -995,14 +1010,14 @@ def main() -> None:
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", models_file, "--baseline-model", args.baseline, "--rerun-all"] + auto_flag,
+                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--rerun-all"] + auto_flag,
                 )
             else:
                 run(
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", models_file, "--baseline-model", args.baseline, "--skip-existing"] + auto_flag,
+                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--skip-existing"] + auto_flag,
                 )
 
         # 4. ELO estimation / OpenJury
@@ -1011,7 +1026,7 @@ def main() -> None:
                 "ELO estimation (automate_elo_estimation)",
                 VENV_OPENJURY,
                 WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation.py",
-                ["--models-file", models_file] + auto_flag,
+                ["--models-file", models_file, "--account", args.account] + auto_flag,
             )
 
         # 5. Static evals

@@ -136,7 +136,7 @@ def extract_model_details(model_name):
     return rank, alpha, step
     # return rank, lr, step
 
-def create_slurm_script(model_name, model_path, script_path, model_port=8000):
+def create_slurm_script(model_name, model_path, script_path, model_port=8000, account="p_neurasearch"):
     """Create a SLURM script for a specific model."""
     rank, alpha, step = extract_model_details(model_name)
     
@@ -159,10 +159,11 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000):
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4        
 #SBATCH --mem=32G                
-#SBATCH --time=04:00:00          
+#SBATCH --time=01:00:00
 #SBATCH --partition=capella
+#SBATCH --exclude=c52
 #SBATCH --gres=gpu:1
-#SBATCH --account=p_neurasearch
+#SBATCH --account={account}
 
 # Exit on any error
 set -e
@@ -285,7 +286,9 @@ def main():
     parser.add_argument('--bench-name', type=str, default='arena-hard-v2.0',
                        help='Benchmark name to use in config files (default: arena-hard-v2.0)',
                        choices=['arena-hard-v0.1', 'arena-hard-v2.0', 'hard_prompt', 'coding', 'math', 'creative_writing'])
-    
+    parser.add_argument('--account', choices=['p_neurasearch', 'p_scads_nas'], default='p_neurasearch',
+                       help='SLURM account to charge jobs to (default: p_neurasearch).')
+
     args = parser.parse_args()
     
     # Create necessary directories
@@ -378,7 +381,7 @@ def main():
         model_path = model_config['model']
         # Determine model port from api_config (fall back to 8000)
         model_port = get_port_for_model(api_config, model_name=model_name, default=8000)
-        create_slurm_script(model_name, model_path, script_path, model_port=model_port)
+        create_slurm_script(model_name, model_path, script_path, model_port=model_port, account=args.account)
         print(f"  Created script: {script_path}")
 
         job_scripts.append(script_path)

@@ -470,6 +470,10 @@ def main() -> None:
         help="Judge model name used for arena-hard and alpaca-eval judgment (default: Qwen3-Next-80B-A3B-Instruct-FP8-quokka).",
     )
     parser.add_argument(
+        "--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+        help="SLURM account to charge all submitted jobs to (default: p_neurasearch).",
+    )
+    parser.add_argument(
         "--judge-tp-size", type=int, default=4,
         help=(
             "Number of A100 40GB GPUs to shard every judge server across via vLLM "
@@ -545,7 +549,7 @@ def main() -> None:
     # For the static submit_*_from_list scripts:
     #   they submit by default; --dry-run suppresses submission.
     # Always route to the alpha partition.
-    static_flag = (["--dry-run"] if (args.dry_run or not args.submit) else []) + ["--partition", "alpha"]
+    static_flag = (["--dry-run"] if (args.dry_run or not args.submit) else []) + ["--partition", "alpha", "--account", args.account]
 
     if args.skip_completed:
         print(f"\n{'='*60}")
@@ -593,7 +597,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_alpha.py",
-                        ["--models-file", tmp, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--submit"],
                         script_prefix="run_arena_hard_",
                     )
                 else:
@@ -601,7 +605,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_alpha.py",
-                        ["--models-file", tmp] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account] + auto_flag,
                     )
             else:
                 print("  -> All models already done for Arena-Hard generation, skipping.")
@@ -621,7 +625,8 @@ def main() -> None:
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
                      "--judge-model", args.judge_model,
-                     "--tensor-parallel-size", judge_tp]
+                     "--tensor-parallel-size", judge_tp,
+                     "--account", args.account]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -640,7 +645,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval_alpha)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval_alpha.py",
-                        ["--models-file", tmp, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--submit"],
                         script_prefix="run_alpaca_eval_generation_",
                     )
                 else:
@@ -648,7 +653,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval_alpha)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval_alpha.py",
-                        ["--models-file", tmp] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account] + auto_flag,
                     )
             else:
                 print("  -> All models already done for AlpacaEval generation, skipping.")
@@ -666,7 +671,8 @@ def main() -> None:
                     SCRIPTS / "automate_alpaca_eval_judgment_alpha.py",
                     ["--models-file", tmp,
                      "--judge-model", args.judge_model,
-                     "--tensor-parallel-size", judge_tp]
+                     "--tensor-parallel-size", judge_tp,
+                     "--account", args.account]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -684,7 +690,8 @@ def main() -> None:
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", tmp, "--baseline-model", args.baseline,
                      "--judge", args.judge_model,
-                     "--judge-server-tp", judge_tp] + mtbench_flag,
+                     "--judge-server-tp", judge_tp,
+                     "--account", args.account] + mtbench_flag,
                 ),
             )
 
@@ -698,7 +705,8 @@ def main() -> None:
                     VENV_OPENJURY,
                     WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation_alpha.py",
                     ["--models-file", tmp, "--judge", args.judge_model,
-                     "--judge-tp-size", judge_tp] + auto_flag,
+                     "--judge-tp-size", judge_tp,
+                     "--account", args.account] + auto_flag,
                 ),
             )
 
@@ -731,7 +739,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_alpha.py",
-                    ["--models-file", models_file, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--submit"],
                     script_prefix="run_arena_hard_",
                 )
             else:
@@ -739,7 +747,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_alpha)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_alpha.py",
-                    ["--models-file", models_file] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account] + auto_flag,
                 )
 
         # 1b. Arena-Hard judgment — one job per model, each depending only on
@@ -757,7 +765,8 @@ def main() -> None:
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
                      "--judge-model", args.judge_model,
-                     "--tensor-parallel-size", judge_tp] + auto_flag + arena_judg_extra,
+                     "--tensor-parallel-size", judge_tp,
+                     "--account", args.account] + auto_flag + arena_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -769,7 +778,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval_alpha)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_alpha.py",
-                    ["--models-file", models_file, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--submit"],
                     script_prefix="run_alpaca_eval_generation_",
                 )
             else:
@@ -777,7 +786,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval_alpha)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval_alpha.py",
-                    ["--models-file", models_file] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account] + auto_flag,
                 )
 
         # 2b. AlpacaEval judgment — one job per model, each depending only on
@@ -794,7 +803,8 @@ def main() -> None:
                     SCRIPTS / "automate_alpaca_eval_judgment_alpha.py",
                     ["--models-file", tmp,
                      "--judge-model", args.judge_model,
-                     "--tensor-parallel-size", judge_tp] + auto_flag + alpaca_judg_extra,
+                     "--tensor-parallel-size", judge_tp,
+                     "--account", args.account] + auto_flag + alpaca_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -807,7 +817,7 @@ def main() -> None:
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", models_file, "--baseline-model", args.baseline,
                      "--judge", args.judge_model,
-                     "--judge-server-tp", judge_tp, "--rerun-all"] + auto_flag,
+                     "--judge-server-tp", judge_tp, "--account", args.account, "--rerun-all"] + auto_flag,
                 )
             else:
                 run(
@@ -816,7 +826,7 @@ def main() -> None:
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench_alpha.py",
                     ["--models-file", models_file, "--baseline-model", args.baseline,
                      "--judge", args.judge_model,
-                     "--judge-server-tp", judge_tp, "--skip-existing"] + auto_flag,
+                     "--judge-server-tp", judge_tp, "--account", args.account, "--skip-existing"] + auto_flag,
                 )
 
         # 4. ELO estimation / OpenJury
@@ -826,7 +836,7 @@ def main() -> None:
                 VENV_OPENJURY,
                 WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation_alpha.py",
                 ["--models-file", models_file, "--judge", args.judge_model,
-                 "--judge-tp-size", judge_tp] + auto_flag,
+                 "--judge-tp-size", judge_tp, "--account", args.account] + auto_flag,
             )
 
         # 5. Static evals

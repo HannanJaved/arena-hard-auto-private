@@ -264,8 +264,10 @@ def create_judgment_config(models_to_judge, output_path, baseline_name, judge_mo
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, api_config=None):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, api_config=None, account="p_neurasearch"):
     """Create a SLURM script for judging a batch of models."""
+    # Time cut from 3h to 1.5h on 2026-09-04: sacct showed Qwen3-14B (largest tested
+    # model) judge-dpo jobs maxing at 52min across 115 post-fix runs.
     
     baseline_model = resolve_baseline_model(baseline_name, api_config or {})
     
@@ -330,11 +332,11 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=48G
-#SBATCH --time=03:00:00
+#SBATCH --time=01:30:00
 #SBATCH --partition=capella
-#SBATCH --exclude=c80,c81
+#SBATCH --exclude=c52
 #SBATCH --gres=gpu:1
-#SBATCH --account=p_neurasearch
+#SBATCH --account={account}
 
 # Exit on any error
 set -e
@@ -579,9 +581,11 @@ def main():
         '--dependency', type=str, default='',
         help='SLURM dependency string passed to sbatch (e.g. afterok:12345:67890).',
     )
-    
+    parser.add_argument('--account', choices=['p_neurasearch', 'p_scads_nas'], default='p_neurasearch',
+                       help='SLURM account to charge jobs to (default: p_neurasearch).')
+
     args = parser.parse_args()
-    
+
     # Create necessary directories
     create_directories()
     
@@ -689,6 +693,7 @@ def main():
             judge_path=model_path,
             judge_port=judge_port,
             api_config=api_config,
+            account=args.account,
         )
         print(f"  Created script: {script_path} (judge port {judge_port}, weights={model_path}, logical={judge_logical})")
 

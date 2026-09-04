@@ -41,7 +41,7 @@ SBATCH_HEADER = """\
 #SBATCH --mem={mem}
 #SBATCH --time={time}
 #SBATCH --partition={partition}
-#SBATCH --account=p_neurasearch
+#SBATCH --account={account}
 {exclude_nodes}
 {exclusive}
 
@@ -125,6 +125,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", default="auto", help="Batch size for lm_eval (int, or 'auto'/'auto:N'). vLLM manages its own request batching internally.")
     parser.add_argument("--dtype", default="bfloat16", help="dtype passed to lm_eval model_args.")
     parser.add_argument("--partition", default="capella", help="Slurm partition.")
+    parser.add_argument("--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
+                        help="SLURM account to charge jobs to (default: p_neurasearch).")
     parser.add_argument("--time", default="03:00:00", help="Slurm wall time.")
     parser.add_argument("--gres", default="gpu:1", help="Slurm gres.")
     parser.add_argument("--cpus-per-task", type=int, default=4, help="Slurm CPUs per task.")
@@ -178,7 +180,7 @@ def build_sbatch_script(
     args: argparse.Namespace,
 ) -> str:
     exclusive_line = "#SBATCH --exclusive" if args.exclusive else ""
-    exclude_nodes_line = "#SBATCH --exclude=c80,c81" if args.partition == "capella" else ""
+    exclude_nodes_line = "#SBATCH --exclude=c52" if args.partition == "capella" else ""
     header = SBATCH_HEADER.format(
         job_name=f"{args.job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
@@ -187,6 +189,7 @@ def build_sbatch_script(
         mem=args.mem,
         time=args.time,
         partition=args.partition,
+        account=args.account,
         exclude_nodes=exclude_nodes_line,
         exclusive=exclusive_line,
     )
