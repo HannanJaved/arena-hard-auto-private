@@ -185,7 +185,7 @@ def build_sbatch_script(
     args: argparse.Namespace,
 ) -> str:
     exclusive_line = "#SBATCH --exclusive" if args.exclusive else ""
-    exclude_nodes_line = "#SBATCH --exclude=c52" if args.partition == "capella" else ""
+    exclude_nodes_line = "#SBATCH --exclude=c52,c78,c93" if args.partition == "capella" else ""
     header = SBATCH_HEADER.format(
         job_name=f"{args.job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
