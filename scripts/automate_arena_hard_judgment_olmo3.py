@@ -284,6 +284,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --mem=16G
 #SBATCH --time=03:00:00
 #SBATCH --partition=capella
+#SBATCH --exclude=c99,c13,c108,c8
 #SBATCH --gres=gpu:1
 
 # Exit on any error

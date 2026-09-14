@@ -16,6 +16,22 @@ from urllib.parse import urlparse
 
 # Configuration
 WORKSPACE_ROOT = "/data/horse/ws/hama901h-BFTranslation"
+DEFAULT_BAD_NODES_FILE = f"{WORKSPACE_ROOT}/slurm_bad_nodes.txt"
+
+
+def read_exclude_nodes(path: str) -> str:
+    """Read a file of node names (one per line, '#' comments/blanks ignored)
+    and return them comma-joined for an sbatch --exclude value, or "" if the
+    file is missing/empty."""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            nodes = [
+                line.strip() for line in handle
+                if line.strip() and not line.strip().startswith("#")
+            ]
+        return ",".join(nodes)
+    except OSError:
+        return ""
 ARENA_HARD_AUTO_DIR = f"{WORKSPACE_ROOT}/arena-hard-auto"
 LOGS_DIR = f"{WORKSPACE_ROOT}/logs/arena-hard"
 SCRIPTS_DIR = f"{WORKSPACE_ROOT}/generated_judgment_scripts"
@@ -264,7 +280,7 @@ def create_judgment_config(models_to_judge, output_path, baseline_name, judge_mo
     with open(output_path, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
 
-def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, api_config=None, account="p_neurasearch"):
+def create_judgment_slurm_script(models_to_judge, script_path, config_file_path, baseline_name, judge_model=JUDGE_MODEL, judge_path=JUDGE_PATH, judge_port=8001, api_config=None, account="p_neurasearch", exclude_nodes_file=DEFAULT_BAD_NODES_FILE):
     """Create a SLURM script for judging a batch of models."""
     # Time cut from 3h to 1.5h on 2026-09-04: sacct showed Qwen3-14B (largest tested
     # model) judge-dpo jobs maxing at 52min across 115 post-fix runs.
@@ -297,6 +313,8 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
     log_file_base = f"{job_name}_%j"
     
     judge_port_val = judge_port or DEFAULT_JUDGE_SERVER_PORT_BASE
+    exclude_nodes = read_exclude_nodes(exclude_nodes_file)
+    exclude_line = f"#SBATCH --exclude={exclude_nodes}" if exclude_nodes else ""
 
     # Job-local endpoint file so gen_judgment hits the same port as the vLLM server
     # (global api_config.yaml hardcodes :8000 for the Qwen3-Next judge).
@@ -334,9 +352,9 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --mem=48G
 #SBATCH --time=01:30:00
 #SBATCH --partition=capella
-#SBATCH --exclude=c52,c78,c93
 #SBATCH --gres=gpu:1
 #SBATCH --account={account}
+{exclude_line}
 
 # Exit on any error
 set -e
@@ -583,6 +601,9 @@ def main():
     )
     parser.add_argument('--account', choices=['p_neurasearch', 'p_scads_nas'], default='p_neurasearch',
                        help='SLURM account to charge jobs to (default: p_neurasearch).')
+    parser.add_argument('--exclude-nodes-file', type=str, default=DEFAULT_BAD_NODES_FILE,
+                       help="Path to a file of known-bad SLURM node names (one per line, '#' "
+                            "comments and blank lines ignored) to pass as --exclude.")
 
     args = parser.parse_args()
 
@@ -694,6 +715,7 @@ def main():
             judge_port=judge_port,
             api_config=api_config,
             account=args.account,
+            exclude_nodes_file=args.exclude_nodes_file,
         )
         print(f"  Created script: {script_path} (judge port {judge_port}, weights={model_path}, logical={judge_logical})")
 

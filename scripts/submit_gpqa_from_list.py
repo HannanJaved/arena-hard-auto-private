@@ -39,8 +39,8 @@ SBATCH_HEADER = """\
 #SBATCH --time={time}
 #SBATCH --partition={partition}
 #SBATCH --account={account}
-{exclude_nodes}
 {exclusive}
+{exclude}
 
 """
 
@@ -138,6 +138,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--exclusive", action="store_true", help="Request exclusive node.")
     parser.add_argument("--no-exclusive", dest="exclusive", action="store_false")
     parser.set_defaults(exclusive=False)
+    parser.add_argument(
+        "--exclude-nodes-file",
+        default="/data/horse/ws/hama901h-BFTranslation/slurm_bad_nodes.txt",
+        help="Path to a file of known-bad SLURM node names (one per line, '#' comments "
+             "and blank lines ignored) to pass as --exclude for every submitted job.",
+    )
     parser.add_argument("--log-dir", default=DEFAULT_LOG_DIR, help="Directory for Slurm logs.")
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory where lm_eval saves results.")
     parser.add_argument("--venv-activate", default=DEFAULT_VENV_ACTIVATE, help="Path to venv activate script.")
@@ -177,6 +183,22 @@ def sanitize_job_name(name: str) -> str:
     return sanitized[:128]
 
 
+
+def read_exclude_nodes(path: str) -> str:
+    """Read a file of node names (one per line, '#' comments and blanks ignored)
+    and return them comma-joined for an sbatch --exclude value, or "" if the
+    file is missing/empty."""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            nodes = [
+                line.strip() for line in handle
+                if line.strip() and not line.strip().startswith("#")
+            ]
+        return ",".join(nodes)
+    except OSError:
+        return ""
+
+
 def build_sbatch_script(
     *,
     model_name: str,
@@ -184,7 +206,8 @@ def build_sbatch_script(
     args: argparse.Namespace,
 ) -> str:
     exclusive_line = "#SBATCH --exclusive" if args.exclusive else ""
-    exclude_nodes_line = "#SBATCH --exclude=c52,c78,c93" if args.partition == "capella" else ""
+    exclude_nodes = read_exclude_nodes(args.exclude_nodes_file)
+    exclude_line = f"#SBATCH --exclude={exclude_nodes}" if exclude_nodes else ""
     header = SBATCH_HEADER.format(
         job_name=f"{args.job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
@@ -194,8 +217,8 @@ def build_sbatch_script(
         time=args.time,
         partition=args.partition,
         account=args.account,
-        exclude_nodes=exclude_nodes_line,
         exclusive=exclusive_line,
+        exclude=exclude_line,
     )
 
     if args.gres == "gpu:1":

@@ -32,6 +32,12 @@ import yaml
 WORKSPACE = Path("/data/horse/ws/hama901h-BFTranslation")
 SCRIPTS = WORKSPACE / "arena-hard-auto" / "scripts"
 
+# Shared with the Qwen3-14B DPO watcher: nodes that fail SLURM job launch
+# instantly (exit 0:53, no output) on capella. The watcher appends to this
+# file as it discovers new bad nodes; every GPU-submitting script downstream
+# of submit_evals.py reads it fresh at sbatch time and adds --exclude.
+DEFAULT_BAD_NODES_FILE = WORKSPACE / "slurm_bad_nodes.txt"
+
 VENV_ARENA    = WORKSPACE / "arena-hard-auto" / "venv" / "bin" / "python"
 VENV_ALPACA   = WORKSPACE / "venv-alpacaeval" / "bin" / "python"
 VENV_OPENJURY = WORKSPACE / "venv-openjury" / "bin" / "python"
@@ -464,6 +470,7 @@ def _static_submit_args(
     output_root: str | None,
     dry_run: bool,
     account: str,
+    exclude_nodes_file: str,
 ) -> tuple[Path, list[str]]:
     """Build (script, args) for one static LM-eval task."""
     dry = ["--dry-run"] if dry_run else []
@@ -525,7 +532,11 @@ def _static_submit_args(
             args.append("--use-module-torch")
         return SCRIPTS / "submit_lmeval_task_from_list.py", args
 
-    args = ["--models-file", models_file, "--account", account] + dry
+    args = [
+        "--models-file", models_file,
+        "--account", account,
+        "--exclude-nodes-file", exclude_nodes_file,
+    ] + dry
     if partition:
         args += ["--partition", partition]
     if cpus_per_task is not None:
@@ -602,6 +613,15 @@ def main() -> None:
     parser.add_argument(
         "--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
         help="SLURM account to charge all submitted jobs to (default: p_neurasearch).",
+    )
+    parser.add_argument(
+        "--exclude-nodes-file", default=str(DEFAULT_BAD_NODES_FILE),
+        help=(
+            "Path to a file of known-bad SLURM node names (one per line, '#' comments "
+            "and blank lines ignored), read fresh at each sbatch submission and passed "
+            f"as --exclude to every GPU job (default: {DEFAULT_BAD_NODES_FILE}). "
+            "Pass a path to a nonexistent/empty file to disable."
+        ),
     )
     parser.add_argument(
         "--evals",
@@ -759,6 +779,7 @@ def main() -> None:
             output_root=args.output_root,
             dry_run=static_dry_run,
             account=args.account,
+            exclude_nodes_file=args.exclude_nodes_file,
         )
         run(f"Static eval: {task}", VENV_LMEVAL, script, extra)
 
@@ -808,7 +829,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                        ["--models-file", tmp, "--account", args.account, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--submit"],
                         script_prefix="run_arena_hard_",
                     )
                 else:
@@ -816,7 +837,7 @@ def main() -> None:
                         "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                         VENV_ARENA,
                         SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                        ["--models-file", tmp, "--account", args.account] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
                     )
             else:
                 print("  -> All models already done for Arena-Hard generation, skipping.")
@@ -836,7 +857,7 @@ def main() -> None:
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
                      "--judge-model", args.judge_model,
-                     "--account", args.account]
+                     "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -855,7 +876,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval.py",
-                        ["--models-file", tmp, "--account", args.account, "--submit"],
+                        ["--models-file", tmp, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--submit"],
                         script_prefix="run_alpaca_eval_generation_",
                     )
                 else:
@@ -863,7 +884,7 @@ def main() -> None:
                         "AlpacaEval generation (automate_alpaca_eval)",
                         VENV_ALPACA,
                         SCRIPTS / "automate_alpaca_eval.py",
-                        ["--models-file", tmp, "--account", args.account] + auto_flag,
+                        ["--models-file", tmp, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
                     )
             else:
                 print("  -> All models already done for AlpacaEval generation, skipping.")
@@ -881,7 +902,7 @@ def main() -> None:
                     SCRIPTS / "automate_alpaca_eval_judgment.py",
                     ["--models-file", tmp,
                      "--judge-model", args.judge_model,
-                     "--account", args.account]
+                     "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file]
                     + auto_flag
                     + (["--dependency", f"afterok:{dep_job_id}"] if dep_job_id else []),
                 ),
@@ -897,7 +918,7 @@ def main() -> None:
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", tmp, "--baseline-model", args.baseline, "--account", args.account] + mtbench_flag,
+                    ["--models-file", tmp, "--baseline-model", args.baseline, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + mtbench_flag,
                 ),
             )
 
@@ -910,7 +931,7 @@ def main() -> None:
                     "ELO estimation (automate_elo_estimation)",
                     VENV_OPENJURY,
                     WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation.py",
-                    ["--models-file", tmp, "--account", args.account] + auto_flag,
+                    ["--models-file", tmp, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
                 ),
             )
 
@@ -936,7 +957,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                    ["--models-file", models_file, "--account", args.account, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--submit"],
                     script_prefix="run_arena_hard_",
                 )
             else:
@@ -944,7 +965,7 @@ def main() -> None:
                     "Arena-Hard generation (automate_arena_hard_generation_olmo3)",
                     VENV_ARENA,
                     SCRIPTS / "automate_arena_hard_generation_olmo3.py",
-                    ["--models-file", models_file, "--account", args.account] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
                 )
 
         # 1b. Arena-Hard judgment — one job per model, each depending only on
@@ -962,7 +983,7 @@ def main() -> None:
                     ["--models-file", tmp,
                      "--baseline", args.baseline,
                      "--judge-model", args.judge_model,
-                     "--account", args.account] + auto_flag + arena_judg_extra,
+                     "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag + arena_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -974,7 +995,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval.py",
-                    ["--models-file", models_file, "--account", args.account, "--submit"],
+                    ["--models-file", models_file, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--submit"],
                     script_prefix="run_alpaca_eval_generation_",
                 )
             else:
@@ -982,7 +1003,7 @@ def main() -> None:
                     "AlpacaEval generation (automate_alpaca_eval)",
                     VENV_ALPACA,
                     SCRIPTS / "automate_alpaca_eval.py",
-                    ["--models-file", models_file, "--account", args.account] + auto_flag,
+                    ["--models-file", models_file, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
                 )
 
         # 2b. AlpacaEval judgment — one job per model, each depending only on
@@ -999,7 +1020,7 @@ def main() -> None:
                     SCRIPTS / "automate_alpaca_eval_judgment.py",
                     ["--models-file", tmp,
                      "--judge-model", args.judge_model,
-                     "--account", args.account] + auto_flag + alpaca_judg_extra,
+                     "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag + alpaca_judg_extra,
                 )
                 Path(tmp).unlink(missing_ok=True)
 
@@ -1010,14 +1031,14 @@ def main() -> None:
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--rerun-all"] + auto_flag,
+                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--rerun-all"] + auto_flag,
                 )
             else:
                 run(
                     "MT-Bench / JudgeArena (automate_mtbench)",
                     VENV_OPENJURY,
                     WORKSPACE / "JudgeArena" / "scripts" / "automate_mtbench.py",
-                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--skip-existing"] + auto_flag,
+                    ["--models-file", models_file, "--baseline-model", args.baseline, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file, "--skip-existing"] + auto_flag,
                 )
 
         # 4. ELO estimation / OpenJury
@@ -1026,7 +1047,7 @@ def main() -> None:
                 "ELO estimation (automate_elo_estimation)",
                 VENV_OPENJURY,
                 WORKSPACE / "OpenJury" / "scripts" / "automate_elo_estimation.py",
-                ["--models-file", models_file, "--account", args.account] + auto_flag,
+                ["--models-file", models_file, "--account", args.account, "--exclude-nodes-file", args.exclude_nodes_file] + auto_flag,
             )
 
         # 5. Static evals

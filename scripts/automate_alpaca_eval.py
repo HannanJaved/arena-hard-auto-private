@@ -13,6 +13,22 @@ from urllib.parse import urlparse
 import yaml
 
 WORKSPACE_ROOT = "/data/horse/ws/hama901h-BFTranslation"
+DEFAULT_BAD_NODES_FILE = f"{WORKSPACE_ROOT}/slurm_bad_nodes.txt"
+
+
+def read_exclude_nodes(path: str) -> str:
+    """Read a file of node names (one per line, '#' comments/blanks ignored)
+    and return them comma-joined for an sbatch --exclude value, or "" if the
+    file is missing/empty."""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            nodes = [
+                line.strip() for line in handle
+                if line.strip() and not line.strip().startswith("#")
+            ]
+        return ",".join(nodes)
+    except OSError:
+        return ""
 LOGS_DIR = f"{WORKSPACE_ROOT}/logs/alpaca_eval"
 SCRIPTS_DIR = f"{WORKSPACE_ROOT}/generated_alpaca_eval_scripts"
 CONFIGS_DIR = f"{WORKSPACE_ROOT}/generated_alpaca_eval_configs"
@@ -139,6 +155,8 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
     num_procs_flag = f"--num-procs {args.num_procs}" if args.num_procs else ""
     max_instances_flag = f"--max-instances {args.max_instances}" if args.max_instances else ""
     requires_chatml_flag = "--requires-chatml" if args.requires_chatml else ""
+    exclude_nodes = read_exclude_nodes(args.exclude_nodes_file)
+    exclude_line = f"#SBATCH --exclude={exclude_nodes}" if exclude_nodes else ""
 
     script_content = f"""#!/bin/bash
 #SBATCH --job-name=alpaca-gen-{model_name}
@@ -150,9 +168,9 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
 #SBATCH --mem=16G
 #SBATCH --time=00:30:00
 #SBATCH --partition=capella
-#SBATCH --exclude=c52,c78,c93
 #SBATCH --gres=gpu:1
 #SBATCH --account={args.account}
+{exclude_line}
 
 set -e
 
@@ -282,6 +300,9 @@ def main():
     parser.add_argument("--trust-remote-code", action="store_true")
     parser.add_argument("--account", choices=["p_neurasearch", "p_scads_nas"], default="p_neurasearch",
                         help="SLURM account to charge jobs to (default: p_neurasearch).")
+    parser.add_argument("--exclude-nodes-file", default=DEFAULT_BAD_NODES_FILE,
+                        help="Path to a file of known-bad SLURM node names (one per line, '#' "
+                             "comments and blank lines ignored) to pass as --exclude.")
 
     args = parser.parse_args()
 

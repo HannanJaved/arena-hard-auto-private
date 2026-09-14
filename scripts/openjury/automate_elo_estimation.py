@@ -129,6 +129,7 @@ def create_slurm_script(
 #SBATCH --mem=64G
 #SBATCH --time={time_limit}
 #SBATCH --partition={partition}
+{"#SBATCH --exclude=c99,c13,c108,c8" if partition == "capella" else ""}
 #SBATCH --gres=gpu:{num_gpus}
 
 set -e

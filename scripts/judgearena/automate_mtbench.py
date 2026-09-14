@@ -268,6 +268,8 @@ def create_slurm_script(
 
     judge_served_name = safe_name(judge_model)
 
+    exclude_nodes_line = "#SBATCH --exclude=c99,c13,c108,c8" if partition == "capella" else ""
+
     script_content = f"""#!/bin/bash
 #SBATCH --job-name={job_name}
 #SBATCH --error={log_dir}/mtbench_%j.err
@@ -278,6 +280,7 @@ def create_slurm_script(
 #SBATCH --mem={mem}
 #SBATCH --time={time_limit}
 #SBATCH --partition={partition}
+{exclude_nodes_line}
 #SBATCH --gres=gpu:{num_gpus}
 
 set -e
