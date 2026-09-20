@@ -549,7 +549,13 @@ def main() -> None:
     # For the static submit_*_from_list scripts:
     #   they submit by default; --dry-run suppresses submission.
     # Always route to the alpha partition.
-    static_flag = (["--dry-run"] if (args.dry_run or not args.submit) else []) + ["--partition", "alpha", "--account", args.account]
+    # Capella node names in slurm_bad_nodes.txt are invalid on alpha and make
+    # sbatch fail with "invalid node name specified", so point at an empty
+    # exclude file (those scripts skip --exclude when the file is empty).
+    static_flag = (
+        (["--dry-run"] if (args.dry_run or not args.submit) else [])
+        + ["--partition", "alpha", "--account", args.account, "--exclude-nodes-file", "/dev/null"]
+    )
 
     if args.skip_completed:
         print(f"\n{'='*60}")
