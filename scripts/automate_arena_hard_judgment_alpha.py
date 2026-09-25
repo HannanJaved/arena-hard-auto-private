@@ -332,6 +332,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
 #SBATCH --account={account}
+#SBATCH --licenses=quokka,horse
 
 # Exit on any error
 set -e

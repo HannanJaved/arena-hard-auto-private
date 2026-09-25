@@ -168,6 +168,7 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000, ac
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:1
 #SBATCH --account={account}
+#SBATCH --licenses=quokka,horse
 
 # Exit on any error
 set -e

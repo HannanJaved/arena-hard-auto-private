@@ -182,6 +182,7 @@ def create_slurm_script(model_name, model_path, script_path, model_port=8000, ac
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --account={account}
+#SBATCH --licenses=cat,horse
 {exclude_line}
 
 # Exit on any error

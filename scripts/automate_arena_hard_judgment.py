@@ -354,6 +354,7 @@ def create_judgment_slurm_script(models_to_judge, script_path, config_file_path,
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --account={account}
+#SBATCH --licenses=cat,horse
 {exclude_line}
 
 # Exit on any error

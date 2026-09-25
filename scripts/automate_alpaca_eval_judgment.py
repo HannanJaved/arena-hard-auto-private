@@ -199,6 +199,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --account={args.account}
+#SBATCH --licenses=cat,horse
 {exclude_line}
 
 set -e

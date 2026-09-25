@@ -61,6 +61,7 @@ SBATCH_HEADER = """\
 #SBATCH --mem={mem}
 #SBATCH --time={time}
 #SBATCH --partition={partition}
+#SBATCH --licenses={licenses}
 {exclusive}
 
 """
@@ -340,6 +341,7 @@ def build_sbatch_script(
     cpu_only = not args.gres or args.gres.lower() == "none"
     gres_line = "" if cpu_only else f"#SBATCH --gres={args.gres}"
     job_name_prefix = args.job_name_prefix or f"{args.task}_{args.num_fewshot}shot_"
+    licenses = "quokka,horse" if args.partition == "alpha" else "cat,horse"
     header = SBATCH_HEADER.format(
         job_name=f"{job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
@@ -348,6 +350,7 @@ def build_sbatch_script(
         mem=args.mem,
         time=args.time,
         partition=args.partition,
+        licenses=licenses,
         exclusive=exclusive_line,
     )
 

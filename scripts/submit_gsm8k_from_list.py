@@ -42,6 +42,7 @@ SBATCH_HEADER = """\
 #SBATCH --time={time}
 #SBATCH --partition={partition}
 #SBATCH --account={account}
+#SBATCH --licenses={licenses}
 {exclusive}
 {exclude}
 
@@ -204,6 +205,7 @@ def build_sbatch_script(
     exclusive_line = "#SBATCH --exclusive" if args.exclusive else ""
     exclude_nodes = read_exclude_nodes(args.exclude_nodes_file)
     exclude_line = f"#SBATCH --exclude={exclude_nodes}" if exclude_nodes else ""
+    licenses = "quokka,horse" if args.partition == "alpha" else "cat,horse"
     header = SBATCH_HEADER.format(
         job_name=f"{args.job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
@@ -213,6 +215,7 @@ def build_sbatch_script(
         time=args.time,
         partition=args.partition,
         account=args.account,
+        licenses=licenses,
         exclusive=exclusive_line,
         exclude=exclude_line,
     )

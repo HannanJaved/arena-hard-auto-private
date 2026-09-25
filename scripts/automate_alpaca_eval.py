@@ -170,6 +170,7 @@ def create_slurm_script(model_name, model_path, script_path, args, model_port):
 #SBATCH --partition=capella
 #SBATCH --gres=gpu:1
 #SBATCH --account={args.account}
+#SBATCH --licenses=cat,horse
 {exclude_line}
 
 set -e

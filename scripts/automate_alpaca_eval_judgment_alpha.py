@@ -210,6 +210,7 @@ def create_slurm_script(models_to_judge, script_path, config_path, args, judge_m
 #SBATCH --partition=alpha
 #SBATCH --gres=gpu:{tp_size}
 #SBATCH --account={args.account}
+#SBATCH --licenses=quokka,horse
 
 set -e
 
