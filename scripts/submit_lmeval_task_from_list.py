@@ -88,7 +88,7 @@ mkdir -p {output_dir}
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    {chat_template_flag}\
+    {chat_template_flag}{gen_kwargs_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --output_path {output_dir}"
@@ -134,7 +134,7 @@ export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    {chat_template_flag}\
+    {chat_template_flag}{gen_kwargs_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size {batch_size} \
     --device cpu \
@@ -182,7 +182,7 @@ export PYTHONUNBUFFERED=1
 export CMD="lm_eval --model hf \
     --model_args pretrained={model_path},dtype=\"{dtype}\"{model_args_extra} \
     --tasks {task} \
-    {chat_template_flag}\
+    {chat_template_flag}{gen_kwargs_flag}\
     --num_fewshot {num_fewshot} \
     --batch_size $TOTAL_BATCH_SIZE \
     --output_path {output_dir}"
@@ -257,6 +257,15 @@ def parse_args() -> argparse.Namespace:
             "instead of the pip-installed torch in venv-lm-eval, which suffers catastrophic Lustre read latency "
             "on its large .so files. Also switches the 'module load CUDA' prelude to the matching PyTorch module."
         ),
+    )
+    parser.add_argument(
+        "--gen-kwargs", default=None,
+        help="Passed to lm_eval --gen_kwargs, e.g. 'max_new_tokens=1024' (default: task defaults).",
+    )
+    parser.add_argument(
+        "--no-chat-template", action="store_true",
+        help="Score ifeval WITHOUT the chat template (historical no-template protocol; results go to "
+             "evaluation_results/ifeval instead of the _chat_template tree).",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print sbatch scripts without submitting.")
     return parser.parse_args()
@@ -367,7 +376,8 @@ def build_sbatch_script(
     # ifeval is a chat/instruction-following eval and is always scored through the
     # chat template; every other static task is scored no-template for comparability
     # with prior/external numbers (see submit_evals.py's _static_submit_args).
-    chat_template_flag = "--apply_chat_template " if args.task == "ifeval" else ""
+    chat_template_flag = "--apply_chat_template " if args.task == "ifeval" and not args.no_chat_template else ""
+    gen_kwargs_flag = f"--gen_kwargs {args.gen_kwargs} " if args.gen_kwargs else ""
 
     body_kwargs = dict(
         venv_activate=venv_activate,
@@ -381,6 +391,7 @@ def build_sbatch_script(
         model_args_extra=model_args_extra,
         task=args.task,
         chat_template_flag=chat_template_flag,
+        gen_kwargs_flag=gen_kwargs_flag,
         num_fewshot=args.num_fewshot,
         batch_size=args.batch_size,
         output_dir=args.output_dir,
@@ -437,7 +448,7 @@ def main() -> int:
         _check_module_typing_extensions(pythonpath)
 
     if not args.output_dir:
-        if args.task == "ifeval":
+        if args.task == "ifeval" and not args.no_chat_template:
             # Chat-template results, not the no-template default -- see the
             # chat_template_flag comment in build_sbatch_script.
             args.output_dir = f"{DEFAULT_OUTPUT_ROOT}_chat_template/{args.task}"
