@@ -8,6 +8,7 @@ The text file should contain one model name per line matching keys in
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -116,6 +117,24 @@ echo "END TIME: $(date)"
 
 echo "END $SLURM_JOBID: $(date)"
 """
+
+
+def has_vllm_result(result_dir: str) -> bool:
+    """A results file from THIS protocol (vLLM, max_new_tokens=1024). HF-backend results share the
+    directory (older Qwen runs) and must not block the vLLM run."""
+    if not os.path.isdir(result_dir):
+        return False
+    for f in os.listdir(result_dir):
+        if not (f.startswith("results_") and f.endswith(".json")):
+            continue
+        try:
+            with open(os.path.join(result_dir, f)) as fh:
+                cfg = json.load(fh).get("config", {})
+        except Exception:
+            continue
+        if cfg.get("model") == "vllm" and "1024" in str(cfg.get("gen_kwargs")):
+            return True
+    return False
 
 
 def parse_args() -> argparse.Namespace:
@@ -307,11 +326,8 @@ def main() -> int:
 
         output_subdir = model_path.replace("/", "__")
         result_dir = os.path.join(args.output_dir, output_subdir)
-        if os.path.isdir(result_dir) and any(
-            f.startswith("results_") and f.endswith(".json")
-            for f in os.listdir(result_dir)
-        ):
-            print(f"Skipping {model_name}: results already exist in {result_dir}")
+        if has_vllm_result(result_dir):
+            print(f"Skipping {model_name}: vLLM results already exist in {result_dir}")
             skipped.append(model_name)
             continue
 
