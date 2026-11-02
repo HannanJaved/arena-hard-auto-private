@@ -61,7 +61,7 @@ SBATCH_HEADER = """\
 #SBATCH --mem={mem}
 #SBATCH --time={time}
 #SBATCH --partition={partition}
-#SBATCH --licenses={licenses}
+{licenses_line}
 {exclusive}
 
 """
@@ -351,6 +351,8 @@ def build_sbatch_script(
     gres_line = "" if cpu_only else f"#SBATCH --gres={args.gres}"
     job_name_prefix = args.job_name_prefix or f"{args.task}_{args.num_fewshot}shot_"
     licenses = "quokka,horse" if args.partition == "alpha" else "cat,horse"
+    # cat/quokka are GPU-cluster licenses; romeo/barnard reject them ("Invalid license specification")
+    licenses_line = "" if cpu_only else f"#SBATCH --licenses={licenses}"
     header = SBATCH_HEADER.format(
         job_name=f"{job_name_prefix}{sanitize_job_name(model_name)}",
         log_dir=args.log_dir,
@@ -359,7 +361,7 @@ def build_sbatch_script(
         mem=args.mem,
         time=args.time,
         partition=args.partition,
-        licenses=licenses,
+        licenses_line=licenses_line,
         exclusive=exclusive_line,
     )
 
