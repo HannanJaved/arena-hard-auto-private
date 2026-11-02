@@ -1,0 +1,25 @@
+# Final checkpoint keys only.
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr1e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr1e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr2e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr2e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr2e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr4e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-ipo-lr4e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr1e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr1e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr1e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr2e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr2e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr2e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr4e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr4e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-apozero-lr4e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr1e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr1e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr1e6-beta0.04
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr2e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr2e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr4e6-beta0.01
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr4e6-beta0.02
+dpo-qwen3-8b-sft-lr3e5-ao-normdpo-lr4e6-beta0.04
