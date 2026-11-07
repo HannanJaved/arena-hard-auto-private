@@ -40095,3 +40095,64 @@ dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr8e7-beta0.01:
   max_tokens: 4096
   temperature: 0.0
 
+# Rebuttal (2026-11-06): Qwen3-4B HalfDolci lr=1.6e-6, beta=0.01
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01-step200:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO/checkpoint-200
+  endpoints:
+  - api_base: http://localhost:9321/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01-step400:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO/checkpoint-400
+  endpoints:
+  - api_base: http://localhost:9322/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01-step600:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO/checkpoint-600
+  endpoints:
+  - api_base: http://localhost:9323/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01-step800:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO/checkpoint-800
+  endpoints:
+  - api_base: http://localhost:9324/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01-step1000:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO/checkpoint-1000
+  endpoints:
+  - api_base: http://localhost:9325/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
+dpo-qwen3-4b-sft-lr3e5-ao-halfdolci-lr1.6e6-beta0.01:
+  model: /data/horse/ws/hama901h-BFTranslation/checkpoints/Qwen/Qwen3-4B-Base/SFT-sweep/DPO-HalfDolci-LR1.6e-6_Beta0.01-Qwen3-4B-SFT-LR3e-5-AO
+  endpoints:
+  - api_base: http://localhost:9326/v1
+    api_key: '-'
+  api_type: openai
+  parallel: 32
+  max_tokens: 4096
+  temperature: 0.0
+
